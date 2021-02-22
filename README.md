@@ -43,5 +43,10 @@
 - Основная БД
   - СУБД - PostgreSQL
   
+	![Image of Yaktocat](https://github.com/mloner/StudentHelper/blob/main/images/DB1Schema.png)
+	
+- Вторая БД
+  - СУБД - MS SQL
+  
 	![Image of Yaktocat](https://github.com/mloner/StudentHelper/blob/main/images/appSchema.jpg)
 	
