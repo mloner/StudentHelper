@@ -44,11 +44,17 @@
 
 - Основная БД
   - СУБД - PostgreSQL
+  - Предназначение - хранение данных о преподавателях, студентах, факультетах, кафедрах, группах и расписание занятий.
   
-	![Image of Yaktocat](https://github.com/mloner/StudentHelper/blob/main/images/DB1Schema.png)
+	![DB1Schema](https://github.com/mloner/StudentHelper/blob/main/images/DB1Schema.png)
+	
+- Вторая БД
+  - СУБД - MS SQL
+  - Предназначение - хранение данных чат-бота (данные о пользователях, опросах, ответах на опросы).
+	![DB2Schema](https://github.com/mloner/StudentHelper/blob/main/images/DB2Schema.png)
 	
 - Вторая БД
   - СУБД - MS SQL
   
-	![Image of Yaktocat](https://github.com/mloner/StudentHelper/blob/main/images/DB2Schema.png)
+	![DB2Schema](https://github.com/mloner/StudentHelper/blob/main/images/DB2Schema.png)
 	
