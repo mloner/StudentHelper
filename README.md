@@ -42,6 +42,6 @@
 
 - Основная БД
   - СУБД - PostgreSQL
-  - Схема БД
-	![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
+  
+	![Image of Yaktocat](https://github.com/mloner/StudentHelper/blob/main/images/appSchema.jpg)
 	
