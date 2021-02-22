@@ -8,4 +8,7 @@
     <string name="Enter_Group_number">Введите номер группы</string>
     <string name="Enter_Password">Введите пароль</string>
     <string name="Login_button">Войти</string>
+    <string name="Login_error">Ошибка: неправильные ФИО</string>
+    <string name="Password_error">Ошибка: неправильный пароль</string>
+    <string name="Group_error">Ошибка: неправильный номер группы</string>
 </resources>
