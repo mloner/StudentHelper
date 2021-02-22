@@ -51,10 +51,24 @@
 - Вторая БД
   - СУБД - MS SQL
   - Предназначение - хранение данных чат-бота (данные о пользователях, опросах, ответах на опросы).
+  
 	![DB2Schema](https://github.com/mloner/StudentHelper/blob/main/images/DB2Schema.png)
 	
 - Третья БД
   - СУБД - MongoDB
+  <!---!- Предназначение - 
+	[DB2Schema](https://github.com/mloner/StudentHelper/blob/main/images/DB2Schema.png) --->
+	
+## Перечень основных операций для баз данных
+
+- Основная БД
   
-	<!---![DB2Schema](https://github.com/mloner/StudentHelper/blob/main/images/DB2Schema.png) --->
+	
+- Вторая БД
+  - 
+	
+- Третья БД
+  - 
+  
+
 	
