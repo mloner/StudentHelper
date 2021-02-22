@@ -64,5 +64,6 @@
 
 ![UseCase](https://github.com/mloner/StudentHelper/blob/main/images/UseCase.png)
   
-
+## Ссылка на trello
+https://trello.com/b/wV3wPOBh/student-helper
 	
