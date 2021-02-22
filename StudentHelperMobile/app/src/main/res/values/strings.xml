@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">StudentHelperMobile</string>
+    <string name="Welcome">Добро пожаловать в Student Helper</string>
+    <string name="Authorization">Вы преподаватель или студент?</string>
+    <string name="Prepod">Преподаватель</string>
+    <string name="Student">Студент</string>
+    <string name="Enter_FIO">Введите Фамилию И.О.</string>
+    <string name="Enter_Group_number">Введите номер группы</string>
+    <string name="Enter_Password">Введите пароль</string>
+    <string name="Login_button">Войти</string>
 </resources>
