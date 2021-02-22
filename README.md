@@ -1,2 +1,0 @@
-# StudentHelper
-никита сосет хуй
