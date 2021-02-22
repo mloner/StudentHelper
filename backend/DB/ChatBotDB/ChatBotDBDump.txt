@@ -1,0 +1,69 @@
+CREATE TABLE "Users" (
+	"id" serial NOT NULL,
+	"vk_page_address" varchar(255) NOT NULL UNIQUE,
+	"student_id" int NOT NULL,
+	"FIO" varchar(255) NOT NULL,
+	"group" varchar(255) NOT NULL,
+	"subgroup" int NOT NULL,
+	"course" int NOT NULL,
+	"interview_agreement" BOOLEAN NOT NULL,
+	CONSTRAINT "Users_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "BotCommandsDescription" (
+	"id" serial NOT NULL,
+	"name" varchar(255) NOT NULL,
+	"description" varchar(255) NOT NULL,
+	CONSTRAINT "BotCommandsDescription_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "Questions" (
+	"id" serial NOT NULL,
+	"name" varchar(255) NOT NULL,
+	"description" TEXT NOT NULL,
+	CONSTRAINT "Questions_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "AnswerVariants" (
+	"id" serial NOT NULL,
+	"question_id" int NOT NULL,
+	"answer_variant" varchar(255) NOT NULL,
+	CONSTRAINT "AnswerVariants_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "InterviewResults" (
+	"id" serial NOT NULL,
+	"user_id" int NOT NULL,
+	"question_id" int NOT NULL,
+	"anwser_variant_id" int NOT NULL,
+	CONSTRAINT "InterviewResults_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+
+
+
+ALTER TABLE "AnswerVariants" ADD CONSTRAINT "AnswerVariants_fk0" FOREIGN KEY ("question_id") REFERENCES "Questions"("id");
+
+ALTER TABLE "InterviewResults" ADD CONSTRAINT "InterviewResults_fk0" FOREIGN KEY ("user_id") REFERENCES "Users"("id");
+ALTER TABLE "InterviewResults" ADD CONSTRAINT "InterviewResults_fk1" FOREIGN KEY ("question_id") REFERENCES "Questions"("id");
+ALTER TABLE "InterviewResults" ADD CONSTRAINT "InterviewResults_fk2" FOREIGN KEY ("anwser_variant_id") REFERENCES "AnswerVariants"("id");
