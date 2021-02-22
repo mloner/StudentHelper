@@ -4,10 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.studenthelpermobile.Model.ApiRepository;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -20,6 +23,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button LoginButton;
     TextView ErrorText;
     boolean isStudent;
+    ApiRepository apiRepository;
+
+    String login;
+    String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         PrepodBtn.setOnClickListener(this);
         LoginButton = findViewById(R.id.login_button);
         LoginButton.setOnClickListener(this);
+        apiRepository = new ApiRepository();
     }
 
     @Override
@@ -49,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 PasswordField.setVisibility(View.GONE);
                 LoginButton.setVisibility(View.VISIBLE);
                 isStudent = true;
+
+
                 break;
             case R.id.choose_prepod:
                 LoginText.setVisibility(View.VISIBLE );
@@ -58,12 +68,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 PasswordField.setVisibility(View.VISIBLE);
                 LoginButton.setVisibility(View.VISIBLE);
                 isStudent = false;
+
+
                 break;
             case R.id.login_button:
+                if (isStudent){
+                    login = LoginField.getText().toString();
+                    password = "";
+                }
+                else {
+                    login = LoginField.getText().toString();
+                    password = PasswordField.getText().toString();
+                }
                 String response;
-                response = "WRONG_PASSWORD";
-
-
+                response = apiRepository.login(isStudent, login, password);
 
                 switch (response){
                     case "OK":
