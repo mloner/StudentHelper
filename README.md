@@ -38,4 +38,7 @@
 просматривать оценки за предметы / занятия
 просматривать расписание на текущий день / на 2 недели
 напоминание о предстоящих занятиях в текущий день
+- Dashes work just as well
+- And if you have sub points, put two spaces before the dash or star:
+  - Like this
 
