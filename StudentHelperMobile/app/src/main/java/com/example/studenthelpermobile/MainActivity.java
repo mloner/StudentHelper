@@ -60,10 +60,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 isStudent = false;
                 break;
             case R.id.login_button:
-                String responce;
-                responce = "OK";
+                String response;
+                response = "WRONG_PASSWORD";
 
-                switch (responce){
+
+
+                switch (response){
                     case "OK":
                         Intent intent = new Intent(this, MainMenu.class);
                         startActivity(intent);
@@ -75,9 +77,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         else {
                             ErrorText.setText(R.string.Login_error);
                         }
+                        ErrorText.setVisibility(View.VISIBLE);
                         break;
                     case "WRONG_PASSWORD":
                         ErrorText.setText(R.string.Password_error);
+                        ErrorText.setVisibility(View.VISIBLE);
                         break;
                 }
 
