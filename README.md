@@ -53,8 +53,8 @@
   - Предназначение - хранение данных чат-бота (данные о пользователях, опросах, ответах на опросы).
 	![DB2Schema](https://github.com/mloner/StudentHelper/blob/main/images/DB2Schema.png)
 	
-- Вторая БД
-  - СУБД - MS SQL
+- Третья БД
+  - СУБД - MongoDB
   
-	![DB2Schema](https://github.com/mloner/StudentHelper/blob/main/images/DB2Schema.png)
+	<!---![DB2Schema](https://github.com/mloner/StudentHelper/blob/main/images/DB2Schema.png) --->
 	
