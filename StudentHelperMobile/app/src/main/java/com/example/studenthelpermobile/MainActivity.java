@@ -22,10 +22,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText PasswordField;
     Button LoginButton;
     TextView ErrorText;
-    boolean isStudent;
+    public static boolean isStudent;
     ApiRepository apiRepository;
 
-    String login;
+    public static String login;
     String password;
 
     @Override

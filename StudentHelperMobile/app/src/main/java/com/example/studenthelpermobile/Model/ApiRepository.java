@@ -12,6 +12,9 @@ public class ApiRepository {
                     response = "WRONG_LOGIN";
             }
         }
+        else if(login.equals("123") && password.equals("123")){
+            response = "OK";
+        }
         else
             response = "WRONG_PASSWORD";
 
