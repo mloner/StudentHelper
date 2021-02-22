@@ -12,6 +12,10 @@
 
     <!-- Главное меню -->
     <string name="Group">Группа</string>
+    <string name="ScheduleToday">Получить расписание на сегодня</string>
+    <string name="ScheduleTomorrow">Получить расписание на завтра</string>
+    <string name="ScheduleTwoWeeks">Получить расписание на 2 недели</string>
+
 
     <!-- Сообщения об ошибках -->
     <string name="Login_error">Ошибка: неправильные ФИО</string>

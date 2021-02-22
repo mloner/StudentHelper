@@ -12,5 +12,29 @@
         android:layout_marginTop="20dp"
         android:id="@+id/welcome_text"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ScheduleToday"
+        android:textColor="@color/BLACK"
+        android:layout_marginTop="20dp"
+        android:id="@+id/schedule_today"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ScheduleTomorrow"
+        android:textColor="@color/BLACK"
+        android:layout_marginTop="20dp"
+        android:id="@+id/schedule_tomorrow"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ScheduleTwoWeeks"
+        android:textColor="@color/BLACK"
+        android:layout_marginTop="20dp"
+        android:id="@+id/schedule_two_weeks"/>
+
 
 </LinearLayout>
