@@ -50,5 +50,5 @@
 - Вторая БД
   - СУБД - MS SQL
   
-	![Image of Yaktocat](https://github.com/mloner/StudentHelper/blob/main/images/appSchema.jpg)
+	![Image of Yaktocat](https://github.com/mloner/StudentHelper/blob/main/images/DB2Schema.png)
 	
