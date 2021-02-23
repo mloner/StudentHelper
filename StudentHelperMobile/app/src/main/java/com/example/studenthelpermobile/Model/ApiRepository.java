@@ -15,6 +15,7 @@ public class ApiRepository {
     private final String client_type = "mobile";
     private String authorization_request = "authorization";
     private String schedule_request = "schedule_check";
+    private String prepod_list_request = "prepod_list";
 
     private String role;
     private String group;
@@ -84,6 +85,13 @@ public class ApiRepository {
         }
         //ToDO получить ответ от сервера
 
+        return response;
+    }
+
+    public JSONObject PrepodList() throws JSONException {
+        JSONObject response = new JSONObject();
+        request.put("command", prepod_list_request);
+        //ToDO получить ответ от сервера
         return response;
     }
 }
