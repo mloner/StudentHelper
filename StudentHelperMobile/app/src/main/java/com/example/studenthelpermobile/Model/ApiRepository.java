@@ -16,6 +16,7 @@ public class ApiRepository {
     private String authorization_request = "authorization";
     private String schedule_request = "schedule_check";
     private String prepod_list_request = "prepod_list";
+    private String prepod_info_request = "prepod_info";
 
     private String role;
     private String group;
@@ -91,6 +92,14 @@ public class ApiRepository {
     public JSONObject PrepodList() throws JSONException {
         JSONObject response = new JSONObject();
         request.put("command", prepod_list_request);
+        //ToDO получить ответ от сервера
+        return response;
+    }
+
+    public JSONObject PrepodInfo(String fio) throws JSONException{
+        JSONObject response = new JSONObject();
+        request.put("command", prepod_info_request);
+        request.put("fio", fio);
         //ToDO получить ответ от сервера
         return response;
     }
