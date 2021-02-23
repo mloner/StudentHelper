@@ -36,5 +36,29 @@
         android:layout_marginTop="20dp"
         android:id="@+id/schedule_two_weeks"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/PrepodInfo"
+        android:textColor="@color/BLACK"
+        android:layout_marginTop="60dp"
+        android:id="@+id/prepod_info"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/PrepodChat"
+        android:textColor="@color/BLACK"
+        android:layout_marginTop="20dp"
+        android:id="@+id/prepod_chat"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Logout"
+        android:textColor="@color/BLACK"
+        android:layout_gravity="bottom"
+        android:id="@+id/logout"/>
+
 
 </LinearLayout>
