@@ -15,10 +15,14 @@
     <string name="ScheduleToday">Получить расписание на сегодня</string>
     <string name="ScheduleTomorrow">Получить расписание на завтра</string>
     <string name="ScheduleTwoWeeks">Получить расписание на 2 недели</string>
+    <string name="PrepodInfo">Получить информацию о преподавателях</string>
+    <string name="PrepodChat">Открыть чаты с преподавателями</string>
+    <string name="Logout">Выйти из аккаунта</string>
 
 
     <!-- Сообщения об ошибках -->
     <string name="Login_error">Ошибка: неправильные ФИО</string>
     <string name="Password_error">Ошибка: неправильный пароль</string>
     <string name="Group_error">Ошибка: неправильный номер группы</string>
+    <string name="Server_error">Ошибка сервера</string>
 </resources>

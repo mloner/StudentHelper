@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.example.studenthelpermobile.Model.ApiRepository;
 
+import org.json.JSONException;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button StudentBtn;
@@ -80,8 +82,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     login = LoginField.getText().toString();
                     password = PasswordField.getText().toString();
                 }
-                String response;
-                response = apiRepository.login(isStudent, login, password);
+
+                String response ="";
+
+                try {//получить ответ от сервера
+                    response = apiRepository.login(isStudent, login, password);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 switch (response){
                     case "OK":
@@ -99,6 +107,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case "WRONG_PASSWORD":
                         ErrorText.setText(R.string.Password_error);
+                        ErrorText.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        ErrorText.setText(R.string.Server_error);
                         ErrorText.setVisibility(View.VISIBLE);
                         break;
                 }
