@@ -20,17 +20,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     Button StudentBtn;
     Button PrepodBtn;
+    Button LoginButton;
+
     TextView LoginText;
     EditText LoginField;
+
     TextView PasswordText;
     EditText PasswordField;
-    Button LoginButton;
+
     TextView ErrorText;
     ProgressBar loginProgressbar;
-    public static boolean isStudent;
-    ApiRepository apiRepository;
 
     public static String login;
+    public static boolean isStudent;
     String password;
 
     @Override
@@ -49,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         PrepodBtn.setOnClickListener(this);
         LoginButton = findViewById(R.id.login_button);
         LoginButton.setOnClickListener(this);
-        apiRepository = new ApiRepository();
     }
 
     @Override
@@ -63,8 +64,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 PasswordField.setVisibility(View.GONE);
                 LoginButton.setVisibility(View.VISIBLE);
                 isStudent = true;
-
-
                 break;
             case R.id.choose_prepod:
                 LoginText.setVisibility(View.VISIBLE );
@@ -74,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 PasswordField.setVisibility(View.VISIBLE);
                 LoginButton.setVisibility(View.VISIBLE);
                 isStudent = false;
-
                 break;
             case R.id.login_button:
                 if (isStudent){
@@ -89,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String response ="";
 
                 try {//получить ответ от сервера
-                    LoginRepo loginRepo = new LoginRepo(isStudent, login, password, loginProgressbar, response, this);
+                    LoginRepo loginRepo = new LoginRepo(isStudent, login, password, loginProgressbar, this);
                     loginRepo.execute();
                 } catch (JSONException e) {
                     e.printStackTrace();

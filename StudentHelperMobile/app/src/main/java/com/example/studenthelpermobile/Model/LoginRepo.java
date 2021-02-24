@@ -17,10 +17,11 @@ public class LoginRepo extends AsyncTask <Void, Void, String> {
     ProgressBar progressBar;
     private String response;
     private MainActivity activity;
-    public LoginRepo (boolean isStudent, String login, String password, ProgressBar progressBar, String response, MainActivity activity) throws JSONException {
+
+    public LoginRepo (boolean isStudent, String login, String password, ProgressBar progressBar, MainActivity activity) throws JSONException {
 
         String role;
-        this.response = response;
+
         this.progressBar = progressBar;
         this.activity = activity;
 
@@ -39,19 +40,7 @@ public class LoginRepo extends AsyncTask <Void, Void, String> {
         request.put("arg", login);
 
 
-        if(isStudent){
-            if (login.equals("363")){
-                this.response = "OK";
-            }
-            else {
-                this.response = "WRONG_LOGIN";
-            }
-        }
-        else if(login.equals("123") && password.equals("123")){
-            this.response = "OK";
-        }
-        else
-            this.response = "WRONG_PASSWORD";
+
 
 
     }
@@ -66,6 +55,7 @@ public class LoginRepo extends AsyncTask <Void, Void, String> {
     protected String doInBackground(Void... voids) {
         try {
             Thread.sleep(5000);
+            //ToDo здесь будет запрос к API
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
