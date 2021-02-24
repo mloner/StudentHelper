@@ -10,13 +10,27 @@ import com.example.studenthelpermobile.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-public class LoginRepo extends AsyncTask <Void, Void, String> {
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.util.Iterator;
+
+public class LoginRepo extends AsyncTask <Void, Void, Login> {
 
     private JSONObject request;
     ProgressBar progressBar;
-    private String response;
+    private JSONObject responseJSON;
     private MainActivity activity;
+    Login l;
+
 
     public LoginRepo (boolean isStudent, String login, String password, ProgressBar progressBar, MainActivity activity) throws JSONException {
 
@@ -40,9 +54,6 @@ public class LoginRepo extends AsyncTask <Void, Void, String> {
         request.put("arg", login);
 
 
-
-
-
     }
 
     @Override
@@ -52,20 +63,54 @@ public class LoginRepo extends AsyncTask <Void, Void, String> {
     }
 
     @Override
-    protected String doInBackground(Void... voids) {
+    protected Login doInBackground(Void... voids) {
         try {
-            Thread.sleep(5000);
-            //ToDo здесь будет запрос к API
-        } catch (InterruptedException e) {
+            //ToDO здесь будет запрос к API
+
+            URL obj = new URL("http://shipshon.fvds.ru/api");
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+
+            connection.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer responseString = new StringBuffer();
+
+
+            while ((inputLine = in.readLine()) != null) {
+                responseString.append(inputLine);
+            }
+
+
+            in.close();
+
+            responseJSON = new JSONObject(responseString.toString());
+
+
+            String status = responseJSON.get("status").toString();
+            String response = responseJSON.get("response").toString();
+
+            l = new Login();
+            l.setStatus(status);
+            l.setResponse(response);
+
+
+        }catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return response;
+        return l;
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        activity.onAsyncTaskFinished(s);
+    protected void onPostExecute(Login l) {
+        super.onPostExecute(l);
+        activity.onAsyncTaskFinished(l);
     }
 }
