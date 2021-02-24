@@ -32,35 +32,9 @@ public class ApiRepository {
         }
     }
 
-    public String login(boolean isStudent, String login, String password) throws JSONException {
-        String response;
+    /*public String login(boolean isStudent, String login, String password)  {
 
-        request.put("client_type", client_type);
-        request.put("command", authorization_request);
-        request.put("role", role);
-        request.put("pass",password);
-        request.put("arg", login);
-
-
-
-        if(isStudent){
-            if (login.equals("363")){
-                response = "OK";
-            }
-            else {
-                    response = "WRONG_LOGIN";
-            }
-        }
-        else if(login.equals("123") && password.equals("123")){
-            response = "OK";
-        }
-        else
-            response = "WRONG_PASSWORD";
-
-        //ToDO получение ответа на логин
-
-        return response;
-    }
+    }*/
 
     public JSONObject Schedule(int days, String login) throws JSONException {
         JSONObject response = new JSONObject();

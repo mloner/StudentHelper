@@ -3,16 +3,21 @@ package com.example.studenthelpermobile;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.studenthelpermobile.Model.ApiRepository;
+import com.example.studenthelpermobile.Model.LoginRepo;
 
 import org.json.JSONException;
+
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText PasswordField;
     Button LoginButton;
     TextView ErrorText;
+    ProgressBar loginProgressbar;
     public static boolean isStudent;
     ApiRepository apiRepository;
 
@@ -35,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         LoginText = findViewById(R.id.text_enter_fio);
+        loginProgressbar = findViewById(R.id.login_progressbar);
         PasswordText = findViewById(R.id.text_enter_password);
         LoginField = findViewById(R.id.enter_fio);
         ErrorText = findViewById(R.id.error_text);
@@ -86,8 +93,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String response ="";
 
                 try {//получить ответ от сервера
-                    response = apiRepository.login(isStudent, login, password);
+                    LoginRepo loginRepo = new LoginRepo(isStudent, login, password, loginProgressbar, response);
+                    response = loginRepo.execute().get();
+
+
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
 
