@@ -1,5 +1,6 @@
 package com.example.studenthelpermobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +28,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
     Button PrepodChat;
     Button Logout;
     JSONObject schedule;
-    JSONObject prepodlist;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +89,8 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
                 ScheduleUnpacking(schedule);
                 break;
             case R.id.prepod_info:
-                try {
-                    prepodlist = apiRepository.PrepodList();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Intent prepodinfo = new Intent(this, PrepodInfo.class);
+                startActivity(prepodinfo);
                 break;
             case R.id.prepod_chat:
 
