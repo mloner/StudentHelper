@@ -3,9 +3,7 @@ package com.example.studenthelpermobile;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,13 +11,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.studenthelpermobile.Model.ApiRepository;
+import com.example.studenthelpermobile.Model.AsyncInterface;
 import com.example.studenthelpermobile.Model.LoginRepo;
 
 import org.json.JSONException;
 
-import java.util.concurrent.ExecutionException;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncInterface {
 
     Button StudentBtn;
     Button PrepodBtn;
@@ -78,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 LoginButton.setVisibility(View.VISIBLE);
                 isStudent = false;
 
-
                 break;
             case R.id.login_button:
                 if (isStudent){
@@ -89,47 +85,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     login = LoginField.getText().toString();
                     password = PasswordField.getText().toString();
                 }
-
+                ErrorText.setText("");
                 String response ="";
 
                 try {//получить ответ от сервера
-                    LoginRepo loginRepo = new LoginRepo(isStudent, login, password, loginProgressbar, response);
-                    response = loginRepo.execute().get();
-
-
+                    LoginRepo loginRepo = new LoginRepo(isStudent, login, password, loginProgressbar, response, this);
+                    loginRepo.execute();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
                 }
-
-                switch (response){
-                    case "OK":
-                        Intent intent = new Intent(this, MainMenu.class);
-                        startActivity(intent);
-                        break;
-                    case "WRONG_LOGIN":
-                        if(isStudent){
-                            ErrorText.setText(R.string.Group_error);
-                        }
-                        else {
-                            ErrorText.setText(R.string.Login_error);
-                        }
-                        ErrorText.setVisibility(View.VISIBLE);
-                        break;
-                    case "WRONG_PASSWORD":
-                        ErrorText.setText(R.string.Password_error);
-                        ErrorText.setVisibility(View.VISIBLE);
-                        break;
-                    default:
-                        ErrorText.setText(R.string.Server_error);
-                        ErrorText.setVisibility(View.VISIBLE);
-                        break;
-                }
-
                 break;
         }
+    }
+
+    @Override
+    public void onAsyncTaskFinished(String response) {
+        switch (response){
+            case "OK":
+                Intent intent = new Intent(this, MainMenu.class);
+                startActivity(intent);
+                break;
+            case "WRONG_LOGIN":
+                if(isStudent){
+                    ErrorText.setText(R.string.Group_error);
+                }
+                else {
+                    ErrorText.setText(R.string.Login_error);
+                }
+                ErrorText.setVisibility(View.VISIBLE);
+                break;
+            case "WRONG_PASSWORD":
+                ErrorText.setText(R.string.Password_error);
+                ErrorText.setVisibility(View.VISIBLE);
+                break;
+            default:
+                ErrorText.setText(R.string.Server_error);
+                ErrorText.setVisibility(View.VISIBLE);
+                break;
+        }
+
+        loginProgressbar.setVisibility(View.INVISIBLE);
     }
 }

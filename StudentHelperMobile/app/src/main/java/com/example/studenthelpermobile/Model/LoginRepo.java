@@ -1,9 +1,12 @@
 package com.example.studenthelpermobile.Model;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import com.example.studenthelpermobile.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,11 +16,13 @@ public class LoginRepo extends AsyncTask <Void, Void, String> {
     private JSONObject request;
     ProgressBar progressBar;
     private String response;
-    public LoginRepo (boolean isStudent, String login, String password, ProgressBar progressBar, String response) throws JSONException {
+    private MainActivity activity;
+    public LoginRepo (boolean isStudent, String login, String password, ProgressBar progressBar, String response, MainActivity activity) throws JSONException {
 
         String role;
         this.response = response;
         this.progressBar = progressBar;
+        this.activity = activity;
 
         if(isStudent){
             role = "student";
@@ -71,6 +76,6 @@ public class LoginRepo extends AsyncTask <Void, Void, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        Log.d("kek", "done");
+        activity.onAsyncTaskFinished(s);
     }
 }
