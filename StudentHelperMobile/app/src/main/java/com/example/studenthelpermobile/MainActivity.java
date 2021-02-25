@@ -17,7 +17,7 @@ import com.example.studenthelpermobile.Model.LoginRepo;
 
 import org.json.JSONException;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncInterface {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncInterface <Login> {
 
     Button StudentBtn;
     Button PrepodBtn;
@@ -32,9 +32,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView ErrorText;
     ProgressBar loginProgressbar;
 
-    public static String login;
-    public static boolean isStudent;
-    String password;
+    private String login;
+    private boolean isStudent;
+    private String password;
+    private String role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,10 +80,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (isStudent){
                     login = LoginField.getText().toString();
                     password = "";
+                    role = "student";
                 }
                 else {
                     login = LoginField.getText().toString();
                     password = PasswordField.getText().toString();
+                    role = "prepod";
                 }
                 ErrorText.setText("");
                 String response ="";
@@ -104,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 switch (login.getResponse()){
                     case "OK":
                         Intent intent = new Intent(this, MainMenu.class);
+                        intent.putExtra("login", this.login);
+                        intent.putExtra("role",role);
                         startActivity(intent);
                         break;
                     case "WRONG_LOGIN":

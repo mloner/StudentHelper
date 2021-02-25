@@ -1,5 +1,6 @@
 package com.example.studenthelpermobile.Model;
 
-public interface AsyncInterface {
-    void onAsyncTaskFinished(Login login);
+public interface AsyncInterface <T> {
+    void onAsyncTaskFinished(T value);
+
 }

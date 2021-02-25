@@ -19,13 +19,7 @@ public class PrepodInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.prepod_info_activity);
 
-        apiRepository = new ApiRepository();
 
-        try {
-            prepodlist = apiRepository.PrepodList();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
     }
 }

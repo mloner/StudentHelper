@@ -5,11 +5,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import static com.example.studenthelpermobile.MainActivity.isStudent;
+
 
 public class ApiRepository {
 
-    private JSONParser jsonParser;
+    /*private JSONParser jsonParser;
     private JSONObject request;
 
     private final String client_type = "mobile";
@@ -34,13 +34,13 @@ public class ApiRepository {
 
     /*public String login(boolean isStudent, String login, String password)  {
 
-    }*/
+    }
 
     public JSONObject Schedule(int days, String login) throws JSONException {
         JSONObject response = new JSONObject();
         request.put("command", schedule_request);
         request.put("role", role);
-        if(isStudent){
+        if(lo){
             request.put("group", login);
         }
         else {
@@ -76,5 +76,5 @@ public class ApiRepository {
         request.put("fio", fio);
         //ToDO получить ответ от сервера
         return response;
-    }
+    }*/
 }

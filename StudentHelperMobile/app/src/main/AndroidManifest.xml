@@ -28,6 +28,9 @@
 
         <activity android:name=".PrepodInfo">
         </activity>
+
+        <activity android:name=".ScheduleView">
+        </activity>
     </application>
 
 </manifest>

@@ -4,17 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.studenthelpermobile.Model.ApiRepository;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import androidx.appcompat.app.AppCompatActivity;
+import java.util.Objects;
 
-import static com.example.studenthelpermobile.MainActivity.isStudent;
-import static com.example.studenthelpermobile.MainActivity.login;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainMenu extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,6 +27,8 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
     Button PrepodChat;
     Button Logout;
     JSONObject schedule;
+    private String login;
+    private String role;
 
 
     @Override
@@ -49,7 +50,10 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         Logout = findViewById(R.id.logout);
         Logout.setOnClickListener(this);
 
-        if(isStudent){
+        login = Objects.requireNonNull(getIntent().getExtras()).getString("login");
+        role = Objects.requireNonNull(getIntent().getExtras()).getString("role");
+
+        if(role.equals("student")){
             String s = login + " " + getString(R.string.Group);
             WelcomeText.setText(s);
         }
@@ -63,30 +67,28 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View view) {
+
         switch (view.getId()){
             case R.id.schedule_today:
-                try {
-                    schedule = apiRepository.Schedule(1, login);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                ScheduleUnpacking(schedule);
+                Intent i1 = new Intent(this, ScheduleView.class);
+                i1.putExtra("type",1);
+                i1.putExtra("role",role);
+                i1.putExtra("login", login);
+                startActivity(i1);
                 break;
             case R.id.schedule_tomorrow:
-                try {
-                    schedule = apiRepository.Schedule(2, login);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                ScheduleUnpacking(schedule);
+                Intent i2 = new Intent(this, ScheduleView.class);
+                i2.putExtra("type",2);
+                i2.putExtra("role",role);
+                i2.putExtra("login", login);
+                startActivity(i2);
                 break;
             case R.id.schedule_two_weeks:
-                try {
-                    schedule = apiRepository.Schedule(14, login);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                ScheduleUnpacking(schedule);
+                Intent i3 = new Intent(this, ScheduleView.class);
+                i3.putExtra("type",3);
+                i3.putExtra("role",role);
+                i3.putExtra("login", login);
+                startActivity(i3);
                 break;
             case R.id.prepod_info:
                 Intent prepodinfo = new Intent(this, PrepodInfo.class);
@@ -101,7 +103,5 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         }
     }
 
-    public void ScheduleUnpacking(JSONObject schedule){
-        //скорее всего в отдельном классе View
-    }
+
 }
