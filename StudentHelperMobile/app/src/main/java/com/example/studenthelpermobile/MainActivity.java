@@ -1,7 +1,5 @@
 package com.example.studenthelpermobile;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,12 +8,13 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.studenthelpermobile.Model.ApiRepository;
 import com.example.studenthelpermobile.Model.AsyncInterface;
 import com.example.studenthelpermobile.Model.Login;
 import com.example.studenthelpermobile.Model.LoginRepo;
 
 import org.json.JSONException;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncInterface <Login> {
 
@@ -88,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     role = "prepod";
                 }
                 ErrorText.setText("");
-                String response ="";
 
                 try {//получить ответ от сервера
                     LoginRepo loginRepo = new LoginRepo(isStudent, login, password, loginProgressbar, this);

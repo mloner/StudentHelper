@@ -4,20 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
-import com.example.studenthelpermobile.Model.ApiRepository;
-
-import org.json.JSONObject;
 
 import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainMenu extends AppCompatActivity implements View.OnClickListener {
-
-    ApiRepository apiRepository;
 
     TextView WelcomeText;
     Button ScheduleToday;
@@ -26,7 +19,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
     Button PrepodInfo;
     Button PrepodChat;
     Button Logout;
-    JSONObject schedule;
+
     private String login;
     private String role;
 
@@ -61,7 +54,6 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
             WelcomeText.setText(login);
         }
 
-        apiRepository = new ApiRepository();
 
     }
 

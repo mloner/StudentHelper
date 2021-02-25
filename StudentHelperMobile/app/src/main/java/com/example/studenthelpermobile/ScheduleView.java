@@ -42,7 +42,7 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
     }
 
     @Override
-    public void onAsyncTaskFinished(Schedule schedule ) {
+    public void onAsyncTaskFinished(Schedule schedule ) { //Выполняется после получения расписания
         progressBar.setVisibility(View.GONE);
     }
 
