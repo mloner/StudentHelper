@@ -5,9 +5,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.studenthelpermobile.Model.AsyncInterface;
+import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Model.Schedule;
-import com.example.studenthelpermobile.Model.ScheduleRepo;
+import com.example.studenthelpermobile.Repository.ScheduleRepo;
 
 import org.json.JSONException;
 

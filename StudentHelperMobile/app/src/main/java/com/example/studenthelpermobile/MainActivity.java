@@ -1,6 +1,8 @@
 package com.example.studenthelpermobile;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,9 +10,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.studenthelpermobile.Model.AsyncInterface;
 import com.example.studenthelpermobile.Model.Login;
-import com.example.studenthelpermobile.Model.LoginRepo;
+import com.example.studenthelpermobile.Repository.AsyncInterface;
+import com.example.studenthelpermobile.Repository.LoginRepo;
 
 import org.json.JSONException;
 
@@ -36,6 +38,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String password;
     private String role;
 
+    public static final String APP_PREFERENCES = "mysettings";
+    SharedPreferences mSettings;
+
+    public static final String APP_PREFERENCES_LOGIN = "Login";
+    public static final String APP_PREFERENCES_ROLE = "Role";
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +61,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         PrepodBtn.setOnClickListener(this);
         LoginButton = findViewById(R.id.login_button);
         LoginButton.setOnClickListener(this);
+        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+
+        if(mSettings.contains(APP_PREFERENCES_LOGIN)) {
+            login = mSettings.getString(APP_PREFERENCES_LOGIN, "");
+        }
+        if(mSettings.contains(APP_PREFERENCES_ROLE)) {
+            role = mSettings.getString(APP_PREFERENCES_ROLE, "");
+        }
+        try {
+            if(!login.equals("")){
+                //ToDO заменить на запрос
+                Intent intent = new Intent(this, MainMenu.class);
+                intent.putExtra("login", this.login);
+                intent.putExtra("role",role);
+                startActivity(intent);
+            }
+        }
+        catch (NullPointerException e){
+
+        }
+
+
     }
 
     @Override
@@ -104,6 +136,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(login.getStatus().equals("OK")){
                 switch (login.getResponse()){
                     case "OK":
+                        editor = mSettings.edit();
+                        editor.putString(APP_PREFERENCES_LOGIN, this.login);
+                        editor.putString(APP_PREFERENCES_ROLE, this.role);
+                        editor.apply();
                         Intent intent = new Intent(this, MainMenu.class);
                         intent.putExtra("login", this.login);
                         intent.putExtra("role",role);

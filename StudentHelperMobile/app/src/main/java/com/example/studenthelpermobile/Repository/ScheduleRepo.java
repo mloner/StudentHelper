@@ -1,9 +1,10 @@
-package com.example.studenthelpermobile.Model;
+package com.example.studenthelpermobile.Repository;
 
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.studenthelpermobile.Model.Schedule;
 import com.example.studenthelpermobile.ScheduleView;
 
 import org.json.JSONException;
@@ -29,7 +30,7 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
         else {
             request.put("fio", login);
         }
-        switch (type){
+        switch (this.type){
             case 1:
                 request.put("schedule_type", "today");
                 break;
