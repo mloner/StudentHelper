@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SharedPreferences mSettings;
 
     public static final String APP_PREFERENCES_LOGIN = "Login";
+    public static final String APP_PREFERENCES_PASS = "Pass";
     public static final String APP_PREFERENCES_ROLE = "Role";
     SharedPreferences.Editor editor;
 
@@ -73,10 +74,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(mSettings.contains(APP_PREFERENCES_ROLE)) {
             role = mSettings.getString(APP_PREFERENCES_ROLE, "");
         }
+        if(mSettings.contains(APP_PREFERENCES_PASS)) {
+            password = mSettings.getString(APP_PREFERENCES_PASS, "");
+        }
         try {
             if(!login.equals("")){
                 try {//получить ответ от сервера
-                    LoginRepo loginRepo = new LoginRepo(isStudent, login, password, loginProgressbar, this);
+
+                    LoginRepo loginRepo = new LoginRepo(role, login, password, loginProgressbar, this);
                     loginRepo.execute();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -129,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ErrorText.setText("");
 
                 try {//получить ответ от сервера
-                    LoginRepo loginRepo = new LoginRepo(isStudent, login, password, loginProgressbar, this);
+                    LoginRepo loginRepo = new LoginRepo(role, login, password, loginProgressbar, this);
                     loginRepo.execute();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -150,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     editor = mSettings.edit();
                     editor.putString(APP_PREFERENCES_LOGIN, this.login);
                     editor.putString(APP_PREFERENCES_ROLE, this.role);
+                    editor.putString(APP_PREFERENCES_PASS, this.password);
                     editor.apply();
                     Intent intent = new Intent(this, MainMenu.class);
                     intent.putExtra("login", this.login);

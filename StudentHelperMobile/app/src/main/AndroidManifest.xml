@@ -26,7 +26,7 @@
         <activity android:name=".MainMenu">
         </activity>
 
-        <activity android:name=".PrepodInfo">
+        <activity android:name=".PrepodListView">
         </activity>
 
         <activity android:name=".ScheduleView">
