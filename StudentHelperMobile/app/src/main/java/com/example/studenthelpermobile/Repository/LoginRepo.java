@@ -1,4 +1,4 @@
-package com.example.studenthelpermobile.Model;
+package com.example.studenthelpermobile.Repository;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.studenthelpermobile.MainActivity;
+import com.example.studenthelpermobile.Model.Login;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,24 +68,11 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
         try {
             //ToDO здесь будет запрос к API
 
-            URL obj = new URL("http://shipshon.fvds.ru/api");
-            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+            URL url = new URL("http://shipshon.fvds.ru/api");
 
-            connection.setRequestMethod("GET");
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuffer responseString = new StringBuffer();
-
-
-            while ((inputLine = in.readLine()) != null) {
-                responseString.append(inputLine);
-            }
-
-
-            in.close();
-
-            responseJSON = new JSONObject(responseString.toString());
+            //Получение ответа от API
+            RepositoryAPI repositoryAPI = new RepositoryAPI();
+            responseJSON = repositoryAPI.getResponse(url);
 
 
             String status = responseJSON.get("status").toString();
