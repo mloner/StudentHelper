@@ -137,7 +137,7 @@ namespace StudentHelper.Controllers
                                         using (PGRepo db = new PGRepo())
                                         {
                                             var groups = db.Groups.ToList();
-                                            string name = req.name;
+                                            string name = req.arg;
                                             var group = groups.Where(g => g.name == name).ToList();
                                             if (group.Count == 0)
                                             {

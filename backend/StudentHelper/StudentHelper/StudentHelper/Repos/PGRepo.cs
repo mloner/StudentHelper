@@ -32,7 +32,7 @@ namespace StudentHelper.Repos
         {
             public int id { get; set; }
             public string name { get; set; }
-            public string facultate_id { get; set; }
+            public int facultate_id { get; set; }
             public int course { get; set; }
         }
 
