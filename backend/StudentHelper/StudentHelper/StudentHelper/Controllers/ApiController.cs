@@ -184,6 +184,83 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
+                    case "getUserState":
+                        {
+                            string idvk = req.idvk;
+                            using (PGRepo db = new PGRepo())
+                            {
+                                var users = db.Users.ToList();
+                                var user = users.Where(u => u.idvk == idvk).ToList();
+                                if (user.Count == 0)
+                                {
+                                    resp.status = "FAIL";
+                                    resp.response = "None";
+                                }
+                                else
+                                {
+                                    resp.status = "OK";
+                                    resp.response = user[0].state;
+                                }
+                            }
+                            break;
+                        }
+                    case "setUserState":
+                        {
+                            string idvk = req.idvk;
+                            using (PGRepo db = new PGRepo())
+                            {
+                                var users = db.Users.ToList();
+                                var user = users.Where(u => u.idvk == idvk).ToList();
+                                if (user.Count == 0)
+                                {
+                                    resp.status = "FAIL";
+                                    resp.response = "No such user";
+                                }
+                                else
+                                {
+                                    string state = req.state;
+                                    users[0].state = state;
+                                    db.SaveChanges();
+
+                                    resp.status = "OK";
+                                    resp.response = "";
+                                }
+                            }
+                            break;
+                        }
+                    case "getTeacherInfo":
+                        {
+                            using (PGRepo db = new PGRepo())
+                            {
+
+                            }
+                            break;
+                        }
+                    case "checkArg":
+                        {
+                            using (PGRepo db = new PGRepo())
+                            {
+                                var arg = req.arg;
+                                switch (arg)
+                                {
+                                    case ""
+                                }
+                                var groups = db.Groups.ToList();
+                                var groupName = req.arg;
+                                var group = groups.Where(g => g.name == groupName).ToList();
+                                if (group.Count == 0)
+                                {
+                                    resp.status = "FAIL";
+                                    resp.response = "";
+                                }
+                                else
+                                {
+                                    resp.status = "OK";
+                                    resp.response = "";
+                                }
+                            }
+                            break;
+                        }
                     default:
                         { 
                             resp.status = "FAIL";
@@ -197,8 +274,8 @@ namespace StudentHelper.Controllers
                 resp.status = "FAIL";
                 resp.response = ex.Message;
             }
-            var ss = resp.ToString();
-            return Content(ss, "application/json");
+            return Content(resp.ToString(), "application/json");
         }
     }
 }
+

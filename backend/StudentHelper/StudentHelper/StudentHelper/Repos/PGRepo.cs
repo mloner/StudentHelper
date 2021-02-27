@@ -19,6 +19,7 @@ namespace StudentHelper.Repos
             public string idvk { get; set; }
             public string role { get; set; }
             public string arg { get; set; }
+            public string state { get; set; }
         }
         public class Teacher
         {
