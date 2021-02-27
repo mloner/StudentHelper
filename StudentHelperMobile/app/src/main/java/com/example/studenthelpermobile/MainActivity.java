@@ -16,6 +16,9 @@ import com.example.studenthelpermobile.Repository.LoginRepo;
 
 import org.json.JSONException;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncInterface <Login> {
@@ -72,11 +75,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         try {
             if(!login.equals("")){
-                //ToDO заменить на запрос
-                Intent intent = new Intent(this, MainMenu.class);
-                intent.putExtra("login", this.login);
-                intent.putExtra("role",role);
-                startActivity(intent);
+                try {//получить ответ от сервера
+                    LoginRepo loginRepo = new LoginRepo(isStudent, login, password, loginProgressbar, this);
+                    loginRepo.execute();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
             }
         }
         catch (NullPointerException e){
@@ -125,6 +133,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     loginRepo.execute();
                 } catch (JSONException e) {
                     e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                 }
                 break;
         }
@@ -133,23 +145,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onAsyncTaskFinished(Login login) {
         try {
-            if(login.getStatus().equals("OK")){
-                switch (login.getResponse()){
-                    case "OK":
-                        editor = mSettings.edit();
-                        editor.putString(APP_PREFERENCES_LOGIN, this.login);
-                        editor.putString(APP_PREFERENCES_ROLE, this.role);
-                        editor.apply();
-                        Intent intent = new Intent(this, MainMenu.class);
-                        intent.putExtra("login", this.login);
-                        intent.putExtra("role",role);
-                        startActivity(intent);
-                        break;
+            if(login.getStatus().equals("OK")) {
+                if (login.getResponse().equals("OK")) {
+                    editor = mSettings.edit();
+                    editor.putString(APP_PREFERENCES_LOGIN, this.login);
+                    editor.putString(APP_PREFERENCES_ROLE, this.role);
+                    editor.apply();
+                    Intent intent = new Intent(this, MainMenu.class);
+                    intent.putExtra("login", this.login);
+                    intent.putExtra("role", role);
+                    startActivity(intent);
+                }
+            }
+            else {
+                switch (login.getResponse()) {
                     case "WRONG_LOGIN":
-                        if(isStudent){
+                        if (isStudent) {
                             ErrorText.setText(R.string.Group_error);
-                        }
-                        else {
+                        } else {
                             ErrorText.setText(R.string.Login_error);
                         }
                         ErrorText.setVisibility(View.VISIBLE);
@@ -160,16 +173,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                 }
             }
-            else {
-                ErrorText.setText(R.string.Server_error);
-                ErrorText.setVisibility(View.VISIBLE);
-            }
+
         }
         catch (NullPointerException e){
             ErrorText.setText(R.string.Server_error);
             ErrorText.setVisibility(View.VISIBLE);
         }
-
         loginProgressbar.setVisibility(View.INVISIBLE);
     }
 }
