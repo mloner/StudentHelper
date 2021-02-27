@@ -38,5 +38,18 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
     @Override
     public void onAsyncTaskFinished(PrepodList prepodList) {
         progressBar.setVisibility(View.GONE);
+        //ToDo сделать как при логине
+        try {
+            if(prepodList.getStatus().equals("FAIL")){
+                ErrorText.setText(R.string.Server_error);
+                ErrorText.setVisibility(View.VISIBLE);
+            }
+        }
+        catch (NullPointerException e){
+            ErrorText.setText(R.string.Server_error);
+            ErrorText.setVisibility(View.VISIBLE);
+        }
+        progressBar.setVisibility(View.INVISIBLE);
+
     }
 }
