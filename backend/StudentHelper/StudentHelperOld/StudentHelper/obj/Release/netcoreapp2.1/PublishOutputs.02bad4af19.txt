@@ -1,0 +1,6 @@
+C:\vuz\6sem\SUBD\StudentHelper\backend\StudentHelper\StudentHelper\StudentHelper\obj\Docker\publish\appsettings.Development.json
+C:\vuz\6sem\SUBD\StudentHelper\backend\StudentHelper\StudentHelper\StudentHelper\obj\Docker\publish\appsettings.json
+C:\vuz\6sem\SUBD\StudentHelper\backend\StudentHelper\StudentHelper\StudentHelper\obj\Docker\publish\StudentHelper.dll
+C:\vuz\6sem\SUBD\StudentHelper\backend\StudentHelper\StudentHelper\StudentHelper\obj\Docker\publish\StudentHelper.runtimeconfig.json
+C:\vuz\6sem\SUBD\StudentHelper\backend\StudentHelper\StudentHelper\StudentHelper\obj\Docker\publish\StudentHelper.pdb
+C:\vuz\6sem\SUBD\StudentHelper\backend\StudentHelper\StudentHelper\StudentHelper\obj\Docker\publish\StudentHelper.deps.json
