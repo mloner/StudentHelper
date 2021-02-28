@@ -19,10 +19,8 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
     Button PrepodInfo;
     Button PrepodChat;
 
-
     private String login;
     private String role;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,24 +39,21 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         PrepodChat = findViewById(R.id.prepod_chat);
         PrepodChat.setOnClickListener(this);
 
-
         login = Objects.requireNonNull(getIntent().getExtras()).getString("login");
         role = Objects.requireNonNull(getIntent().getExtras()).getString("role");
 
         if(role.equals("student")){
-            String s = login + " " + getString(R.string.Group);
+            String s = getString(R.string.LoginAs)+ " " + getString(R.string.Group) + " " + login;
             WelcomeText.setText(s);
         }
         else {
-            WelcomeText.setText(login);
+            String s = getString(R.string.LoginAs) + " " + login ;
+            WelcomeText.setText(s);
         }
-
-
     }
 
     @Override
     public void onClick(View view) {
-
         switch (view.getId()){
             case R.id.schedule_today:
                 Intent i1 = new Intent(this, ScheduleView.class);
@@ -88,9 +83,6 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
             case R.id.prepod_chat:
 
                 break;
-
         }
     }
-
-
 }

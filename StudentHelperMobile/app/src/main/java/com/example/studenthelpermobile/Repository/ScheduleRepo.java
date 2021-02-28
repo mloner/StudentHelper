@@ -8,7 +8,7 @@ import com.example.studenthelpermobile.Model.Schedule;
 import com.example.studenthelpermobile.ScheduleView;
 
 import org.json.JSONException;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 
 public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
 

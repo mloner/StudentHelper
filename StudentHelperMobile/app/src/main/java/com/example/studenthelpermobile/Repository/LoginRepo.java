@@ -28,38 +28,18 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
 
 
     public LoginRepo (String role, String login, String password, ProgressBar progressBar, MainActivity activity) throws JSONException, NoSuchAlgorithmException, UnsupportedEncodingException {
-
-
-
         this.progressBar = progressBar;
         this.activity = activity;
-
-
-
         //Шифрование пароля
 
-        MessageDigest m = MessageDigest.getInstance("MD5");
-        m.reset();
-        m.update(password.getBytes("utf-8"));
-
-        String s2 = new BigInteger(1, m.digest()).toString(16);
-        StringBuilder sb = new StringBuilder(32);
-        // дополняем нулями до 32 символов, в случае необходимости
-        //System.out.println(32 - s2.length());
-        for (int i = 0, count = 32 - s2.length(); i < count; i++) {
-            sb.append("0");
-        }
-        // возвращаем MD5-хеш
-        sb.append(s2).toString();
+       String encryptedPass = PasswordEncrypt(password);
 
         request = new JSONObject();
         request.put("client_type", "mobile");
         request.put("command", "authorizationMobile");
         request.put("role", role);
         request.put("arg", login);
-        request.put("pass", sb);
-
-
+        request.put("pass", encryptedPass);
 
     }
 
@@ -97,6 +77,23 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
         }
 
         return l;
+    }
+
+    private String PasswordEncrypt(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest m = MessageDigest.getInstance("MD5");
+        m.reset();
+        m.update(password.getBytes("utf-8"));
+
+        String s2 = new BigInteger(1, m.digest()).toString(16);
+        StringBuilder sb = new StringBuilder(32);
+        // дополняем нулями до 32 символов, в случае необходимости
+        //System.out.println(32 - s2.length());
+        for (int i = 0, count = 32 - s2.length(); i < count; i++) {
+            sb.append("0");
+        }
+        // возвращаем MD5-хеш
+        sb.append(s2).toString();
+        return sb.toString();
     }
 
     @Override

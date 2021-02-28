@@ -74,5 +74,4 @@ public class PrepodInfo {
         this.mail = mail;
     }
 
-
 }

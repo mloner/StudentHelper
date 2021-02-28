@@ -67,59 +67,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LoginButton.setOnClickListener(this);
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
+        LoadParams();
 
-        if(mSettings.contains(APP_PREFERENCES_LOGIN)) {
-            login = mSettings.getString(APP_PREFERENCES_LOGIN, "");
-        }
-        if(mSettings.contains(APP_PREFERENCES_ROLE)) {
-            role = mSettings.getString(APP_PREFERENCES_ROLE, "");
-        }
-        if(mSettings.contains(APP_PREFERENCES_PASS)) {
-            password = mSettings.getString(APP_PREFERENCES_PASS, "");
-        }
         try {
             if(!login.equals("")){
-                try {//получить ответ от сервера
-
-                    LoginRepo loginRepo = new LoginRepo(role, login, password, loginProgressbar, this);
-                    loginRepo.execute();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                GetServerResponse();
             }
         }
         catch (NullPointerException e){
 
         }
-
-
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.choose_student:
-                LoginText.setVisibility(View.VISIBLE );
-                LoginText.setText(R.string.Enter_Group_number);
-                LoginField.setVisibility(View.VISIBLE);
                 LoginField.setText("");
+                LoginText.setText(R.string.Enter_Group_number);
+                ChangeVisibility();
                 PasswordText.setVisibility(View.GONE);
                 PasswordField.setVisibility(View.GONE);
-                LoginButton.setVisibility(View.VISIBLE);
                 isStudent = true;
                 break;
             case R.id.choose_prepod:
-                LoginText.setVisibility(View.VISIBLE );
                 LoginText.setText(R.string.Enter_FIO);
-                LoginField.setVisibility(View.VISIBLE );
                 LoginField.setText("");
+                ChangeVisibility();
                 PasswordText.setVisibility(View.VISIBLE);
                 PasswordField.setVisibility(View.VISIBLE);
-                LoginButton.setVisibility(View.VISIBLE);
                 isStudent = false;
                 break;
             case R.id.login_button:
@@ -134,19 +110,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     role = "prepod";
                 }
                 ErrorText.setText("");
-
-                try {//получить ответ от сервера
-                    LoginRepo loginRepo = new LoginRepo(role, login, password, loginProgressbar, this);
-                    loginRepo.execute();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                GetServerResponse();
                 break;
         }
+    }
+
+    private void LoadParams(){
+        if(mSettings.contains(APP_PREFERENCES_LOGIN)) {
+            login = mSettings.getString(APP_PREFERENCES_LOGIN, "");
+        }
+        if(mSettings.contains(APP_PREFERENCES_ROLE)) {
+            role = mSettings.getString(APP_PREFERENCES_ROLE, "");
+        }
+        if(mSettings.contains(APP_PREFERENCES_PASS)) {
+            password = mSettings.getString(APP_PREFERENCES_PASS, "");
+        }
+    }
+
+    private void GetServerResponse(){
+        try {
+            LoginRepo loginRepo = new LoginRepo(role, login, password, loginProgressbar, this);
+            loginRepo.execute();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void ChangeVisibility(){
+        LoginText.setVisibility(View.VISIBLE );
+        LoginField.setVisibility(View.VISIBLE);
+        LoginButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -181,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                 }
             }
-
         }
         catch (NullPointerException e){
             ErrorText.setText(R.string.Server_error);
