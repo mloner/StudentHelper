@@ -1,8 +1,6 @@
 package com.example.studenthelpermobile.Repository;
 
-import android.app.Activity;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -11,22 +9,14 @@ import com.example.studenthelpermobile.Model.Login;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Iterator;
 
 public class LoginRepo extends AsyncTask <Void, Void, Login> {
 
@@ -37,19 +27,14 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
     Login l;
 
 
-    public LoginRepo (boolean isStudent, String login, String password, ProgressBar progressBar, MainActivity activity) throws JSONException, NoSuchAlgorithmException, UnsupportedEncodingException {
+    public LoginRepo (String role, String login, String password, ProgressBar progressBar, MainActivity activity) throws JSONException, NoSuchAlgorithmException, UnsupportedEncodingException {
 
-        String role;
+
 
         this.progressBar = progressBar;
         this.activity = activity;
 
-        if(isStudent){
-            role = "student";
-        }
-        else {
-            role = "prepod";
-        }
+
 
         //Шифрование пароля
 
@@ -87,9 +72,6 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
     @Override
     protected Login doInBackground(Void... voids) {
         try {
-            //ToDO здесь будет запрос к API
-
-
 
             //Получение ответа от API
             RepositoryAPI repositoryAPI = new RepositoryAPI();

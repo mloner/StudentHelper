@@ -24,12 +24,19 @@
         </activity>
 
         <activity android:name=".MainMenu">
+
         </activity>
 
-        <activity android:name=".PrepodInfo">
+        <activity android:name=".PrepodListView">
+
         </activity>
 
         <activity android:name=".ScheduleView">
+
+        </activity>
+
+        <activity android:name=".PrepodInfoView">
+
         </activity>
     </application>
 

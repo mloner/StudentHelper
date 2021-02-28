@@ -83,7 +83,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
                 startActivity(i3);
                 break;
             case R.id.prepod_info:
-                Intent prepodinfo = new Intent(this, PrepodInfo.class);
+                Intent prepodinfo = new Intent(this, PrepodListView.class);
                 startActivity(prepodinfo);
                 break;
             case R.id.prepod_chat:

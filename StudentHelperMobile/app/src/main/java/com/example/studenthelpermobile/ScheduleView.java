@@ -5,8 +5,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Model.Schedule;
+import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Repository.ScheduleRepo;
 
 import org.json.JSONException;
@@ -27,7 +27,7 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.schedule_layout);
+        setContentView(R.layout.schedule_activity);
         ErrorText = findViewById(R.id.error_text_schedule);
         progressBar = findViewById(R.id.schedule_progressbar);
         type = Objects.requireNonNull(getIntent().getExtras()).getInt("type");

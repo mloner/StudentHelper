@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/prepod_info_layout">
+        android:id="@+id/prepod_list_layout">
 
         <TextView
             android:layout_width="match_parent"
@@ -16,20 +16,15 @@
             android:textColor="@color/RED"
             android:gravity="center"
             android:layout_marginTop="20dp"
-            android:id="@+id/error_text_prepod_info"
+            android:id="@+id/error_text_prepod_list"
             android:visibility="gone"/>
 
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:id="@+id/progressbar_prepod_info"
+            android:id="@+id/progressbar_prepod_list"
             android:layout_gravity="center"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/prepod_info_text"/>
 
     </LinearLayout>
 
