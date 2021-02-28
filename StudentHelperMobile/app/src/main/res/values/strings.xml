@@ -17,7 +17,10 @@
     <string name="ScheduleTwoWeeks">Получить расписание на 2 недели</string>
     <string name="PrepodInfo">Получить информацию о преподавателях</string>
     <string name="PrepodChat">Открыть чаты с преподавателями</string>
-    <string name="Logout">Выйти из аккаунта</string>
+    <string name="LogoutTip">Чтобы выйти из аккаунта, нажмите кнопку "Назад"</string>
+
+    <!-- Лист преподавателей -->
+    <string name="Search">Поиск</string>
 
 
     <!-- Сообщения об ошибках -->
