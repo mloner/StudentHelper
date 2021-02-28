@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,26 +16,24 @@ using static StudentHelper.Repos.PGRepo;
 
 namespace StudentHelper.Controllers
 {
-    [ApiController]
     [Route("api")]
+    [ApiController]
     public class ApiController : ControllerBase
     {
         private readonly ILogger<ApiController> _logger;
-
-        public ApiController(ILogger<ApiController> logger)
+        private readonly IConfiguration _config;
+        private readonly string _PGConStr;
+        public ApiController(ILogger<ApiController> logger, IConfiguration config)
         {
             _logger = logger;
-        }
-        public class Response
-        {
-            public string status { get; set; }
-            public object response { get; set; }
+            _config = config;
+            _PGConStr = _config["Config:PGConnectionString"];
         }
 
         [HttpGet]
-        public ActionResult<String> Get()
+        public IActionResult Get()
         {
-            return new JsonResult(new object());
+            return Content("Do Post request", "text/plain");
         }
 
         [HttpPost]
@@ -42,50 +41,21 @@ namespace StudentHelper.Controllers
         public IActionResult Post([FromBody] object data)
         {
             dynamic req = JObject.Parse(data.ToString());
-            //// добавление данных
-            //using (PGRepo db = new PGRepo())
-            //{
-            //    // создаем два объекта User
-            //    TeacherPosition user1 = new TeacherPosition { name = "ert"};
-
-            //    // добавляем их в бд
-            //    db.TeacherPositions.AddRange(user1);
-            //    db.SaveChanges();
-            //}
             dynamic resp = new JObject();
+
             string command = req.command;
-            
             try
             {
                 switch (command)
                 {
-                    case "getTeacherPositions":
-                        {
-
-                            using (PGRepo db = new PGRepo())
-                            {
-                                resp.response = new JArray();
-                                var teacherPositions = db.TeacherPositions.ToList();
-                                foreach (TeacherPosition tp in teacherPositions)
-                                {
-                                    resp.response.Add(new JObject(
-                                            new JProperty("id", tp.id),
-                                            new JProperty("name", tp.name)
-                                        ));
-                                    resp.status = "OK";
-                                }
-                            }
-
-                            break;
-                        }
+                    // Получить данные юзера, если он есть в базе
                     case "getAuthData":
                         {
-                            using (PGRepo db = new PGRepo())
+                            using (PGRepo db = new PGRepo(_PGConStr))
                             {
-                                var users = db.Users.ToList();
-                                string vkid = req.idvk;
-                                var u = users.Where(u => u.idvk == vkid).ToList();
-                                if (u.Count == 0)
+                                string idvk = req.idvk;
+                                var user = db.Users.FirstOrDefault(u => u.idvk == idvk);
+                                if (user == null)
                                 {
                                     resp.status = "FAIL";
                                     resp.response = "WRONG_LOGIN";
@@ -93,29 +63,36 @@ namespace StudentHelper.Controllers
                                 else
                                 {
                                     resp.status = "OK";
-                                    resp.response = new JObject(new JProperty("role", u[0].role),
-                                                                new JProperty("arg", u[0].arg));
+                                    resp.response = new JObject(
+                                                                new JProperty("role", user.role),
+                                                                new JProperty("arg", user.arg)
+                                                                );
                                 }
                             }
                             break;
                         }
+                    // Зарегистрировать юзера
                     case "registerUser":
                         {
-                            using (PGRepo db = new PGRepo())
+                            using (PGRepo db = new PGRepo(_PGConStr))
                             {
-                                var users = db.Users.ToList();
                                 string idvk = req.idvk;
                                 string role = req.role;
                                 string arg = req.arg;
-                                var user = users.FirstOrDefault(u => u.idvk == idvk);
+
+                                var user = db.Users.FirstOrDefault(u => u.idvk == idvk);
+
                                 user.role = role;
                                 user.arg = arg;
+
                                 db.SaveChanges();
+
                                 resp.status = "OK";
                                 resp.response = "OK";
                             }
                             break;
                         }
+                    // Авторизоваться с мобильного
                     case "authorizationMobile":
                         {
                             string role = req.role;
@@ -123,12 +100,11 @@ namespace StudentHelper.Controllers
                             {
                                 case "student":
                                     {
-                                        using (PGRepo db = new PGRepo())
+                                        using (PGRepo db = new PGRepo(_PGConStr))
                                         {
-                                            var groups = db.Groups.ToList();
                                             string name = req.arg;
-                                            var group = groups.Where(g => g.name == name).ToList();
-                                            if (group.Count == 0)
+                                            var group = db.Groups.FirstOrDefault(g => g.name == name);
+                                            if (group == null)
                                             {
                                                 resp.status = "FAIL";
                                                 resp.response = "WRONG_LOGIN";
@@ -143,20 +119,20 @@ namespace StudentHelper.Controllers
                                     }
                                 case "prepod":
                                     {
-                                        using (PGRepo db = new PGRepo())
+                                        using (PGRepo db = new PGRepo(_PGConStr))
                                         {
-                                            var teachers = db.Teachers.ToList();
                                             string fio = req.arg;
-                                            var teacher = teachers.Where(t => t.FIO == fio).ToList();
-                                            if (teacher.Count == 0)
+                                            var teacher = db.Teachers.FirstOrDefault(t => t.FIO == fio);
+                                            if (teacher == null)
                                             {
                                                 resp.status = "FAIL";
                                                 resp.response = "WRONG_LOGIN";
                                             }
                                             else
                                             {
+                                                // check password
                                                 string pass = req.pass;
-                                                if (teacher[0].password == pass)
+                                                if (teacher.password == pass)
                                                 {
                                                     resp.status = "OK";
                                                     resp.response = "OK";
@@ -173,27 +149,27 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
+                    // Получить текущее состояние юзера
                     case "getUserState":
                         {
-                            string idvk = req.idvk;
-                            using (PGRepo db = new PGRepo())
+                            using (PGRepo db = new PGRepo(_PGConStr))
                             {
-                                var users = db.Users.ToList();
-                                var user = users.FirstOrDefault(u => u.idvk == idvk);
+                                string idvk = req.idvk;
+                                var user = db.Users.FirstOrDefault(u => u.idvk == idvk);
                                 if (user == null)
-                                {
-                                    resp.status = "OK";
-                                    
-
+                                {  
                                     User newUser = new User() {
                                         idvk = idvk,
                                         state = "None"
                                     };
                                     db.Users.AddRange(newUser);
                                     db.SaveChanges();
-                                    resp.response = new JObject(new JProperty("role", newUser.role),
+                                    resp.status = "OK";
+                                    resp.response = new JObject(
+                                                                new JProperty("role", newUser.role),
                                                                 new JProperty("arg", newUser.arg),
-                                                                new JProperty("state", newUser.state));
+                                                                new JProperty("state", newUser.state)
+                                                                );
                                 }
                                 else
                                 {
@@ -205,12 +181,13 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
+                    // Задать текущее состояние юзера
                     case "setUserState":
                         {
                             string idvk = req.idvk;
-                            using (PGRepo db = new PGRepo())
+                            using (PGRepo db = new PGRepo(_PGConStr))
                             {
-                                var user = db.Users.ToList().FirstOrDefault(u => u.idvk == idvk);
+                                var user = db.Users.FirstOrDefault(u => u.idvk == idvk);
                                 if (user == null)
                                 {
                                     resp.status = "FAIL";
@@ -220,6 +197,7 @@ namespace StudentHelper.Controllers
                                 {
                                     string state = req.state;
                                     user.state = state;
+
                                     db.SaveChanges();
 
                                     resp.status = "OK";
@@ -228,25 +206,25 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
+                    // Получить список ФИО преподавателей
                     case "getPrepodList":
                         {
                             resp.status = "OK";
                             resp.response = new JArray();
-                            using (PGRepo db = new PGRepo())
+                            using (PGRepo db = new PGRepo(_PGConStr))
                             {
                                 var teachers = db.Teachers.ToList();
                                 foreach (var t in teachers)
                                 {
-                                    resp.response.Add(new JValue(
-                                                t.FIO
-                                            ));
+                                    resp.response.Add(new JValue(t.FIO));
                                 }
                             }
                             break;
                         }
+                    // Получить инф-ю о преподавателе
                     case "getPrepodInfo":
                         {
-                            using (PGRepo db = new PGRepo())
+                            using (PGRepo db = new PGRepo(_PGConStr))
                             {
                                 string fio = req.fio;
                                 var teachers =
@@ -256,9 +234,9 @@ namespace StudentHelper.Controllers
                                     join f in db.Facultates on c.facultate_id equals f.id
                                     select new { FIO = t.FIO, position = tp.name, facultate = f.name, location = c.location, cathedraName = c.name };
                                 var teacher = teachers.FirstOrDefault(t => t.FIO == fio);
-                                
                                 if (teacher != null)
                                 {
+                                    resp.status = "OK";
                                     resp.response = new JObject(
                                         new JProperty("faculty", teacher.facultate),
                                         new JProperty("cathedra", teacher.cathedraName),
@@ -267,18 +245,18 @@ namespace StudentHelper.Controllers
                                         new JProperty("phone", "8 800 555 35 35"),
                                         new JProperty("mail", "mail@mail.ru")
                                         );
-                                    resp.status = "OK";
                                 }
-                                //foreach (var t in teachers)
-                                //{
-                                //    Console.WriteLine(t.FIO + " " + t.position + " " + t.facultate + " " + t.location);
-                                //}
+                                else
+                                {
+                                    resp.status = "FAIL";
+                                    resp.response = new JValue("No such teacher");
+                                }
                             }
                             break;
                         }
                     case "checkGroup":
                         {
-                            using (PGRepo db = new PGRepo())
+                            using (PGRepo db = new PGRepo(_PGConStr))
                             {
                                 string groupName = req.group;
                                 var group = db.Groups.ToList().FirstOrDefault(g => g.name == groupName);
@@ -297,7 +275,7 @@ namespace StudentHelper.Controllers
                         }
                     case "checkFIO":
                         {
-                            using (PGRepo db = new PGRepo())
+                            using (PGRepo db = new PGRepo(_PGConStr))
                             {
                                 string fio = req.FIO;
                                 var teacher = db.Teachers.ToList().FirstOrDefault(t => t.FIO == fio);

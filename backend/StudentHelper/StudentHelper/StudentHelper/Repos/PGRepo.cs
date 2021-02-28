@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace StudentHelper.Repos
-{   
+{
     public class PGRepo : DbContext
     {
+        private readonly string _connectionString;
         public class TeacherPosition
         {
             public int id { get; set; }
@@ -35,7 +36,6 @@ namespace StudentHelper.Repos
             public Cathedra Cathedra { get; set; }
             public TeacherPosition TeacherPosition { get; set; }
         }
-
         public class Cathedra
         {
             public int id { get; set; }
@@ -69,14 +69,14 @@ namespace StudentHelper.Repos
         public DbSet<Cathedra> Cathedras { get; set; }
         public DbSet<Facultate> Facultates { get; set; }
 
-        public PGRepo()
+        public PGRepo(string connectionString)
         {
-            Database.EnsureCreated();
+            _connectionString = connectionString;
             Database.EnsureCreated();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=shipshon.fvds.ru;Port=5432;Database=studenthelperdb;Username=postgres;Password=hfk3egrk");
+            optionsBuilder.UseNpgsql(_connectionString);
         }
     }
 }
