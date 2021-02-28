@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 LoginText.setVisibility(View.VISIBLE );
                 LoginText.setText(R.string.Enter_Group_number);
                 LoginField.setVisibility(View.VISIBLE);
+                LoginField.setText("");
                 PasswordText.setVisibility(View.GONE);
                 PasswordField.setVisibility(View.GONE);
                 LoginButton.setVisibility(View.VISIBLE);
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 LoginText.setVisibility(View.VISIBLE );
                 LoginText.setText(R.string.Enter_FIO);
                 LoginField.setVisibility(View.VISIBLE );
+                LoginField.setText("");
                 PasswordText.setVisibility(View.VISIBLE);
                 PasswordField.setVisibility(View.VISIBLE);
                 LoginButton.setVisibility(View.VISIBLE);
@@ -122,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.login_button:
                 if (isStudent){
-                    login = LoginField.getText().toString();
+                    login = LoginField.getText().toString().toUpperCase();
                     password = "";
                     role = "student";
                 }

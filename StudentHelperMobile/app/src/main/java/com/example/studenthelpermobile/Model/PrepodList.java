@@ -1,6 +1,6 @@
 package com.example.studenthelpermobile.Model;
 
-import org.json.simple.JSONArray;
+import org.json.JSONArray;
 
 public class PrepodList {
 

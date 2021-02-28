@@ -9,7 +9,7 @@ import com.example.studenthelpermobile.PrepodListView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.JSONArray;
+import org.json.JSONArray;
 
 import java.io.IOException;
 
@@ -54,7 +54,7 @@ public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return prepodList;
     }
 
     @Override
