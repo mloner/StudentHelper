@@ -47,41 +47,54 @@ for event in longpoll.listen():
         # else:
         #     sender(event.user_id, 'Выберите расписание', 2)
 
-        if event.text == 'Авторизация':
+        if event.text == 'Авторизация' and user_state['state'] != 'Finish':
             API_repository._setUserState(event.user_id, 'RegisterUser')
             sender(event.user_id, 'Кто Вы?', 0)
 
-        elif event.text == 'Студент' and user_state != 'Finish':
+        elif event.text == 'Студент' and user_state['state'] != 'Finish':
             API_repository._setUserState(event.user_id, 'RegisterUser_S')
-            sender_without_keyboard(event.user_id, 'Введи группу, если ввел неправильно - твои проблемы')
+            sender_without_keyboard(event.user_id, 'Введите группу')
 
-        elif event.text == 'Преподаватель' and user_state != 'Finish':
+        elif event.text == 'Преподаватель' and user_state['state'] != 'Finish':
             API_repository._setUserState(event.user_id, 'RegisterUser_P')
             sender_without_keyboard(event.user_id, 'Введите, пожалуйста, ваше ФИО в формате "Фамилия И.О."')
+
+        elif event.text == 'Разлогиниться':
+            API_repository._setUserState(event.user_id, 'Start')
+            sender(event.user_id, 'Пожалуйтса авторизуйтесь', 4)
 
 
         #Ввел что-то не из перечня
         else:
-            if user_state == 'None':
+            if user_state['state'] == 'None':
                 API_repository._setUserState(event.user_id, 'Start')
                 sender(event.user_id, 'Пожалуйтса авторизуйтесь', 4)
 
-            elif user_state == 'Start':
+            elif user_state['state'] == 'Start':
                 sender(event.user_id, 'НУ ТЫ ДУРАК БЛЯТЬ!? КНОПКА ЖЕ ЕСТЬ', 4)
 
-            elif user_state == 'RegisterUser_S':
-                if API_repository._checkGroup(event.text)['status'] == 'OK':
-                    API_repository._registerUser(event.user_id, 'student', event.text)
-                    sender(event.user_id, 'Вы успешно авторизовались\nВыберите расписание', 2)
+            elif user_state['state'] == 'RegisterUser':
+                sender(event.user_id, 'НУ ТЫ ДУРАК БЛЯТЬ!? КНОПКА ЖЕ ЕСТЬ', 0)
+
+            elif user_state['state'] == 'Finish':
+                if user_state['role'] == 'student':
+                    sender(event.user_id, 'Вы уже авторизованы как студент группы ' + user_state['arg'], 2)
+                else:
+                    sender(event.user_id, 'Вы уже авторизованы как преподаватель ' + user_state['arg'], 2)
+
+            elif user_state['state'] == 'RegisterUser_S':
+                if API_repository._checkGroup(event.text.upper())['status'] == 'OK':
+                    API_repository._registerUser(event.user_id, 'student', event.text.upper())
+                    sender(event.user_id, 'Вы успешно авторизовались!\n\nВыберите расписание', 2)
                     API_repository._setUserState(event.user_id, 'Finish')
                 else:
                     API_repository._setUserState(event.user_id, 'Start')
                     sender(event.user_id, 'Пожалуйтса авторизуйтесь', 4)
 
-            elif user_state == 'RegisterUser_P':
+            elif user_state['state'] == 'RegisterUser_P':
                 if API_repository._checkFIO(event.text)['status'] == 'OK':
                     API_repository._registerUser(event.user_id, 'prepod', event.text)
-                    sender(event.user_id, 'Вы успешно авторизовались\nВыберите расписание', 2)
+                    sender(event.user_id, 'Вы успешно авторизовались!\n\nВыберите расписание', 2)
                     API_repository._setUserState(event.user_id, 'Finish')
                 else:
                     API_repository._setUserState(event.user_id, 'Start')

@@ -31,12 +31,12 @@ keyboard1 = {
 keyboard1 = json.dumps(keyboard1, ensure_ascii=False).encode('utf-8')
 keyboard1 = str(keyboard1.decode('utf-8'))
 
-# Клава Преподаватель
+# Клава выбор расписания
 keyboard2 = {
     "one_time": True,
     "buttons": [
         [get_but('На сегодня', 'primary'), get_but('На завтра', 'primary'), get_but('На 2 недели', 'primary')],
-        [get_but('В начало', 'negative')]
+        [get_but('Разлогиниться', 'negative')]
     ]
 }
 keyboard2 = json.dumps(keyboard2, ensure_ascii=False).encode('utf-8')
