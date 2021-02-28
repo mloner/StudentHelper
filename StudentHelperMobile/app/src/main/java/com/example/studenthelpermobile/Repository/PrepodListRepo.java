@@ -21,14 +21,14 @@ public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
     private JSONObject responseJSON;
     private PrepodList prepodList;
 
-    public PrepodListRepo (ProgressBar progressBar, PrepodListView prepodListView, int type, String search) throws JSONException {
+    public PrepodListRepo (ProgressBar progressBar, PrepodListView prepodListView, String type, String search) throws JSONException {
         activity = prepodListView;
         this.progressBar = progressBar;
         request = new JSONObject();
 
-        if(type == 2){
+        if(type.equals("search")){
             request.put("search",search);
-            request.put("command","idiNahui");
+            request.put("command","getPrepodListSearch");
         }
         else {
             request.put("command","getPrepodList");
@@ -49,7 +49,6 @@ public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
 
             String status = responseJSON.get("status").toString();
             JSONArray response = (JSONArray) responseJSON.get("response");
-
 
             prepodList = new PrepodList();
             prepodList.setStatus(status);

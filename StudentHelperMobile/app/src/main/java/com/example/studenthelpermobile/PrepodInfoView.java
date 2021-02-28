@@ -1,18 +1,14 @@
 package com.example.studenthelpermobile;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.studenthelpermobile.Model.PrepodInfo;
 import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Repository.PrepodInfoRepo;
-import com.example.studenthelpermobile.Repository.PrepodListRepo;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.Objects;
@@ -50,7 +46,6 @@ public class PrepodInfoView extends AppCompatActivity implements AsyncInterface 
                 String info = "Имя: " + name + "\nФакультет: " + prepodInfo.getFaculty() + "\nКафедра: " + prepodInfo.getCathedra() + "\nНа каком этаже: " + prepodInfo.getLocation() +
                         "\nДолжность: " + prepodInfo.getPosition() + "\nНомер телефона: " + prepodInfo.getPhone() + "\nАдрес электронной почты: " + prepodInfo.getMail();
                 textView.setText(info);
-
             }
             else {
                 ErrorText.setText(R.string.Server_error);

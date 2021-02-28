@@ -26,5 +26,4 @@ public class Login {
         this.response = response;
     }
 
-
 }

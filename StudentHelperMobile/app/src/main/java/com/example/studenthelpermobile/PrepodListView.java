@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class PrepodListView extends AppCompatActivity implements AsyncInterface <PrepodList>, View.OnClickListener {
 
-
     private TextView ErrorText;
     private ProgressBar progressBar;
     private LinearLayout linearLayout;
@@ -40,9 +39,8 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
         linearLayout = findViewById(R.id.prepod_list_layout);
         activity = this;
 
-
         try {
-            PrepodListRepo prepodListRepo = new PrepodListRepo(progressBar, this, 1, "");
+            PrepodListRepo prepodListRepo = new PrepodListRepo(progressBar, this, "basic", "");
             prepodListRepo.execute();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -56,7 +54,6 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
         try {
             if(prepodList.getStatus().equals("OK")){
                 JSONArray array = prepodList.getResponse();
-
                 for(int n = 0; n < array.length(); n++){
                     final String s = (String) array.get(n);
                     Button b = new Button(this);
@@ -71,17 +68,13 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
                     });
                     linearLayout.addView(b);
                 }
-
-
             }
             else {
-                ErrorText.setText(R.string.Server_error);
-                ErrorText.setVisibility(View.VISIBLE);
+                ServerError();
             }
         }
         catch (NullPointerException e){
-            ErrorText.setText(R.string.Server_error);
-            ErrorText.setVisibility(View.VISIBLE);
+            ServerError();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -89,13 +82,18 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
 
     }
 
+    private void ServerError(){
+        ErrorText.setText(R.string.Server_error);
+        ErrorText.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.prepod_list_search:
                 try {
-                    String s = SearchText.getText().toString();
-                    PrepodListRepo prepodListRepo = new PrepodListRepo(progressBar, this, 2, s);
+                    String search = SearchText.getText().toString();
+                    PrepodListRepo prepodListRepo = new PrepodListRepo(progressBar, this, "search", search);
                     prepodListRepo.execute();
                 } catch (JSONException e) {
                     e.printStackTrace();

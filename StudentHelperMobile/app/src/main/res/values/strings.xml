@@ -11,13 +11,14 @@
     <string name="Login_button">Войти</string>
 
     <!-- Главное меню -->
-    <string name="Group">Группа</string>
+    <string name="Group">группа</string>
     <string name="ScheduleToday">Получить расписание на сегодня</string>
     <string name="ScheduleTomorrow">Получить расписание на завтра</string>
     <string name="ScheduleTwoWeeks">Получить расписание на 2 недели</string>
     <string name="PrepodInfo">Получить информацию о преподавателях</string>
     <string name="PrepodChat">Открыть чаты с преподавателями</string>
     <string name="LogoutTip">Чтобы выйти из аккаунта, нажмите кнопку "Назад"</string>
+    <string name="LoginAs">Вы вошли как</string>
 
     <!-- Лист преподавателей -->
     <string name="Search">Поиск</string>
