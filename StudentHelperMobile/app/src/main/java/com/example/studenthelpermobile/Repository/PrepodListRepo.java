@@ -4,13 +4,12 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.studenthelpermobile.Model.Login;
 import com.example.studenthelpermobile.Model.PrepodList;
-import com.example.studenthelpermobile.Model.Schedule;
 import com.example.studenthelpermobile.PrepodListView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.JSONArray;
 
 import java.io.IOException;
 
@@ -26,7 +25,7 @@ public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
         activity = prepodListView;
         this.progressBar = progressBar;
         request = new JSONObject();
-        request.put("command","schedule_check");
+        request.put("command","getPrepodList");
     }
 
     @Override
@@ -42,10 +41,12 @@ public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
             responseJSON = repositoryAPI.getResponse(request);
 
             String status = responseJSON.get("status").toString();
-            //ToDO получить сам лист
+            JSONArray response = (JSONArray) responseJSON.get("response");
+
 
             prepodList = new PrepodList();
             prepodList.setStatus(status);
+            prepodList.setResponse(response);
 
 
         } catch (IOException e) {
