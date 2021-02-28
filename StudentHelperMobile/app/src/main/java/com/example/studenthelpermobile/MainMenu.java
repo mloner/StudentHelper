@@ -18,7 +18,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
     Button ScheduleTwoWeeks;
     Button PrepodInfo;
     Button PrepodChat;
-    Button Logout;
+
 
     private String login;
     private String role;
@@ -40,8 +40,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         PrepodInfo.setOnClickListener(this);
         PrepodChat = findViewById(R.id.prepod_chat);
         PrepodChat.setOnClickListener(this);
-        Logout = findViewById(R.id.logout);
-        Logout.setOnClickListener(this);
+
 
         login = Objects.requireNonNull(getIntent().getExtras()).getString("login");
         role = Objects.requireNonNull(getIntent().getExtras()).getString("role");
@@ -89,9 +88,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
             case R.id.prepod_chat:
 
                 break;
-            case R.id.logout:
 
-                break;
         }
     }
 

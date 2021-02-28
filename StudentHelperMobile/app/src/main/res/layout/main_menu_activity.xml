@@ -52,13 +52,14 @@
         android:layout_marginTop="20dp"
         android:id="@+id/prepod_chat"/>
 
-    <Button
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Logout"
+        android:text="@string/LogoutTip"
+        android:textSize="16sp"
         android:textColor="@color/BLACK"
-        android:layout_gravity="bottom"
-        android:id="@+id/logout"/>
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"/>
 
 
 </LinearLayout>

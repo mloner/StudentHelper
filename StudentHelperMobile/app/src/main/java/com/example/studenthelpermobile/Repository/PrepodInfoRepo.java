@@ -5,11 +5,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.studenthelpermobile.Model.PrepodInfo;
-import com.example.studenthelpermobile.Model.PrepodList;
 import com.example.studenthelpermobile.PrepodInfoView;
-import com.example.studenthelpermobile.PrepodListView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,7 +50,7 @@ public class PrepodInfoRepo extends AsyncTask<Void, Void, PrepodInfo> {
             String fac = r.get("faculty").toString();
             String loc = r.get("location").toString();
             String phone = r.get("phone").toString();
-            String mail = r.get("mail").toString();
+            String mail = r.get("email").toString();
             String pos = r.get("position").toString();
 
             prepodInfo = new PrepodInfo();
