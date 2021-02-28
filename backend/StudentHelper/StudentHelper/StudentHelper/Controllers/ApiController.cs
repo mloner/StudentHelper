@@ -104,26 +104,15 @@ namespace StudentHelper.Controllers
                             using (PGRepo db = new PGRepo())
                             {
                                 var users = db.Users.ToList();
-                                string vkid = req.idvk;
-                                var u = users.Where(u => u.idvk == vkid).ToList();
-                                if (u.Count == 0)
-                                {
-                                    User user = new User {
-                                        idvk = req.idvk,
-                                        role = req.role,
-                                        arg = req.arg
-                                    };
-                                    db.Users.AddRange(user);
-                                    db.SaveChanges();
-                                    resp.status = "OK";
-                                    resp.response = "";
-                                }
-                                else
-                                {
-                                    resp.status = "FAIL";
-                                    resp.response = "User already exists";
-                                }
-
+                                string idvk = req.idvk;
+                                string role = req.role;
+                                string arg = req.arg;
+                                var user = users.FirstOrDefault(u => u.idvk == idvk);
+                                user.role = role;
+                                user.arg = arg;
+                                db.SaveChanges();
+                                resp.status = "OK";
+                                resp.response = "OK";
                             }
                             break;
                         }
@@ -190,16 +179,23 @@ namespace StudentHelper.Controllers
                             using (PGRepo db = new PGRepo())
                             {
                                 var users = db.Users.ToList();
-                                var user = users.Where(u => u.idvk == idvk).ToList();
-                                if (user.Count == 0)
+                                var user = users.FirstOrDefault(u => u.idvk == idvk);
+                                if (user == null)
                                 {
-                                    resp.status = "FAIL";
+                                    resp.status = "OK";
                                     resp.response = "None";
+
+                                    User newUser = new User() {
+                                        idvk = idvk,
+                                        state = "None"
+                                    };
+                                    db.Users.AddRange(newUser);
+                                    db.SaveChanges();
                                 }
                                 else
                                 {
                                     resp.status = "OK";
-                                    resp.response = user[0].state;
+                                    resp.response = user.state;
                                 }
                             }
                             break;
@@ -209,9 +205,8 @@ namespace StudentHelper.Controllers
                             string idvk = req.idvk;
                             using (PGRepo db = new PGRepo())
                             {
-                                var users = db.Users.ToList();
-                                var user = users.Where(u => u.idvk == idvk).ToList();
-                                if (user.Count == 0)
+                                var user = db.Users.ToList().FirstOrDefault(u => u.idvk == idvk);
+                                if (user == null)
                                 {
                                     resp.status = "FAIL";
                                     resp.response = "No such user";
@@ -219,13 +214,25 @@ namespace StudentHelper.Controllers
                                 else
                                 {
                                     string state = req.state;
-                                    users[0].state = state;
+                                    user.state = state;
                                     db.SaveChanges();
 
                                     resp.status = "OK";
                                     resp.response = "";
                                 }
                             }
+                            break;
+                        }
+                    case "getPrepodList":
+                        {
+                            resp.status = "OK";
+                            resp.response = new JArray();
+                            resp.response.Add(new JValue(
+                                            "Скоря"
+                                        ));
+                            resp.response.Add(new JValue(
+                                            "Грецов"
+                                        ));
                             break;
                         }
                     case "getTeacherInfo":
@@ -236,26 +243,39 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
-                    case "checkArg":
+                    case "checkGroup":
                         {
                             using (PGRepo db = new PGRepo())
                             {
-                                var arg = req.arg;
-                                switch (arg)
+                                string groupName = req.group;
+                                var group = db.Groups.ToList().FirstOrDefault(g => g.name == groupName);
+                                if (group != null)
                                 {
-                                    case ""
-                                }
-                                var groups = db.Groups.ToList();
-                                var groupName = req.arg;
-                                var group = groups.Where(g => g.name == groupName).ToList();
-                                if (group.Count == 0)
-                                {
-                                    resp.status = "FAIL";
+                                    resp.status = "OK";
                                     resp.response = "";
                                 }
                                 else
                                 {
+                                    resp.status = "FAIL";
+                                    resp.response = "";
+                                }
+                            }
+                            break;
+                        }
+                    case "checkFIO":
+                        {
+                            using (PGRepo db = new PGRepo())
+                            {
+                                string fio = req.FIO;
+                                var teacher = db.Teachers.ToList().FirstOrDefault(t => t.FIO == fio);
+                                if (teacher != null)
+                                {
                                     resp.status = "OK";
+                                    resp.response = "";
+                                }
+                                else
+                                {
+                                    resp.status = "FAIL";
                                     resp.response = "";
                                 }
                             }
