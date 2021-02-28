@@ -183,7 +183,7 @@ namespace StudentHelper.Controllers
                                 if (user == null)
                                 {
                                     resp.status = "OK";
-                                    resp.response = "None";
+                                    
 
                                     User newUser = new User() {
                                         idvk = idvk,
@@ -191,11 +191,16 @@ namespace StudentHelper.Controllers
                                     };
                                     db.Users.AddRange(newUser);
                                     db.SaveChanges();
+                                    resp.response = new JObject(new JProperty("role", newUser.role),
+                                                                new JProperty("arg", newUser.arg),
+                                                                new JProperty("state", newUser.state));
                                 }
                                 else
                                 {
                                     resp.status = "OK";
-                                    resp.response = user.state;
+                                    resp.response = new JObject(new JProperty("role" , user.role),
+                                                                new JProperty("arg", user.arg),
+                                                                new JProperty("state", user.state));
                                 }
                             }
                             break;
@@ -227,19 +232,47 @@ namespace StudentHelper.Controllers
                         {
                             resp.status = "OK";
                             resp.response = new JArray();
-                            resp.response.Add(new JValue(
-                                            "Скоря"
-                                        ));
-                            resp.response.Add(new JValue(
-                                            "Грецов"
-                                        ));
+                            using (PGRepo db = new PGRepo())
+                            {
+                                var teachers = db.Teachers.ToList();
+                                foreach (var t in teachers)
+                                {
+                                    resp.response.Add(new JValue(
+                                                t.FIO
+                                            ));
+                                }
+                            }
                             break;
                         }
-                    case "getTeacherInfo":
+                    case "getPrepodInfo":
                         {
                             using (PGRepo db = new PGRepo())
                             {
-
+                                string fio = req.fio;
+                                var teachers =
+                                    from t in db.Teachers
+                                    join tp in db.TeacherPositions on t.TeacherPositionid equals tp.id
+                                    join c in db.Cathedras on t.Cathedraid equals c.id
+                                    join f in db.Facultates on c.facultate_id equals f.id
+                                    select new { FIO = t.FIO, position = tp.name, facultate = f.name, location = c.location, cathedraName = c.name };
+                                var teacher = teachers.FirstOrDefault(t => t.FIO == fio);
+                                
+                                if (teacher != null)
+                                {
+                                    resp.response = new JObject(
+                                        new JProperty("faculty", teacher.facultate),
+                                        new JProperty("cathedra", teacher.cathedraName),
+                                        new JProperty("location", teacher.location),
+                                        new JProperty("position", teacher.position),
+                                        new JProperty("phone", "8 800 555 35 35"),
+                                        new JProperty("mail", "mail@mail.ru")
+                                        );
+                                    resp.status = "OK";
+                                }
+                                //foreach (var t in teachers)
+                                //{
+                                //    Console.WriteLine(t.FIO + " " + t.position + " " + t.facultate + " " + t.location);
+                                //}
                             }
                             break;
                         }
