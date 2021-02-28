@@ -42,7 +42,7 @@ namespace StudentHelper.Controllers
         {
             dynamic req = JObject.Parse(data.ToString());
             dynamic resp = new JObject();
-
+            
             string command = req.command;
             try
             {
@@ -232,7 +232,15 @@ namespace StudentHelper.Controllers
                                     join tp in db.TeacherPositions on t.TeacherPositionid equals tp.id
                                     join c in db.Cathedras on t.Cathedraid equals c.id
                                     join f in db.Facultates on c.facultate_id equals f.id
-                                    select new { FIO = t.FIO, position = tp.name, facultate = f.name, location = c.location, cathedraName = c.name };
+                                    select new {
+                                                 FIO = t.FIO,
+                                                 position = tp.name,
+                                                 facultate = f.name,
+                                                 location = c.location,
+                                                 cathedraName = c.name,
+                                                 phone = t.phone,
+                                                 email = t.email
+                                               };
                                 var teacher = teachers.FirstOrDefault(t => t.FIO == fio);
                                 if (teacher != null)
                                 {
@@ -242,8 +250,8 @@ namespace StudentHelper.Controllers
                                         new JProperty("cathedra", teacher.cathedraName),
                                         new JProperty("location", teacher.location),
                                         new JProperty("position", teacher.position),
-                                        new JProperty("phone", "8 800 555 35 35"),
-                                        new JProperty("mail", "mail@mail.ru")
+                                        new JProperty("phone", teacher.phone),
+                                        new JProperty("email", teacher.email)
                                         );
                                 }
                                 else
@@ -254,12 +262,13 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
+                    // Узнать, есть ли такая группа
                     case "checkGroup":
                         {
                             using (PGRepo db = new PGRepo(_PGConStr))
                             {
                                 string groupName = req.group;
-                                var group = db.Groups.ToList().FirstOrDefault(g => g.name == groupName);
+                                var group = db.Groups.FirstOrDefault(g => g.name == groupName);
                                 if (group != null)
                                 {
                                     resp.status = "OK";
@@ -273,12 +282,13 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
+                    // Узнать, есть ли такой преподаватель
                     case "checkFIO":
                         {
                             using (PGRepo db = new PGRepo(_PGConStr))
                             {
                                 string fio = req.FIO;
-                                var teacher = db.Teachers.ToList().FirstOrDefault(t => t.FIO == fio);
+                                var teacher = db.Teachers.FirstOrDefault(t => t.FIO == fio);
                                 if (teacher != null)
                                 {
                                     resp.status = "OK";
@@ -305,7 +315,10 @@ namespace StudentHelper.Controllers
                 resp.status = "FAIL";
                 resp.response = ex.Message;
             }
-            return Content(resp.ToString(), "application/json");
+            string reqStr = req.ToString();
+            string respStr = resp.ToString();
+            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + reqStr + "\n" + "Response: " + respStr);
+            return Content(respStr, "application/json");
         }
     }
 }

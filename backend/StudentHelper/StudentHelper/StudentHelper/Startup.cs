@@ -33,6 +33,13 @@ namespace StudentHelper
             //{
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "StudentHelper", Version = "v1" });
             //});
+            services.AddLogging(builder =>
+                builder
+                    .AddDebug()
+                    .AddConsole()
+                    .AddConfiguration(Configuration.GetSection("Logging"))
+                    .SetMinimumLevel(LogLevel.Information)
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

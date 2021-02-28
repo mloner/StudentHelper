@@ -32,6 +32,8 @@ namespace StudentHelper.Repos
             public int Cathedraid { get; set; }
             public int TeacherPositionid { get; set; }
             public string password { get; set; }
+            public string? phone { get; set; }
+            public string? email { get; set; }
 
             public Cathedra Cathedra { get; set; }
             public TeacherPosition TeacherPosition { get; set; }
