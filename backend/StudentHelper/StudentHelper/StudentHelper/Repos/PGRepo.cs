@@ -12,6 +12,9 @@ namespace StudentHelper.Repos
         {
             public int id { get; set; }
             public string name { get; set; }
+
+            //public List<Teacher> Teachers { get; set; } = new List<Teacher>();
+
         }
         public class User
         {
@@ -28,6 +31,19 @@ namespace StudentHelper.Repos
             public int cafedra_id { get; set; }
             public int position_id { get; set; }
             public string password { get; set; }
+
+         //   public Cathedra Cathedra { get; set; }
+        //    public TeacherPosition TeacherPosition { get; set; }
+        }
+
+        public class Cathedra
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public int facultate_id { get; set; }
+            public string location { get; set; }
+
+         //   public List<Teacher> Teachers { get; set; } = new List<Teacher>();
         }
         public class Group
         {
