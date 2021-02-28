@@ -4,7 +4,14 @@ import json
 import keyboards
 import API_repository
 
-def write_msg(user_id, answer, keyboard_number):
+
+
+import tokens
+token = tokens.my_token
+vk = vk_api.VkApi(token=token)
+longpoll = VkLongPoll(vk)
+
+def sender(user_id, answer, keyboard_number):
     vk.method('messages.send', {
                                 'user_id': user_id,
                                 'message': answer,
@@ -13,7 +20,7 @@ def write_msg(user_id, answer, keyboard_number):
                                }
              )
 
-def write_msg_withot(user_id, answer):
+def sender_without_keyboard(user_id, answer):
     vk.method('messages.send', {
                                 'user_id': user_id,
                                 'message': answer,
@@ -21,98 +28,61 @@ def write_msg_withot(user_id, answer):
                                }
              )
 
-import tokens
-token = tokens.my_token
-vk = vk_api.VkApi(token=token)
-longpoll = VkLongPoll(vk)
+def log(event):
+    print('\n\nNew message:')
+    print('For me by: {}'.format(event.user_id))
+    print("Text: " + event.text)
 
-# Основной цикл
+
 for event in longpoll.listen():
-    if event.type == VkEventType.MESSAGE_NEW:
-        if event.to_me:
-            print('\n\nNew message:')
-            print('For me by: {}'.format(event.user_id))
-            print("Text: " + event.text)
-
-            req_authorization = {}
-            req_authorization['client_type'] = 'bot'
-
-            write_msg(event.user_id, 'Пожалуйста аторизуйтесь', 4)
-            if event.text == 'Авторизация':
-                write_msg(event.user_id, 'Кто Вы?', 0)
-
-                for event_authorization in longpoll.listen():
-                    if event_authorization.type == VkEventType.MESSAGE_NEW:
-                        if event_authorization.to_me:
-                            print('\n\nNew message:')
-                            print('For me by: {}'.format(event_authorization.user_id))
-                            print("Text: " + event_authorization.text)
-
-                            if event_authorization.text == 'Преподаватель':
-                                write_msg_withot(event.user_id, 'Введите свои ФИО в формате "Фамилия И.О."')
-
-                                req_authorization['command'] = 'authorization'
-                                req_authorization['role'] = 'prepod'
-
-                                for event_prepod in longpoll.listen():
-                                    if event_prepod.type == VkEventType.MESSAGE_NEW:
-                                        if event_prepod.to_me:
-                                            print('\n\nNew message:')
-                                            print('For me by: {}'.format(event_prepod.user_id))
-                                            print("Text: " + event_prepod.text)
-
-                                            req_authorization['arg'] = event_prepod.text
-
-                                            if API_repository._authorization(json.dumps(req_authorization)):
-                                                write_msg(event.user_id, 'Выберите, какое расписание вы хотите получить', 2)
-
-                                                for event_schedule_p in longpoll.listen():
-                                                    if event_schedule_p.type == VkEventType.MESSAGE_NEW:
-                                                        if event_schedule_p.to_me:
-                                                            print('\n\nNew message:')
-                                                            print('For me by: {}'.format(event_schedule_p.user_id))
-                                                            print("Text: " + event_schedule_p.text)
-
-                                                            break
-                                                break
-
-                                            else:
-                                                write_msg(event.user_id, 'Таких не знаем...\nПожалуйста аторизуйтесь', 4)
-                                                break
-
-                            elif event_authorization.text == 'Студент':
-                                write_msg(event.user_id, 'Выбери группу', 1)
-
-                                req_authorization['command'] = 'authorization'
-                                req_authorization['role'] = 'student'
-
-                                for event_student in longpoll.listen():
-                                    if event_student.type == VkEventType.MESSAGE_NEW:
-                                        if event_student.to_me:
-                                            print('\n\nNew message:')
-                                            print('For me by: {}'.format(event_student.user_id))
-                                            print("Text: " + event_student.text)
-
-                                            req_authorization['arg'] = event_student.text.split('-')[1]
-
-                                            if API_repository._authorization(json.dumps(req_authorization)):
-                                                write_msg(event.user_id, 'Выберите, какое расписание вы хотите получить', 2)
-
-                                                for event_schedule_s in longpoll.listen():
-                                                    if event_schedule_s.type == VkEventType.MESSAGE_NEW:
-                                                        if event_schedule_s.to_me:
-                                                            print('\n\nNew message:')
-                                                            print('For me by: {}'.format(event_schedule_s.user_id))
-                                                            print("Text: " + event_schedule_s.text)
-
-                                                            break
-                                                break
+    if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+        log(event)
 
 
+        user_state = API_repository._getUserState(event.user_id)['response']
 
-                                            else:
-                                                write_msg(event.user_id, 'Таких не знаем...\nПожалуйста аторизуйтесь', 4)
-                                                break
+        # authorization = API_repository._getAuthData(event.user_id)
+        # if authorization['status'] == 'FAIL':
+        #     sender(event.user_id, 'Пожалуйтса авторизуйтесь', 4)
+        # else:
+        #     sender(event.user_id, 'Выберите расписание', 2)
 
-                            break
+        if event.text == 'Авторизация':
+            API_repository._setUserState(event.user_id, 'RegisterUser')
+            sender(event.user_id, 'Кто Вы?', 0)
 
+        elif event.text == 'Студент' and user_state != 'Finish':
+            API_repository._setUserState(event.user_id, 'RegisterUser_S')
+            sender_without_keyboard(event.user_id, 'Введи группу, если ввел неправильно - твои проблемы')
+
+        elif event.text == 'Преподаватель' and user_state != 'Finish':
+            API_repository._setUserState(event.user_id, 'RegisterUser_P')
+            sender_without_keyboard(event.user_id, 'Введите, пожалуйста, ваше ФИО в формате "Фамилия И.О."')
+
+
+        #Ввел что-то не из перечня
+        else:
+            if user_state == 'None':
+                API_repository._setUserState(event.user_id, 'Start')
+                sender(event.user_id, 'Пожалуйтса авторизуйтесь', 4)
+
+            elif user_state == 'Start':
+                sender(event.user_id, 'НУ ТЫ ДУРАК БЛЯТЬ!? КНОПКА ЖЕ ЕСТЬ', 4)
+
+            elif user_state == 'RegisterUser_S':
+                if API_repository._checkGroup(event.text)['status'] == 'OK':
+                    API_repository._registerUser(event.user_id, 'student', event.text)
+                    sender(event.user_id, 'Вы успешно авторизовались\nВыберите расписание', 2)
+                    API_repository._setUserState(event.user_id, 'Finish')
+                else:
+                    API_repository._setUserState(event.user_id, 'Start')
+                    sender(event.user_id, 'Пожалуйтса авторизуйтесь', 4)
+
+            elif user_state == 'RegisterUser_P':
+                if API_repository._checkFIO(event.text)['status'] == 'OK':
+                    API_repository._registerUser(event.user_id, 'prepod', event.text)
+                    sender(event.user_id, 'Вы успешно авторизовались\nВыберите расписание', 2)
+                    API_repository._setUserState(event.user_id, 'Finish')
+                else:
+                    API_repository._setUserState(event.user_id, 'Start')
+                    sender(event.user_id, 'Пожалуйтса авторизуйтесь', 4)

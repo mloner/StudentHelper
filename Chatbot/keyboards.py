@@ -23,7 +23,7 @@ keyboard0 = str(keyboard0.decode('utf-8'))
 
 # Клава Студент
 keyboard1 = {
-    "one_time": False,
+    "one_time": True,
     "buttons": [
         [get_but('ИВТ-363', 'primary'), get_but('ИВТ-365', 'primary')]
     ]
@@ -33,7 +33,7 @@ keyboard1 = str(keyboard1.decode('utf-8'))
 
 # Клава Преподаватель
 keyboard2 = {
-    "one_time": False,
+    "one_time": True,
     "buttons": [
         [get_but('На сегодня', 'primary'), get_but('На завтра', 'primary'), get_but('На 2 недели', 'primary')],
         [get_but('В начало', 'negative')]
@@ -55,7 +55,7 @@ keyboard3 = str(keyboard3.decode('utf-8'))
 
 # Клава Начало
 keyboard4 = {
-    "one_time": False,
+    "one_time": True,
     "buttons": [[get_but('Авторизация', 'positive')]]
 }
 keyboard4 = json.dumps(keyboard4, ensure_ascii=False).encode('utf-8')
