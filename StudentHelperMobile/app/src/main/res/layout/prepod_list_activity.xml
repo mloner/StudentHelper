@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/prepod_list_layout">
+        >
 
         <TextView
             android:layout_width="match_parent"
@@ -26,23 +26,20 @@
             android:id="@+id/progressbar_prepod_list"
             android:layout_gravity="center"/>
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_text"
+            android:hint="@string/SearchHint"/>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:id="@+id/prepod_list_layout">
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="6"
-                android:id="@+id/search_text"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/Search"
-                android:id="@+id/prepod_list_search"/>
         </LinearLayout>
 
 

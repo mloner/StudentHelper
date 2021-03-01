@@ -16,6 +16,8 @@ import com.example.studenthelpermobile.Repository.PrepodListRepo;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class PrepodListView extends AppCompatActivity implements AsyncInterface <PrepodList>, View.OnClickListener {
@@ -24,8 +26,9 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
     private ProgressBar progressBar;
     private LinearLayout linearLayout;
     private PrepodListView activity;
-    private Button Search;
+    //private Button Search;
     private EditText SearchText;
+    private ArrayList <String> PrepodList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +36,8 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
         setContentView(R.layout.prepod_list_activity);
         ErrorText = findViewById(R.id.error_text_prepod_list);
         progressBar = findViewById(R.id.progressbar_prepod_list);
-        Search = findViewById(R.id.prepod_list_search);
-        Search.setOnClickListener(this);
+        //Search = findViewById(R.id.prepod_list_search);
+        //Search.setOnClickListener(this);
         SearchText = findViewById(R.id.search_text);
         linearLayout = findViewById(R.id.prepod_list_layout);
         activity = this;
@@ -45,29 +48,23 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        PrepodList = new ArrayList<>();
+        PrepodSearch prepodSearch = new PrepodSearch(this, PrepodList );
+        SearchText.addTextChangedListener(prepodSearch);
     }
 
 
     @Override
-    public void onAsyncTaskFinished(PrepodList prepodList) {
-
+    public void onAsyncTaskFinished(PrepodList prepodListClass) {
         try {
-            if(prepodList.getStatus().equals("OK")){
-                JSONArray array = prepodList.getResponse();
+            if(prepodListClass.getStatus().equals("OK")){
+                JSONArray array = prepodListClass.getResponse();
                 for(int n = 0; n < array.length(); n++){
                     final String s = (String) array.get(n);
-                    Button b = new Button(this);
-                    b.setText(s);
-                    b.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(activity, PrepodInfoView.class);
-                            intent.putExtra("name", s);
-                            startActivity(intent);
-                        }
-                    });
-                    linearLayout.addView(b);
+                    PrepodList.add(s);
                 }
+                SetPrepods(PrepodList, "");
             }
             else {
                 ServerError();
@@ -87,8 +84,30 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
         ErrorText.setVisibility(View.VISIBLE);
     }
 
+    public void SetPrepods(ArrayList<String> prepods, String sort){
+        linearLayout.removeAllViews();
+        for (String s: prepods) {
+            if(s.toLowerCase().contains(sort.toLowerCase())){
+                Button b = new Button(this);
+                b.setText(s);
+                final String put = s;
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(activity, PrepodInfoView.class);
+                        intent.putExtra("name", put);
+                        startActivity(intent);
+                    }
+                });
+                linearLayout.addView(b);
+            }
+
+        }
+    }
+
     @Override
     public void onClick(View view) {
+        /*
         switch (view.getId()){
             case R.id.prepod_list_search:
                 try {
@@ -100,5 +119,6 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
                 }
                 break;
         }
+        */
     }
 }
