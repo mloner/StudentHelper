@@ -22,6 +22,7 @@
 
     <!-- Лист преподавателей -->
     <string name="Search">Поиск</string>
+    <string name="SearchHint">Начните вводить для поиска</string>
 
 
     <!-- Сообщения об ошибках -->
