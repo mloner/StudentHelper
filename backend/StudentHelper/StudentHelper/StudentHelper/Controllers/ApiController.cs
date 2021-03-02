@@ -2,17 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using StudentHelper.Repos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading.Tasks;
-using System.Web.Helpers;
+using static StudentHelper.Repos.FBRepo;
 using static StudentHelper.Repos.PGRepo;
+using Microsoft.EntityFrameworkCore;
 
 namespace StudentHelper.Controllers
 {
@@ -23,19 +20,21 @@ namespace StudentHelper.Controllers
         private readonly ILogger<ApiController> _logger;
         private readonly IConfiguration _config;
         private readonly string _PGConStr;
+        private readonly string _FBConStr;
         public ApiController(ILogger<ApiController> logger, IConfiguration config)
         {
             _logger = logger;
             _config = config;
             _PGConStr = _config["Config:PGConnectionString"];
+            _FBConStr = _config["Config:FBConnectionString"];
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Content("Do Post request", "text/plain");
+            return Content("{\"status\" : \"FAIL\" , \"request\" : \"Do Post request\"}", "application/json");
         }
-
+       
         [HttpPost]
         [AllowAnonymous]
         public IActionResult Post([FromBody] object data)
@@ -51,10 +50,10 @@ namespace StudentHelper.Controllers
                     // Получить данные юзера, если он есть в базе
                     case "getAuthData":
                         {
-                            using (PGRepo db = new PGRepo(_PGConStr))
+                            using (var db = new FBRepo(_FBConStr))
                             {
                                 string idvk = req.idvk;
-                                var user = db.Users.FirstOrDefault(u => u.idvk == idvk);
+                                var user = db.USERS.FirstOrDefault(u => u.IDVK == idvk);
                                 if (user == null)
                                 {
                                     resp.status = "FAIL";
@@ -64,8 +63,8 @@ namespace StudentHelper.Controllers
                                 {
                                     resp.status = "OK";
                                     resp.response = new JObject(
-                                                                new JProperty("role", user.role),
-                                                                new JProperty("arg", user.arg)
+                                                                new JProperty("role", user.ROLE),
+                                                                new JProperty("arg", user.ARG)
                                                                 );
                                 }
                             }
@@ -74,16 +73,16 @@ namespace StudentHelper.Controllers
                     // Зарегистрировать юзера
                     case "registerUser":
                         {
-                            using (PGRepo db = new PGRepo(_PGConStr))
+                            using (var db = new FBRepo(_FBConStr))
                             {
                                 string idvk = req.idvk;
                                 string role = req.role;
                                 string arg = req.arg;
 
-                                var user = db.Users.FirstOrDefault(u => u.idvk == idvk);
+                                var user = db.USERS.FirstOrDefault(u => u.IDVK == idvk);
 
-                                user.role = role;
-                                user.arg = arg;
+                                user.ROLE = role;
+                                user.ARG = arg;
 
                                 db.SaveChanges();
 
@@ -96,7 +95,7 @@ namespace StudentHelper.Controllers
                     case "authorizationMobile":
                         {
                             string role = req.role;
-                            switch(role)
+                            switch (role)
                             {
                                 case "student":
                                     {
@@ -149,34 +148,35 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
-                    // Получить текущее состояние юзера
+                    // Получить текущее состояние юзера (если юзера не существует, создать его)
                     case "getUserState":
                         {
-                            using (PGRepo db = new PGRepo(_PGConStr))
+                            using (var db = new FBRepo(_FBConStr))
                             {
                                 string idvk = req.idvk;
-                                var user = db.Users.FirstOrDefault(u => u.idvk == idvk);
+                                var user = db.USERS.FirstOrDefault(u => u.IDVK == idvk);
                                 if (user == null)
-                                {  
-                                    User newUser = new User() {
-                                        idvk = idvk,
-                                        state = "None"
+                                {
+                                    User newUser = new User()
+                                    {
+                                        IDVK = idvk,
+                                        STATE = "None"
                                     };
-                                    db.Users.AddRange(newUser);
+                                    db.USERS.AddRange(newUser);
                                     db.SaveChanges();
                                     resp.status = "OK";
                                     resp.response = new JObject(
-                                                                new JProperty("role", newUser.role),
-                                                                new JProperty("arg", newUser.arg),
-                                                                new JProperty("state", newUser.state)
+                                                                new JProperty("role", newUser.ROLE),
+                                                                new JProperty("arg", newUser.ARG),
+                                                                new JProperty("state", newUser.STATE)
                                                                 );
                                 }
                                 else
                                 {
                                     resp.status = "OK";
-                                    resp.response = new JObject(new JProperty("role" , user.role),
-                                                                new JProperty("arg", user.arg),
-                                                                new JProperty("state", user.state));
+                                    resp.response = new JObject(new JProperty("role", user.ROLE),
+                                                                new JProperty("arg", user.ARG),
+                                                                new JProperty("state", user.STATE));
                                 }
                             }
                             break;
@@ -185,9 +185,9 @@ namespace StudentHelper.Controllers
                     case "setUserState":
                         {
                             string idvk = req.idvk;
-                            using (PGRepo db = new PGRepo(_PGConStr))
+                            using (var db = new FBRepo(_FBConStr))
                             {
-                                var user = db.Users.FirstOrDefault(u => u.idvk == idvk);
+                                var user = db.USERS.FirstOrDefault(u => u.IDVK == idvk);
                                 if (user == null)
                                 {
                                     resp.status = "FAIL";
@@ -196,7 +196,7 @@ namespace StudentHelper.Controllers
                                 else
                                 {
                                     string state = req.state;
-                                    user.state = state;
+                                    user.STATE = state;
 
                                     db.SaveChanges();
 
@@ -232,15 +232,16 @@ namespace StudentHelper.Controllers
                                     join tp in db.TeacherPositions on t.TeacherPositionid equals tp.id
                                     join c in db.Cathedras on t.Cathedraid equals c.id
                                     join f in db.Facultates on c.facultate_id equals f.id
-                                    select new {
-                                                 FIO = t.FIO,
-                                                 position = tp.name,
-                                                 facultate = f.name,
-                                                 location = c.location,
-                                                 cathedraName = c.name,
-                                                 phone = t.phone,
-                                                 email = t.email
-                                               };
+                                    select new
+                                    {
+                                        FIO = t.FIO,
+                                        position = tp.name,
+                                        facultate = f.name,
+                                        location = c.location,
+                                        cathedraName = c.name,
+                                        phone = t.phone,
+                                        email = t.email
+                                    };
                                 var teacher = teachers.FirstOrDefault(t => t.FIO == fio);
                                 if (teacher != null)
                                 {
@@ -262,7 +263,7 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
-                    // Узнать, есть ли такая группа
+                    // Существует ли такая группа
                     case "checkGroup":
                         {
                             using (PGRepo db = new PGRepo(_PGConStr))
@@ -282,7 +283,7 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
-                    // Узнать, есть ли такой преподаватель
+                    // Существует ли преподаватель с таким ФИО
                     case "checkFIO":
                         {
                             using (PGRepo db = new PGRepo(_PGConStr))
@@ -302,6 +303,61 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
+                    case "getScheduleStudent":
+                        {
+                            string group = req.group;
+                            string schedule_type = req.schedule_type;
+                            using (PGRepo db = new PGRepo(_PGConStr))
+                            {
+                                var schedules =
+                                    from l in db.Lessons
+                                    join c in db.Classes on l.class_id equals c.id
+                                    join ltp in db.LessonTypes on l.lesson_type_id equals ltp.id
+                                    join t in db.Teachers on l.teacher_id equals t.id
+                                    join g in db.Groups on l.group_id equals g.id
+                                    join sn in db.SubjectNames on l.subject_name_id equals sn.id
+                                    join wd in db.WeekDays on l.day_num_id equals wd.id
+                                    join ltm in db.LessonTimes on l.start_lesson_num equals ltm.id
+                                    select new
+                                    {
+                                        subjectName = sn.name,
+                                        prepodName = t.FIO,
+                                        className = c.name,
+                                        lessonType = ltp.name,
+                                        lessonStart = ltm.start_time,
+                                        lessonEnd = (from ltm1 in db.LessonTimes where ltm1.id == l.start_lesson_num + l.lesson_duration - 1 select ltm1.end_time).First(),
+                                        groupName = g.name,
+                                        subGroup = l.subgroup,
+                                        isRemote = l.remote,
+                                        weekNum = l.week_num,
+                                        weekDayName = wd.name,
+                                        duration = l.lesson_duration
+
+
+
+                                    };
+                                var schedule = schedules.Where(s => s.groupName == "ИВТ-363" && s.weekNum == 1 && s.weekDayName == "Среда");
+                                resp.status = "OK";
+                                resp.response = new JArray();
+                                
+                                foreach (var si in schedule)
+                                {
+                                    resp.response.Add(new JObject(
+                                        new JProperty("subjectName", si.subjectName),
+                                        new JProperty("prepodName", si.prepodName),
+                                        new JProperty("className", si.className),
+                                        new JProperty("lessonType", si.lessonType),
+                                        new JProperty("lessonStart", si.lessonStart),
+                                        new JProperty("lessonEnd", si.lessonEnd),
+                                        new JProperty("groupName", si.groupName),
+                                        new JProperty("subGroup", si.subGroup),
+                                        new JProperty("isRemote", si.isRemote)
+                                        ));
+                                }
+                            }
+
+                            break;
+                        }
                     default:
                         { 
                             resp.status = "FAIL";
@@ -315,11 +371,14 @@ namespace StudentHelper.Controllers
                 resp.status = "FAIL";
                 resp.response = ex.Message;
             }
+
             string reqStr = req.ToString();
             string respStr = resp.ToString();
+
             _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + reqStr + "\n" + "Response: " + respStr);
+
             return Content(respStr, "application/json");
         }
+
     }
 }
-
