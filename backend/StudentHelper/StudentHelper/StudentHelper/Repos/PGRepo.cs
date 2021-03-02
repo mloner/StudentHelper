@@ -17,14 +17,14 @@ namespace StudentHelper.Repos
             public List<Teacher> Teachers { get; set; } = new List<Teacher>();
 
         }
-        public class User
-        {
-            public int id { get; set; }
-            public string idvk { get; set; }
-            public string role { get; set; }
-            public string arg { get; set; }
-            public string state { get; set; }
-        }
+        //public class User
+        //{
+        //    public int id { get; set; }
+        //    public string idvk { get; set; }
+        //    public string role { get; set; }
+        //    public string arg { get; set; }
+        //    public string state { get; set; }
+        //}
         public class Teacher
         {
             public int id { get; set; }
@@ -65,7 +65,7 @@ namespace StudentHelper.Repos
         }
 
         public DbSet<TeacherPosition> TeacherPositions { get; set; }
-        public DbSet<User> Users { get; set; }
+       // public DbSet<User> Users { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Cathedra> Cathedras { get; set; }
