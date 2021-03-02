@@ -18,7 +18,6 @@ namespace StudentHelper.Repos
 		public DbSet<User> USERS { get; set; }
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			//string connectionString = "data source=shipshon.fvds.ru;port number=3050;initial catalog=/var/lib/firebird/3.0/data/studenthelper_database.fdb;user id=SYSDBA;password=hfk3egrk;server type=Default";
 			optionsBuilder.UseFirebird(_connString);
 		}
 		protected override void OnModelCreating(ModelBuilder modelo)

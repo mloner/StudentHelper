@@ -303,8 +303,59 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
-                    case "test":
+                    case "getScheduleStudent":
                         {
+                            string group = req.group;
+                            string schedule_type = req.schedule_type;
+                            using (PGRepo db = new PGRepo(_PGConStr))
+                            {
+                                var schedules =
+                                    from l in db.Lessons
+                                    join c in db.Classes on l.class_id equals c.id
+                                    join ltp in db.LessonTypes on l.lesson_type_id equals ltp.id
+                                    join t in db.Teachers on l.teacher_id equals t.id
+                                    join g in db.Groups on l.group_id equals g.id
+                                    join sn in db.SubjectNames on l.subject_name_id equals sn.id
+                                    join wd in db.WeekDays on l.day_num_id equals wd.id
+                                    join ltm in db.LessonTimes on l.start_lesson_num equals ltm.id
+                                    select new
+                                    {
+                                        subjectName = sn.name,
+                                        prepodName = t.FIO,
+                                        className = c.name,
+                                        lessonType = ltp.name,
+                                        lessonStart = ltm.start_time,
+                                        lessonEnd = (from ltm1 in db.LessonTimes where ltm1.id == l.start_lesson_num + l.lesson_duration - 1 select ltm1.end_time).First(),
+                                        groupName = g.name,
+                                        subGroup = l.subgroup,
+                                        isRemote = l.remote,
+                                        weekNum = l.week_num,
+                                        weekDayName = wd.name,
+                                        duration = l.lesson_duration
+
+
+
+                                    };
+                                var schedule = schedules.Where(s => s.groupName == "ИВТ-363" && s.weekNum == 1 && s.weekDayName == "Среда");
+                                resp.status = "OK";
+                                resp.response = new JArray();
+                                
+                                foreach (var si in schedule)
+                                {
+                                    resp.response.Add(new JObject(
+                                        new JProperty("subjectName", si.subjectName),
+                                        new JProperty("prepodName", si.prepodName),
+                                        new JProperty("className", si.className),
+                                        new JProperty("lessonType", si.lessonType),
+                                        new JProperty("lessonStart", si.lessonStart),
+                                        new JProperty("lessonEnd", si.lessonEnd),
+                                        new JProperty("groupName", si.groupName),
+                                        new JProperty("subGroup", si.subGroup),
+                                        new JProperty("isRemote", si.isRemote)
+                                        ));
+                                }
+                            }
+
                             break;
                         }
                     default:
