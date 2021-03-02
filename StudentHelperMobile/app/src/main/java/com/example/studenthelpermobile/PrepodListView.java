@@ -20,13 +20,12 @@ import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class PrepodListView extends AppCompatActivity implements AsyncInterface <PrepodList>, View.OnClickListener {
+public class PrepodListView extends AppCompatActivity implements AsyncInterface <PrepodList> {
 
     private TextView ErrorText;
     private ProgressBar progressBar;
     private LinearLayout linearLayout;
     private PrepodListView activity;
-    //private Button Search;
     private EditText SearchText;
     private ArrayList <String> PrepodList;
 
@@ -36,14 +35,12 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
         setContentView(R.layout.prepod_list_activity);
         ErrorText = findViewById(R.id.error_text_prepod_list);
         progressBar = findViewById(R.id.progressbar_prepod_list);
-        //Search = findViewById(R.id.prepod_list_search);
-        //Search.setOnClickListener(this);
         SearchText = findViewById(R.id.search_text);
         linearLayout = findViewById(R.id.prepod_list_layout);
         activity = this;
 
         try {
-            PrepodListRepo prepodListRepo = new PrepodListRepo(progressBar, this, "basic", "");
+            PrepodListRepo prepodListRepo = new PrepodListRepo(progressBar, this);
             prepodListRepo.execute();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -101,24 +98,7 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
                 });
                 linearLayout.addView(b);
             }
-
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        /*
-        switch (view.getId()){
-            case R.id.prepod_list_search:
-                try {
-                    String search = SearchText.getText().toString();
-                    PrepodListRepo prepodListRepo = new PrepodListRepo(progressBar, this, "search", search);
-                    prepodListRepo.execute();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                break;
-        }
-        */
-    }
 }
