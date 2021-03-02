@@ -25,6 +25,15 @@
             android:id="@+id/schedule_progressbar"
             android:layout_gravity="center"/>
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/schedule_layout">
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </ScrollView>

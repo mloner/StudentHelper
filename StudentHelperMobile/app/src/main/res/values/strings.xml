@@ -24,6 +24,8 @@
     <string name="Search">Поиск</string>
     <string name="SearchHint">Начните вводить для поиска</string>
 
+    <!-- Расписание -->
+    <string name="Subgroup">Подгруппа</string>
 
     <!-- Сообщения об ошибках -->
     <string name="Login_error">Ошибка: неправильные ФИО</string>

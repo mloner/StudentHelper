@@ -53,7 +53,6 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
     protected Login doInBackground(Void... voids) {
         try {
 
-            //Получение ответа от API
             RepositoryAPI repositoryAPI = new RepositoryAPI();
             responseJSON = repositoryAPI.getResponse(request);
 

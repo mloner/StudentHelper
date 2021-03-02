@@ -21,18 +21,12 @@ public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
     private JSONObject responseJSON;
     private PrepodList prepodList;
 
-    public PrepodListRepo (ProgressBar progressBar, PrepodListView prepodListView, String type, String search) throws JSONException {
+    public PrepodListRepo (ProgressBar progressBar, PrepodListView prepodListView) throws JSONException {
         activity = prepodListView;
         this.progressBar = progressBar;
         request = new JSONObject();
+        request.put("command","getPrepodList");
 
-        if(type.equals("search")){
-            request.put("search",search);
-            request.put("command","getPrepodListSearch");
-        }
-        else {
-            request.put("command","getPrepodList");
-        }
     }
 
     @Override
