@@ -42,6 +42,7 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
         type = Objects.requireNonNull(getIntent().getExtras()).getInt("type");
         login = Objects.requireNonNull(getIntent().getExtras()).getString("login");
         role = Objects.requireNonNull(getIntent().getExtras()).getString("role");
+
         try {
             scheduleRepo = new ScheduleRepo(type, login,role,progressBar, this);
             scheduleRepo.execute();
@@ -54,8 +55,9 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
     public void onAsyncTaskFinished(Schedule scheduleClass) { //Выполняется после получения расписания
         try {
             if(scheduleClass.getStatus().equals("OK")){
+                if(role.equals("student")){
                 JSONArray array = scheduleClass.getResponse();
-                for(int n = 0; n < array.length(); n++){
+                for(int n = 0; n < array.length(); n++) {
                     JSONObject s = (JSONObject) array.get(n);
                     Lesson lesson = new Lesson();
                     lesson.setClass_name(s.get("className").toString());
@@ -69,6 +71,10 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
                     lesson.setRemote(Boolean.parseBoolean(s.get("isRemote").toString()));
                     lesson.setGroup(s.get("groupName").toString());
                     SetLesson(lesson);
+                }
+                }
+                else {
+                    //Парсинг расписания препода
                 }
             }
             else {

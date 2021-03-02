@@ -6,12 +6,8 @@ import org.json.JSONArray;
 
 public class Schedule {
 
-
-
     private String status;
     private JSONArray response;
-
-
 
     public Schedule(){
         status = "";

@@ -30,12 +30,14 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
         activity = scheduleView;
         this.progressBar = progressBar;
         request = new JSONObject();
-        request.put("command","getScheduleStudent");
+        request.put("client_type", "mobile");
         if(role.equals("student")){
             request.put("group", login);
+            request.put("command","getScheduleStudent");
         }
         else {
             request.put("fio", login);
+            request.put("command","getSchedulePrepod");
         }
         switch (this.type){
             case 1:
@@ -73,9 +75,6 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
             schedule = new Schedule();
             schedule.setStatus(status);
             schedule.setResponse(response);
-
-
-
 
         }catch (ProtocolException e) {
             e.printStackTrace();
