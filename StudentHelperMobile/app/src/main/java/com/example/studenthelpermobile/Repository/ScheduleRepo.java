@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.studenthelpermobile.Model.Login;
 import com.example.studenthelpermobile.Model.Schedule;
 import com.example.studenthelpermobile.ScheduleView;
 
@@ -66,7 +65,7 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
         try {
 
             RepositoryAPI repositoryAPI = new RepositoryAPI();
-            responseJSON = repositoryAPI.getResponse(request);
+            responseJSON = repositoryAPI.postResponse(request);
 
 
             String status = responseJSON.get("status").toString();

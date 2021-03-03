@@ -12,22 +12,19 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
 
     private PrepodListView activity;
     private ProgressBar progressBar;
-    private JSONObject request;
     private JSONObject responseJSON;
     private PrepodList prepodList;
 
     public PrepodListRepo (ProgressBar progressBar, PrepodListView prepodListView) throws JSONException {
         activity = prepodListView;
         this.progressBar = progressBar;
-        request = new JSONObject();
-        request.put("command","getPrepodList");
-
-    }
+            }
 
     @Override
     protected void onPreExecute() {
@@ -39,7 +36,8 @@ public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
     protected PrepodList doInBackground(Void... voids) {
         RepositoryAPI repositoryAPI = new RepositoryAPI();
         try {
-            responseJSON = repositoryAPI.getResponse(request);
+            URL url = new URL("http://shipshon.fvds.ru/api/getPrepodList");
+            responseJSON = repositoryAPI.getRequest(url);
 
             String status = responseJSON.get("status").toString();
             JSONArray response = (JSONArray) responseJSON.get("response");

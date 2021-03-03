@@ -54,7 +54,7 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
         try {
 
             RepositoryAPI repositoryAPI = new RepositoryAPI();
-            responseJSON = repositoryAPI.getResponse(request);
+            responseJSON = repositoryAPI.postResponse(request);
 
 
             String status = responseJSON.get("status").toString();
