@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace StudentHelper
 {
+#pragma warning disable CS1591
     public class Program
     {
         public static void Main(string[] args)
@@ -23,4 +24,5 @@ namespace StudentHelper
                     webBuilder.UseStartup<Startup>();
                 });
     }
+#pragma warning restore CS1591
 }
