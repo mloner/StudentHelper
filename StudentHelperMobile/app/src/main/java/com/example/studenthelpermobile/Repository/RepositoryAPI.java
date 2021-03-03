@@ -7,8 +7,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Map;
 
 public class RepositoryAPI {
 
@@ -74,5 +77,23 @@ public class RepositoryAPI {
         responseJSON = new JSONObject(s);
 
         return responseJSON;
+    }
+
+    public String URLBuilder (String url, Map<String, String> params) throws UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+        result.append("?");
+
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            result.append("&");
+        }
+        String resultString = result.toString();
+        if(resultString.length()> 1){
+            resultString = resultString.substring(0, resultString.length() - 1);
+        }
+        url = url + resultString;
+        return url;
     }
 }

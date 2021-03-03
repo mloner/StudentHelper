@@ -71,6 +71,7 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
                     lesson.setRemote(Boolean.parseBoolean(s.get("isRemote").toString()));
                     lesson.setGroup(s.get("groupName").toString());
                     lesson.setDescription(s.get("description").toString());
+                    lesson.setWeekdayname(s.get("weekDayName").toString());
                     SetLesson(lesson);
                 }
                 }
@@ -129,7 +130,7 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
 
         if(lesson.getSubgroup()!=0){
             TextView subgroup = new TextView(this);
-            subgroup.setText(lesson.getSubgroup() + getString(R.string.SubGroup));
+            subgroup.setText(lesson.getSubgroup() + " " + getString(R.string.SubGroup));
             subgroup.setTextSize(16);
             subgroup.setTypeface(null, Typeface.BOLD);
             subgroup.setGravity(Gravity.CENTER_HORIZONTAL);
