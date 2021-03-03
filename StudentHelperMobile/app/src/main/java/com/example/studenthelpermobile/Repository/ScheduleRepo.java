@@ -65,13 +65,11 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
     protected Schedule doInBackground(Void... voids) {
 
         try {
-
             RepositoryAPI repositoryAPI = new RepositoryAPI();
             String s = "http://shipshon.fvds.ru/api/getScheduleStudent";
             s = repositoryAPI.URLBuilder(s, request);
             URL url = new URL(s);
             responseJSON = repositoryAPI.getRequest(url);
-
 
             String status = responseJSON.get("status").toString();
             JSONArray response = (JSONArray) responseJSON.get("response");
