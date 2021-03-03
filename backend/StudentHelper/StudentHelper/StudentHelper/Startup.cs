@@ -31,6 +31,8 @@ namespace StudentHelper
             );
 
             // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen();
+            // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -51,7 +53,14 @@ namespace StudentHelper
                         Url = new Uri("https://example.com/license"),
                     }
                 });
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
+
+            
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -68,12 +77,8 @@ namespace StudentHelper
                 c.RouteTemplate = "api/docs/{documentName}/swagger.json";
             });
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/api/docs/v1/swagger.json", "AnnexUI API V1");
-                c.RoutePrefix = "api/docs";
-            });
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ApiClientes v1"));
 
             app.UseHttpsRedirection();
             app.UseHsts();
