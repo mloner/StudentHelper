@@ -8,6 +8,7 @@ public class PrepodInfo {
     private String phone;
     private String mail;
     private String status;
+    private String degree;
 
     public PrepodInfo(){
         faculty = "";
@@ -17,6 +18,7 @@ public class PrepodInfo {
         phone = "";
         mail = "";
         status = "";
+        degree = "";
     }
     public String getStatus() {
         return status;
@@ -74,4 +76,11 @@ public class PrepodInfo {
         this.mail = mail;
     }
 
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
+    }
 }

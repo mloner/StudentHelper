@@ -14,6 +14,8 @@ public class Lesson {
     private Date date;
     private boolean isRemote;
     private int subgroup;
+    private String description;
+    private String weekdayname;
 
     public Lesson(){
         subject_name = "";
@@ -25,6 +27,16 @@ public class Lesson {
         date = new Date();
         isRemote = false;
         subgroup = 0;
+        description = "";
+        weekdayname = "";
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getLesson_start() {
@@ -105,5 +117,13 @@ public class Lesson {
 
     public void setSubgroup(int subgroup) {
         this.subgroup = subgroup;
+    }
+
+    public String getWeekdayname() {
+        return weekdayname;
+    }
+
+    public void setWeekdayname(String weekdayname) {
+        this.weekdayname = weekdayname;
     }
 }

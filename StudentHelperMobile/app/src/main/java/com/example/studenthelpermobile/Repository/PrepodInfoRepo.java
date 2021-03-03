@@ -11,13 +11,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URL;
 
 
 public class PrepodInfoRepo extends AsyncTask<Void, Void, PrepodInfo> {
 
     private PrepodInfoView activity;
     private ProgressBar progressBar;
-    private JSONObject request;
+    private String fio;
     private JSONObject responseJSON;
     private PrepodInfo prepodInfo;
 
@@ -25,9 +26,7 @@ public class PrepodInfoRepo extends AsyncTask<Void, Void, PrepodInfo> {
     public PrepodInfoRepo (ProgressBar progressBar, PrepodInfoView prepodInfoView, String name) throws JSONException {
         activity = prepodInfoView;
         this.progressBar = progressBar;
-        request = new JSONObject();
-        request.put("command","getPrepodInfo");
-        request.put("fio", name);
+        fio = name;
     }
 
 
@@ -41,7 +40,8 @@ public class PrepodInfoRepo extends AsyncTask<Void, Void, PrepodInfo> {
     protected PrepodInfo doInBackground(Void... voids) {
         RepositoryAPI repositoryAPI = new RepositoryAPI();
         try {
-            responseJSON = repositoryAPI.getResponse(request);
+            URL url = new URL("http://shipshon.fvds.ru/api/getPrepodInfo" + "?fio=" + fio);
+            responseJSON = repositoryAPI.getRequest(url);
 
             String response = responseJSON.get("status").toString();
             JSONObject r = (JSONObject) responseJSON.get("response");
@@ -52,6 +52,7 @@ public class PrepodInfoRepo extends AsyncTask<Void, Void, PrepodInfo> {
             String phone = r.get("phone").toString();
             String mail = r.get("email").toString();
             String pos = r.get("position").toString();
+            String degree = r.get("degree").toString();
 
             prepodInfo = new PrepodInfo();
             prepodInfo.setCathedra(cath);
@@ -61,7 +62,7 @@ public class PrepodInfoRepo extends AsyncTask<Void, Void, PrepodInfo> {
             prepodInfo.setMail(mail);
             prepodInfo.setPosition(pos);
             prepodInfo.setStatus(response);
-
+            prepodInfo.setDegree(degree);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -15,12 +15,15 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginRepo extends AsyncTask <Void, Void, Login> {
 
-    private JSONObject request;
+    private Map <String, String> request;
     ProgressBar progressBar;
     private JSONObject responseJSON;
     private MainActivity activity;
@@ -34,9 +37,8 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
 
        String encryptedPass = PasswordEncrypt(password);
 
-        request = new JSONObject();
+        request = new HashMap<>();
         request.put("client_type", "mobile");
-        request.put("command", "authorizationMobile");
         request.put("role", role);
         request.put("arg", login);
         request.put("pass", encryptedPass);
@@ -54,7 +56,10 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
         try {
 
             RepositoryAPI repositoryAPI = new RepositoryAPI();
-            responseJSON = repositoryAPI.getResponse(request);
+            String s = "http://shipshon.fvds.ru/api/authorizationMobile";
+            s = repositoryAPI.URLBuilder(s, request);
+            URL url = new URL(s);
+            responseJSON = repositoryAPI.getRequest(url);
 
 
             String status = responseJSON.get("status").toString();

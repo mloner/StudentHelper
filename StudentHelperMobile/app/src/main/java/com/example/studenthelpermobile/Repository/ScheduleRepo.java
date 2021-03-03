@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.studenthelpermobile.Model.Login;
 import com.example.studenthelpermobile.Model.Schedule;
 import com.example.studenthelpermobile.ScheduleView;
 
@@ -15,13 +14,16 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
 
     private int type;
     private ScheduleView activity;
     private ProgressBar progressBar;
-    private JSONObject request;
+    private Map<String, String> request;
     private JSONObject responseJSON;
     private Schedule schedule;
 
@@ -29,11 +31,10 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
         this.type = type;
         activity = scheduleView;
         this.progressBar = progressBar;
-        request = new JSONObject();
+        request = new HashMap<>();
         request.put("client_type", "mobile");
         if(role.equals("student")){
             request.put("group", login);
-            request.put("command","getScheduleStudent");
         }
         else {
             request.put("fio", login);
@@ -66,7 +67,10 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
         try {
 
             RepositoryAPI repositoryAPI = new RepositoryAPI();
-            responseJSON = repositoryAPI.getResponse(request);
+            String s = "http://shipshon.fvds.ru/api/getScheduleStudent";
+            s = repositoryAPI.URLBuilder(s, request);
+            URL url = new URL(s);
+            responseJSON = repositoryAPI.getRequest(url);
 
 
             String status = responseJSON.get("status").toString();

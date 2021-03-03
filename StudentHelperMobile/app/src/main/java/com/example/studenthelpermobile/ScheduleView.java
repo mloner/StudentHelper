@@ -70,6 +70,8 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
                     lesson.setSubgroup(Integer.parseInt(s.get("subGroup").toString()));
                     lesson.setRemote(Boolean.parseBoolean(s.get("isRemote").toString()));
                     lesson.setGroup(s.get("groupName").toString());
+                    lesson.setDescription(s.get("description").toString());
+                    lesson.setWeekdayname(s.get("weekDayName").toString());
                     SetLesson(lesson);
                 }
                 }
@@ -128,11 +130,26 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
 
         if(lesson.getSubgroup()!=0){
             TextView subgroup = new TextView(this);
-            subgroup.setText(lesson.getSubgroup() + getString(R.string.Subgroup));
+            subgroup.setText(lesson.getSubgroup() + " " + getString(R.string.SubGroup));
             subgroup.setTextSize(16);
             subgroup.setTypeface(null, Typeface.BOLD);
             subgroup.setGravity(Gravity.CENTER_HORIZONTAL);
             linearLayout.addView(subgroup);
+        }
+
+        if(!lesson.getDescription().equals("null")){
+            TextView description = new TextView(this);
+            if (lesson.getDescription().contains("/")){
+                description.setText(getString(R.string.FirstSubgroup) + ": " + lesson.getDescription().substring(0, lesson.getDescription().indexOf('/')) + "\n" +
+                        getString(R.string.SecondSubgroup) + ": " + lesson.getDescription().substring(lesson.getDescription().indexOf('/')));
+            }
+            else {
+                description.setText(lesson.getDescription());
+            }
+            description.setTextSize(16);
+            description.setTypeface(null, Typeface.BOLD);
+            description.setGravity(Gravity.CENTER_HORIZONTAL);
+            linearLayout.addView(description);
         }
     }
 

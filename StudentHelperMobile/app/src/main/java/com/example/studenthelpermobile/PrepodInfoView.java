@@ -43,8 +43,8 @@ public class PrepodInfoView extends AppCompatActivity implements AsyncInterface 
     public void onAsyncTaskFinished(PrepodInfo prepodInfo) {
         try {
             if(prepodInfo.getStatus().equals("OK")){
-                String info = "Имя: " + name + "\nФакультет: " + prepodInfo.getFaculty() + "\nКафедра: " + prepodInfo.getCathedra() + "\nНа каком этаже: " + prepodInfo.getLocation() +
-                        "\nДолжность: " + prepodInfo.getPosition() + "\nНомер телефона: " + prepodInfo.getPhone() + "\nАдрес электронной почты: " + prepodInfo.getMail();
+                String info = "Имя: " + name + "\nФакультет: " + prepodInfo.getFaculty() + "\nКафедра: " + prepodInfo.getCathedra() + "\nГде найти: " + prepodInfo.getLocation() +
+                        "\nДолжность: " + prepodInfo.getPosition() + "\nУченая степень: " + prepodInfo.getDegree() + "\nНомер телефона: " + prepodInfo.getPhone() + "\nАдрес электронной почты: " + prepodInfo.getMail();
                 textView.setText(info);
             }
             else {
