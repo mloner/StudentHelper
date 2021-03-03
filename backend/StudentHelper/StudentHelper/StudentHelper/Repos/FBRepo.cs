@@ -38,6 +38,7 @@ namespace StudentHelper.Repos
 			public string ROLE { get; set; }
 			public string ARG { get; set; }
 			public string STATE { get; set; }
+			public int? SUBGROUP { get; set; }
 		}
 	}
 }

@@ -28,33 +28,6 @@ namespace StudentHelper.Controllers
             _FBConStr = _config["Config:FBConnectionString"];
         }
 
-        //[HttpGet("kek")]
-        //public IActionResult GetTest()
-        //{
-        //    var today = new DateTime(2021, 3, 3);//  46 неделя (должна быть нечетная учебная неделя)
-        //    var fs = new DateTime(today.Year, 9, 1);// 36 неделя (нечетная учебная неделя)
-        //    DateTime lastDay = new DateTime(today.Year, 12, 31);
-        //    var cal = new GregorianCalendar();
-        //    bool weekNumChetn;
-        //    int weekNumInt;
-        //    if (today <= lastDay && today >= fs)
-        //    {
-        //        var weekNumberFs = cal.GetWeekOfYear(fs, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
-        //        weekNumChetn = weekNumberFs % 2 != 0;
-        //        weekNumInt = weekNumChetn ? 1 : 2;
-        //    }
-        //    var weekNumberToday = cal.GetWeekOfYear(today, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
-
-
-        //    dynamic resp = new JObject();
-        //    resp.status = "OK";
-        //    resp.response = "";
-
-        //    string respStr = resp.ToString();
-        //    _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
-
-        //    return Content(respStr, "application/json");
-        //}
 
         [HttpGet("getPrepodList")]
         public IActionResult GetPrepodList()
@@ -287,8 +260,6 @@ namespace StudentHelper.Controllers
             weekNumChetn = weekNumberToday % 2 == 0;
             if ((dateSchedule <= lastDay && dateSchedule >= fs) || (todayFirstDayNum != todayFullWeekNum))
             {
-                //  var weekNumberFs = cal.GetWeekOfYear(fs, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
-                
                 weekNumInt = weekNumChetn ? 1 : 2;
             }
             else if((dateSchedule < new DateTime(dateSchedule.Year, 9,1) && (todayFirstDayNum == todayFullWeekNum)))
@@ -296,10 +267,7 @@ namespace StudentHelper.Controllers
                 weekNumInt = weekNumChetn ? 1 : 2;
             }
             
-
             string RUmonth = dateSchedule.ToString("dddd", CultureInfo.GetCultureInfo("ru-ru"));
-
-
 
             dynamic resp = new JObject();
             resp.status = "OK";
@@ -336,7 +304,6 @@ namespace StudentHelper.Controllers
                 var schedule = schedules;
                 if (schedule_type == "two_weeks")
                 {
-                    //schedule = schedules.OrderBy(s => s.lessonStart);
                 }
                 else
                 {
@@ -364,8 +331,6 @@ namespace StudentHelper.Controllers
                         ));
                 }
             }
-
-
 
             string respStr = resp.ToString();
             _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
@@ -399,7 +364,8 @@ namespace StudentHelper.Controllers
                     resp.response = new JObject(
                                                 new JProperty("role", newUser.ROLE),
                                                 new JProperty("arg", newUser.ARG),
-                                                new JProperty("state", newUser.STATE)
+                                                new JProperty("state", newUser.STATE),
+                                                new JProperty("subGroup", newUser.SUBGROUP)
                                                 );
                 }
                 else
@@ -407,7 +373,8 @@ namespace StudentHelper.Controllers
                     resp.status = "OK";
                     resp.response = new JObject(new JProperty("role", user.ROLE),
                                                 new JProperty("arg", user.ARG),
-                                                new JProperty("state", user.STATE));
+                                                new JProperty("state", user.STATE),
+                                                new JProperty("subGroup", user.SUBGROUP));
                 }
             }
 
@@ -430,13 +397,16 @@ namespace StudentHelper.Controllers
             using (var db = new FBRepo(_FBConStr))
             {
                 string idvk = req.idvk;
+
                 string role = req.role;
                 string arg = req.arg;
+                int subgroup = req.subgroup;
 
                 var user = db.USERS.FirstOrDefault(u => u.IDVK == idvk);
 
                 user.ROLE = role;
                 user.ARG = arg;
+                user.SUBGROUP = subgroup;
 
                 db.SaveChanges();
 
