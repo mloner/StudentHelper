@@ -63,4 +63,7 @@
   
 ## Ссылка на trello
 https://trello.com/b/wV3wPOBh/student-helper
+
+## Ссылка на swagger
+http://shipshon.fvds.ru/swagger/index.html
 	
