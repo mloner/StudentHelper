@@ -10,7 +10,7 @@ headers = {'Content-type': 'application/json',  # Определение тип�
            'Content-Encoding': 'utf-8'}
 
 # POST
-def _registerUser(idvk:str, role:str, arg:str):
+def _registerUser(idvk:str, role:str, arg:str, subGroup:str):
     url = 'http://shipshon.fvds.ru/api/registerUser'
     req = {}
     req['client_type'] = 'bot'
@@ -18,18 +18,20 @@ def _registerUser(idvk:str, role:str, arg:str):
     req['idvk'] = idvk
     req['role'] = role
     req['arg'] = arg
+    req['subGroup'] = subGroup
     print(json.dumps(req))
     response = json.loads(requests.post(url, json.dumps(req), headers=headers).text)
     print(response)
     return response
 
-def _setUserState(idvk:str, state:str):
-    url = 'http://shipshon.fvds.ru/api/setUserState'
+def _setUserField(idvk:str, field:str, value:str):
+    url = 'http://shipshon.fvds.ru/api/setUserField'
     req = {}
     req['client_type'] = 'bot'
-    req['command'] = 'setUserState'
+    req['command'] = 'setUserField'
     req['idvk'] = idvk
-    req['state'] = state
+    req['field'] = field
+    req['value'] = value
     print(json.dumps(req))
     response = json.loads(requests.post(url, json.dumps(req), headers=headers).text)
     print(response)
