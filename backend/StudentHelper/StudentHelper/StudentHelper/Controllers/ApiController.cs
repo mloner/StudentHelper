@@ -460,21 +460,25 @@ namespace StudentHelper.Controllers
             resp.status = "OK";
             resp.response = new JObject();
 
+            string idvk = req.idvk;
             using (var db = new FBRepo(_FBConStr))
             {
-                string idvk = req.idvk;
-                string role = req.role;
-                string arg = req.arg;
-
                 var user = db.USERS.FirstOrDefault(u => u.IDVK == idvk);
+                if (user == null)
+                {
+                    resp.status = "FAIL";
+                    resp.response = "No such user";
+                }
+                else
+                {
+                    string state = req.state;
+                    user.STATE = state;
 
-                user.ROLE = role;
-                user.ARG = arg;
+                    db.SaveChanges();
 
-                db.SaveChanges();
-
-                resp.status = "OK";
-                resp.response = "OK";
+                    resp.status = "OK";
+                    resp.response = "";
+                }
             }
 
             string respStr = resp.ToString();
