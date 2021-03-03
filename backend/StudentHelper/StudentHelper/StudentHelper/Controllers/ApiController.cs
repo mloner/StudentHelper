@@ -29,12 +29,95 @@ namespace StudentHelper.Controllers
             _FBConStr = _config["Config:FBConnectionString"];
         }
 
-        [HttpGet]
-        public IActionResult Get()
+        [HttpGet("kek")]
+        public IActionResult GetTest()
         {
-            return Content("{\"status\" : \"FAIL\" , \"request\" : \"Do Post request\"}", "application/json");
+            dynamic resp = new JObject();
+            resp.status = "OK";
+            resp.response = "";
+
+            string respStr = resp.ToString();
+            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + "getPrepodList" + "\n" + "Response: " + respStr);
+
+            return Content(respStr, "application/json");
         }
-       
+
+        [HttpGet("getPrepodList")]
+        public IActionResult GetPrepodList()
+        {
+            dynamic resp = new JObject();
+            resp.status = "OK";
+            resp.response = new JArray();
+            using (PGRepo db = new PGRepo(_PGConStr))
+            {
+                var teachers = db.Teachers.ToList();
+                foreach (var t in teachers)
+                {
+                    resp.response.Add(new JValue(t.FIO));
+                }
+            }
+            string respStr = resp.ToString();
+            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + "getPrepodList" + "\n" + "Response: " + respStr);
+
+            return Content(respStr, "application/json");
+        }
+
+        [HttpGet("getPrepodInfo")]
+        public IActionResult GetPrepodInfo([FromQuery(Name = "fio")] string fio)
+        {
+            dynamic resp = new JObject();
+            resp.status = "OK";
+            resp.response = new JObject();
+
+            using (PGRepo db = new PGRepo(_PGConStr))
+            {
+                var teachers =
+                    from t in db.Teachers
+                    join tp in db.TeacherPositions on t.TeacherPositionid equals tp.id
+                    join c in db.Cathedras on t.Cathedraid equals c.id
+                    join f in db.Facultates on c.facultate_id equals f.id
+                    join td in db.TeacherDegrees on t.TeacherDegreeid equals td.id
+                    select new
+                    {
+                        FIO = t.FIO,
+                        position = tp.name,
+                        facultate = f.name,
+                        location = c.location,
+                        cathedraName = c.name,
+                        phone = t.phone,
+                        email = t.email,
+                        degree = td.name
+                    };
+                var teacher = teachers.FirstOrDefault(t => t.FIO == fio);
+                if (teacher != null)
+                {
+                    resp.status = "OK";
+                    resp.response = new JObject(
+                        new JProperty("faculty", teacher.facultate),
+                        new JProperty("cathedra", teacher.cathedraName),
+                        new JProperty("location", teacher.location),
+                        new JProperty("position", teacher.position),
+                        new JProperty("phone", teacher.phone),
+                        new JProperty("email", teacher.email),
+                        new JProperty("degree", teacher.degree)
+                        );
+                }
+                else
+                {
+                    resp.status = "FAIL";
+                    resp.response = new JValue("No such teacher");
+                }
+
+
+
+                string respStr = resp.ToString();
+                _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + "getPrepodInfo" + "\n" + "Response: " + respStr);
+
+                return Content(respStr, "application/json");
+            }
+        }
+
+
         [HttpPost]
         [AllowAnonymous]
         public IActionResult Post([FromBody] object data)
@@ -148,7 +231,7 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
-                    // Получить текущее состояние юзера (если юзера не существует, создать его)
+                    // Получить текущее состояние юзера (если юзера не существует, создать его и вернуть дефолтное состояние)
                     case "getUserState":
                         {
                             using (var db = new FBRepo(_FBConStr))
@@ -206,7 +289,7 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
-                    // Получить список ФИО преподавателей
+                    // Получить список ФИО преподавателей     (DONE)===========================================
                     case "getPrepodList":
                         {
                             resp.status = "OK";
@@ -303,6 +386,7 @@ namespace StudentHelper.Controllers
                             }
                             break;
                         }
+                    // Получить расписание для студента
                     case "getScheduleStudent":
                         {
                             string group = req.group;
@@ -325,18 +409,20 @@ namespace StudentHelper.Controllers
                                         className = c.name,
                                         lessonType = ltp.name,
                                         lessonStart = ltm.start_time,
-                                        lessonEnd = (from ltm1 in db.LessonTimes where ltm1.id == l.start_lesson_num + l.lesson_duration - 1 select ltm1.end_time).First(),
+                                        lessonEnd = (from ltm1 in db.LessonTimes
+                                                     where ltm1.id == (l.start_lesson_num + l.lesson_duration - 1)
+                                                     select ltm1.end_time).Single(),
                                         groupName = g.name,
                                         subGroup = l.subgroup,
                                         isRemote = l.remote,
                                         weekNum = l.week_num,
                                         weekDayName = wd.name,
-                                        duration = l.lesson_duration
-
-
-
+                                        duration = l.lesson_duration,
+                                        description = l.description
                                     };
-                                var schedule = schedules.Where(s => s.groupName == "ИВТ-363" && s.weekNum == 1 && s.weekDayName == "Среда");
+                                var schedule = schedules.Where(s => s.groupName == group &&
+                                                                    s.weekNum == 1 &&
+                                                                    s.weekDayName == "Среда");
                                 resp.status = "OK";
                                 resp.response = new JArray();
                                 
@@ -351,7 +437,8 @@ namespace StudentHelper.Controllers
                                         new JProperty("lessonEnd", si.lessonEnd),
                                         new JProperty("groupName", si.groupName),
                                         new JProperty("subGroup", si.subGroup),
-                                        new JProperty("isRemote", si.isRemote)
+                                        new JProperty("isRemote", si.isRemote),
+                                        new JProperty("description", si.description)
                                         ));
                                 }
                             }
@@ -368,7 +455,7 @@ namespace StudentHelper.Controllers
             }
             catch (Exception ex)
             {
-                resp.status = "FAIL";
+                resp.status = "ERROR";
                 resp.response = ex.Message;
             }
 
