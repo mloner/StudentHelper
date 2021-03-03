@@ -33,8 +33,6 @@ public class RepositoryAPI {
             os.write(input, 0, input.length);
         }
 
-        //Получение ответа
-
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String inputLine;
         StringBuffer responseString = new StringBuffer();
