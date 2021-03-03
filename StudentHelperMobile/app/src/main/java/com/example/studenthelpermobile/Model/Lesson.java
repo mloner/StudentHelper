@@ -14,6 +14,7 @@ public class Lesson {
     private Date date;
     private boolean isRemote;
     private int subgroup;
+    private String description;
 
     public Lesson(){
         subject_name = "";
@@ -25,6 +26,15 @@ public class Lesson {
         date = new Date();
         isRemote = false;
         subgroup = 0;
+        description = "";
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getLesson_start() {
