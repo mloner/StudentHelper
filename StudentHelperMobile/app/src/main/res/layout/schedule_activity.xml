@@ -8,6 +8,34 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/first_subgroup"
+                android:text="@string/FirstSubgroup"
+                android:layout_weight="1"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/second_subgroup"
+                android:text="@string/SecondSubgroup"
+                android:layout_weight="1"/>
+
+
+        </LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/both_subgroup"
+            android:text="@string/BothSubgroup"
+            />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

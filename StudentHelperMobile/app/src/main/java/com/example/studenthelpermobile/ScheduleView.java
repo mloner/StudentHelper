@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,11 +19,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ScheduleView extends AppCompatActivity implements AsyncInterface <Schedule> {
+public class ScheduleView extends AppCompatActivity implements View.OnClickListener, AsyncInterface <Schedule> {
 
     TextView ErrorText;
     ProgressBar progressBar;
@@ -31,6 +33,11 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
     private String role;
     ScheduleRepo scheduleRepo;
     LinearLayout linearLayout;
+    ArrayList <Lesson> lessonArrayList;
+
+    Button firstSub;
+    Button secondSub;
+    Button bothSub;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,14 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
         login = Objects.requireNonNull(getIntent().getExtras()).getString("login");
         role = Objects.requireNonNull(getIntent().getExtras()).getString("role");
 
+        firstSub = findViewById(R.id.first_subgroup);
+        firstSub.setOnClickListener(this);
+        secondSub = findViewById(R.id.second_subgroup);
+        secondSub.setOnClickListener(this);
+        bothSub = findViewById(R.id.both_subgroup);
+        bothSub.setOnClickListener(this);
+
+        lessonArrayList = new ArrayList<>();
         try {
             scheduleRepo = new ScheduleRepo(type, login,role,progressBar, this);
             scheduleRepo.execute();
@@ -60,6 +75,7 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
                 for(int n = 0; n < array.length(); n++) {
                     JSONObject s = (JSONObject) array.get(n);
                     Lesson lesson = new Lesson();
+                    lessonArrayList.add(lesson);
                     lesson.setClass_name(s.get("className").toString());
                     lesson.setPrepod_name(s.get("prepodName").toString());
                     lesson.setSubject_name(s.get("subjectName").toString());
@@ -141,7 +157,7 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
             TextView description = new TextView(this);
             if (lesson.getDescription().contains("/")){
                 description.setText(getString(R.string.FirstSubgroup) + ": " + lesson.getDescription().substring(0, lesson.getDescription().indexOf('/')) + "\n" +
-                        getString(R.string.SecondSubgroup) + ": " + lesson.getDescription().substring(lesson.getDescription().indexOf('/')));
+                        getString(R.string.SecondSubgroup) + ": " + lesson.getDescription().substring(lesson.getDescription().indexOf('/')+1));
             }
             else {
                 description.setText(lesson.getDescription());
@@ -154,4 +170,33 @@ public class ScheduleView extends AppCompatActivity implements AsyncInterface <S
     }
 
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.first_subgroup:
+                linearLayout.removeAllViews();
+                for (Lesson l: lessonArrayList
+                     ) {
+                    if(l.getSubgroup()==1 || l.getSubgroup() == 0){
+                        SetLesson(l);
+                    }
+                }
+                break;
+            case R.id.second_subgroup:
+                linearLayout.removeAllViews();
+                for (Lesson l: lessonArrayList
+                ) {
+                    if(l.getSubgroup()==2 || l.getSubgroup() == 0){
+                        SetLesson(l);
+                    }
+                }
+                break;
+            default:
+                linearLayout.removeAllViews();
+                for (Lesson l: lessonArrayList
+                ) {
+                    SetLesson(l);
+                }
+        }
+    }
 }

@@ -28,6 +28,8 @@
     <string name="SubGroup">Подгруппа</string>
     <string name="FirstSubgroup">1 подгруппа</string>
     <string name="SecondSubgroup">2 подгруппа</string>
+    <string name="BothSubgroup">Обе подгруппы</string>
+    BothSubgroup
 
     <!-- Сообщения об ошибках -->
     <string name="Login_error">Ошибка: неправильные ФИО</string>
