@@ -35,7 +35,7 @@ keyboard1 = str(keyboard1.decode('utf-8'))
 keyboard2 = {
     "one_time": True,
     "buttons": [
-        [get_but('На сегодня', 'primary'), get_but('На завтра', 'primary'), get_but('На 2 недели', 'primary')],
+        [get_but('На сегодня', 'primary'), get_but('На завтра', 'primary'), get_but('По дате', 'primary')],
         [get_but('Разлогиниться', 'negative')]
     ]
 }
@@ -65,7 +65,7 @@ keyboard4 = str(keyboard4.decode('utf-8'))
 keyboard5 = {
     "one_time": True,
     "buttons": [
-        [get_but('На сегодня', 'primary'), get_but('На завтра', 'primary'), get_but('На 2 недели', 'primary')],
+        [get_but('На сегодня', 'primary'), get_but('На завтра', 'primary'), get_but('По дате', 'primary')],
         [get_but('Разлогиниться', 'negative'), get_but('Сменить подгруппу', 'primary')]
     ]
 }

@@ -2,30 +2,22 @@ import vk_api
 from vk_api.longpoll import VkLongPoll, VkEventType
 import keyboards
 import API_repository
-
-
+import datetime
 
 import tokens
 token = tokens.my_token
-vk = vk_api.VkApi(token=token)
-longpoll = VkLongPoll(vk)
+vk_session = vk_api.VkApi(token=token)
+vk = vk_session.get_api()
+longpoll = VkLongPoll(vk_session)
 
 def sender(user_id, answer, keyboard_number):
-    vk.method('messages.send', {
-                                'user_id': user_id,
-                                'message': answer,
-                                'random_id': 0,
-                                'keyboard': keyboards.keyboards[keyboard_number]
-                               }
-             )
+    vk.messages.send(user_id=user_id, message=answer, keyboard = keyboards.keyboards[keyboard_number], random_id=0)
 
 def sender_without_keyboard(user_id, answer):
-    vk.method('messages.send', {
-                                'user_id': user_id,
-                                'message': answer,
-                                'random_id': 0,
-                               }
-             )
+    vk.messages.send(user_id = user_id, message = answer, random_id = 0)
+
+def sender_XOXOL(user_id):
+    vk.messages.send(user_id=user_id, message='Для Миииииши', attachment = 'doc163807367_588463638', random_id=0)
 
 def log(event):
     print('\n\nNew message:')
@@ -33,7 +25,7 @@ def log(event):
     print("Text: " + event.text)
 
 
-def scheduel_text_mod(i, schedule_text):
+def scheduel_text_S(i, schedule_text):
     schedule_text = schedule_text + '📖 ' + i['subjectName'] + '\n'
     schedule_text = schedule_text + '📄 ' + i['lessonType'] + '\n'
     schedule_text = schedule_text + '⏰ ' + i['lessonStart'] + ' - ' + i['lessonEnd'] + '\n'
@@ -47,12 +39,28 @@ def scheduel_text_mod(i, schedule_text):
     schedule_text = schedule_text + '🤡 ' + i['prepodName'] + '\n\n'
     return schedule_text
 
+def scheduel_text_P(i, schedule_text):
+    schedule_text = schedule_text + '📖 ' + i['subjectName'] + '\n'
+    schedule_text = schedule_text + '📄 ' + i['lessonType'] + '\n'
+    schedule_text = schedule_text + '⏰ ' + i['lessonStart'] + ' - ' + i['lessonEnd'] + '\n'
+    schedule_text = schedule_text + '🤡 ' + i['groupName'] + '\n'
+    if i['subGroup'] == 0:
+        schedule_text = schedule_text + '🗿 ' + 'Обе подргуппы' + '\n'
+    elif i['subGroup'] == 1:
+        schedule_text = schedule_text + '🗿 ' + '1 подргуппа' + '\n'
+    elif i['subGroup'] == 2:
+        schedule_text = schedule_text + '🗿 ' + '2 подргуппа' + '\n'
+    schedule_text = schedule_text + '🚪 ' + i['className'] + '\n\n'
+    return schedule_text
 
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW and event.to_me:
         log(event)
 
         user_state = API_repository._getUserState(event.user_id)['response']
+
+        if (event.text == 'хохол' or event.text == 'Хохол'):
+            sender_XOXOL(event.user_id)
 
         if event.text == 'Авторизация' and user_state['state'] != 'Finish':
             API_repository._setUserField(event.user_id, 'state', 'RegisterUser')
@@ -76,95 +84,104 @@ for event in longpoll.listen():
 
         elif event.text == 'На сегодня' and user_state['state'] == 'Finish':
             if user_state['role'] == 'student':
-                schedule_today = API_repository._getScheduleStudent(user_state['role'], user_state['arg'], 'today')['response']
+                schedule_today = API_repository._getScheduleStudent(user_state['role'], user_state['arg'], 'today', '')['response']
                 schedule_text = ''
                 if user_state['subGroup'] == 0:
-                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' Обе подргуппы' + '\n\n'
+                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' Обе подргуппы' + '\n'
                     if schedule_today != []:
+                        schedule_text = schedule_text + '📅 ' + schedule_today[0]['weekDayName'].title() + '\n\n'
                         for i in schedule_today:
-                            schedule_text = scheduel_text_mod(i, schedule_text)
+                            schedule_text = scheduel_text_S(i, schedule_text)
                     else:
                         schedule_text = schedule_text + 'КА-НИ-КУ-ЛЫ, СЕГОДНЯ В ШКОЛУ НЕ ПОЙДУ'
 
                 elif user_state['subGroup'] == 1:
-                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' 1 подргуппа' + '\n\n'
+                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' 1 подргуппа' + '\n'
                     if schedule_today != []:
+                        schedule_text = schedule_text + '📅 ' + schedule_today[0]['weekDayName'].title() + '\n\n'
                         for i in schedule_today:
                             if i['subGroup'] == 1 or i['subGroup'] == 0:
-                                schedule_text = scheduel_text_mod(i, schedule_text)
+                                schedule_text = scheduel_text_S(i, schedule_text)
                     else:
                         schedule_text = schedule_text + 'КА-НИ-КУ-ЛЫ, СЕГОДНЯ В ШКОЛУ НЕ ПОЙДУ'
 
                 elif user_state['subGroup'] == 2:
-                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' 2 подргуппа' + '\n\n'
+                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' 2 подргуппа' + '\n'
                     if schedule_today != []:
+                        schedule_text = schedule_text + '📅 ' + schedule_today[0]['weekDayName'].title() + '\n\n'
                         for i in schedule_today:
                             if i['subGroup'] == 2 or i['subGroup'] == 0:
-                                schedule_text = scheduel_text_mod(i, schedule_text)
+                                schedule_text = scheduel_text_S(i, schedule_text)
                     else:
                         schedule_text = schedule_text + 'КА-НИ-КУ-ЛЫ, СЕГОДНЯ В ШКОЛУ НЕ ПОЙДУ'
-
                 sender(event.user_id, schedule_text, 5)
 
-
             elif user_state['role'] == 'prepod':
-                schedule_today = API_repository._getSchedulePrepod(user_state['role'], user_state['arg'], 'today')
+                schedule_today = API_repository._getSchedulePrepod(user_state['role'], user_state['arg'], 'today', '')['response']
+                schedule_text = ''
+                schedule_text = schedule_text + '👥 ' + user_state['arg'] + '\n'
+                if schedule_today != []:
+                    schedule_text = schedule_text + '📅 ' + schedule_today[0]['weekDayName'].title() + '\n\n'
+                    for i in schedule_today:
+                        schedule_text = scheduel_text_P(i, schedule_text)
+                else:
+                    schedule_text = schedule_text + 'ОТДОХНИ, ТЫ ЗАСЛУЖИЛ'
+                sender(event.user_id, schedule_text, 2)
 
         elif event.text == 'На завтра' and user_state['state'] == 'Finish':
             if user_state['role'] == 'student':
-                schedule_tomorrow = API_repository._getScheduleStudent(user_state['role'], user_state['arg'], 'tomorrow')['response']
+                schedule_tomorrow = API_repository._getScheduleStudent(user_state['role'], user_state['arg'], 'tomorrow', '')['response']
                 schedule_text = ''
                 if user_state['subGroup'] == 0:
-                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' Обе подргуппы' + '\n\n'
+                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' Обе подргуппы' + '\n'
                     if schedule_tomorrow != []:
+                        schedule_text = schedule_text + '📅 ' + schedule_tomorrow[0]['weekDayName'].title() + '\n\n'
                         for i in schedule_tomorrow:
-                            schedule_text = scheduel_text_mod(i, schedule_text)
+                            schedule_text = scheduel_text_S(i, schedule_text)
                     else:
                         schedule_text = schedule_text + 'КА-НИ-КУ-ЛЫ, ЗАВТРА В ШКОЛУ НЕ ПОЙДУ'
 
                 elif user_state['subGroup'] == 1:
-                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' 1 подргуппа' + '\n\n'
+                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' 1 подргуппа' + '\n'
                     if schedule_tomorrow != []:
+                        schedule_text = schedule_text + '📅 ' + schedule_tomorrow[0]['weekDayName'].title() + '\n\n'
                         for i in schedule_tomorrow:
                             if i['subGroup'] == 1 or i['subGroup'] == 0:
-                                schedule_text = scheduel_text_mod(i, schedule_text)
+                                schedule_text = scheduel_text_S(i, schedule_text)
                     else:
                         schedule_text = schedule_text + 'КА-НИ-КУ-ЛЫ, ЗАВТРА В ШКОЛУ НЕ ПОЙДУ'
 
                 elif user_state['subGroup'] == 2:
-                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' 2 подргуппа' + '\n\n'
+                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' 2 подргуппа' + '\n'
                     if schedule_tomorrow != []:
+                        schedule_text = schedule_text + '📅 ' + schedule_tomorrow[0]['weekDayName'].title() + '\n\n'
                         for i in schedule_tomorrow:
                             if i['subGroup'] == 2 or i['subGroup'] == 0:
-                                schedule_text = scheduel_text_mod(i, schedule_text)
+                                schedule_text = scheduel_text_S(i, schedule_text)
                     else:
                         schedule_text = schedule_text + 'КА-НИ-КУ-ЛЫ, ЗАВТРА В ШКОЛУ НЕ ПОЙДУ'
-
                 sender(event.user_id, schedule_text, 5)
-                # schedule_text = '👥 ' + user_state['arg'] + '\n\n'
-                # for i in schedule_tomorrow:
-                #     schedule_text = schedule_text + '📖 ' + i['lessonType'] + ' '
-                #     schedule_text = schedule_text + i['subjectName'] + '\n'
-                #     schedule_text = schedule_text + '⏰ ' + i['lessonStart'] + ' - ' + i['lessonEnd'] + ' '
-                #     schedule_text = schedule_text + '🚪 ' + i['className'] + '\n'
-                #     if i['subGroup'] == 0:
-                #         schedule_text = schedule_text + '🗿 ' + 'Обе подргуппы' + ' '
-                #     elif i['subGroup'] == 1:
-                #         schedule_text = schedule_text + '🗿 ' + '1 подргуппа' + ' '
-                #     elif i['subGroup'] == 2:
-                #         schedule_text = schedule_text + '🗿 ' + '2 подргуппа' + ' '
-                #     schedule_text = schedule_text + '🤡 ' + i['prepodName'] + '\n\n'
 
             elif user_state['role'] == 'prepod':
-                schedule_tomorrow = API_repository._getSchedulePrepod(user_state['role'], user_state['arg'], 'tomorrow')
+                schedule_tomorrow = API_repository._getSchedulePrepod(user_state['role'], user_state['arg'], 'tomorrow', '')['response']
+                schedule_text = ''
+                schedule_text = schedule_text + '👥 ' + user_state['arg'] + '\n'
+                if schedule_tomorrow != []:
+                    schedule_text = schedule_text + '📅 ' + schedule_tomorrow[0]['weekDayName'].title() + '\n\n'
+                    for i in schedule_tomorrow:
+                        schedule_text = scheduel_text_P(i, schedule_text)
+                else:
+                    schedule_text = schedule_text + 'ОТДОХНИ, ТЫ ЗАСЛУЖИЛ'
+                sender(event.user_id, schedule_text, 2)
 
-        elif event.text == 'На 2 недели' and user_state['state'] == 'Finish':
+        elif event.text == 'По дате' and user_state['state'] == 'Finish':
             if user_state['role'] == 'student':
-                schedule_two_weeks = API_repository._getScheduleStudent(user_state['role'], user_state['arg'], 'two_weeks')
+                API_repository._setUserField(event.user_id, 'state', 'Finish_date_S')
+                sender_without_keyboard(event.user_id, 'Введите дату в формате "дд.мм.гггг"')
 
             elif user_state['role'] == 'prepod':
-                schedule_two_weeks = API_repository._getSchedulePrepod(user_state['role'], user_state['arg'], 'two_weeks')
-
+                API_repository._setUserField(event.user_id, 'state', 'Finish_date_P')
+                sender_without_keyboard(event.user_id, 'Введите дату в формате "дд.мм.гггг"')
 
 
         #Ввел что-то не из перечня
@@ -223,3 +240,62 @@ for event in longpoll.listen():
                 else:
                     API_repository._setUserField(event.user_id, 'state', 'Start')
                     sender(event.user_id, 'Пожалуйтса авторизуйтесь', 4)
+
+            elif user_state['state'] == 'Finish_date_S':
+                try:
+                    datetime.datetime.strptime(event.text, '%d.%m.%Y')
+                    schedule_custom = API_repository._getScheduleStudent(user_state['role'], user_state['arg'], 'custom', event.text)['response']
+                    schedule_text = ''
+                    if user_state['subGroup'] == 0:
+                        schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' Обе подргуппы' + '\n'
+                        if schedule_custom != []:
+                            schedule_text = schedule_text + '📅 ' + schedule_custom[0]['weekDayName'].title() + '\n\n'
+                            for i in schedule_custom:
+                                schedule_text = scheduel_text_S(i, schedule_text)
+                        else:
+                            schedule_text = schedule_text + 'КА-НИ-КУ-ЛЫ, А Я В ШКОЛУ НЕ ПОЙДУ'
+
+                    elif user_state['subGroup'] == 1:
+                        schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' 1 подргуппа' + '\n'
+                        if schedule_custom != []:
+                            schedule_text = schedule_text + '📅 ' + schedule_custom[0]['weekDayName'].title() + '\n\n'
+                            for i in schedule_custom:
+                                if i['subGroup'] == 1 or i['subGroup'] == 0:
+                                    schedule_text = scheduel_text_S(i, schedule_text)
+                        else:
+                            schedule_text = schedule_text + 'КА-НИ-КУ-ЛЫ, А Я В ШКОЛУ НЕ ПОЙДУ'
+
+                    elif user_state['subGroup'] == 2:
+                        schedule_text = schedule_text + '👥 ' + user_state['arg'] + ' 2 подргуппа' + '\n'
+                        if schedule_custom != []:
+                            schedule_text = schedule_text + '📅 ' + schedule_custom[0]['weekDayName'].title() + '\n\n'
+                            for i in schedule_custom:
+                                if i['subGroup'] == 2 or i['subGroup'] == 0:
+                                    schedule_text = scheduel_text_S(i, schedule_text)
+                        else:
+                            schedule_text = schedule_text + 'КА-НИ-КУ-ЛЫ, А Я В ШКОЛУ НЕ ПОЙДУ'
+                    sender(event.user_id, schedule_text, 5)
+                    API_repository._setUserField(event.user_id, 'state', 'Finish')
+
+                except ValueError:
+                    sender(event.user_id, 'Неверный формат', 2)
+                    API_repository._setUserField(event.user_id, 'state', 'Finish')
+
+            elif user_state['state'] == 'Finish_date_P':
+                try:
+                    datetime.datetime.strptime(event.text, '%d.%m.%Y')
+                    schedule_custom = API_repository._getScheduleStudent(user_state['role'], user_state['arg'], 'custom', event.text)['response']
+                    schedule_text = ''
+                    schedule_text = schedule_text + '👥 ' + user_state['arg'] + '\n'
+                    if schedule_custom != []:
+                        schedule_text = schedule_text + '📅 ' + schedule_custom[0]['weekDayName'].title() + '\n\n'
+                        for i in schedule_custom:
+                            schedule_text = scheduel_text_P(i, schedule_text)
+                    else:
+                        schedule_text = schedule_text + 'ОТДОХНИ, ТЫ ЗАСЛУЖИЛ'
+                    sender(event.user_id, schedule_text, 2)
+                    API_repository._setUserField(event.user_id, 'state', 'Finish')
+
+                except ValueError:
+                    sender(event.user_id, 'Неверный формат', 2)
+                    API_repository._setUserField(event.user_id, 'state', 'Finish')
