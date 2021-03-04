@@ -35,5 +35,6 @@
     <string name="Login_error">Ошибка: неправильные ФИО</string>
     <string name="Password_error">Ошибка: неправильный пароль</string>
     <string name="Group_error">Ошибка: неправильный номер группы</string>
+    <string name="Hohol">Хохла спросить забыли</string>
     <string name="Server_error">Ошибка сервера</string>
 </resources>

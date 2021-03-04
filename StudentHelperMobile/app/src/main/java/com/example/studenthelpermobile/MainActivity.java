@@ -168,7 +168,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (isStudent) {
                             ErrorText.setText(R.string.Group_error);
                         } else {
-                            ErrorText.setText(R.string.Login_error);
+                            if (this.login.equals("Хохол"))
+                                ErrorText.setText(R.string.Hohol);
+                            else
+                                ErrorText.setText(R.string.Login_error);
                         }
                         ErrorText.setVisibility(View.VISIBLE);
                         break;

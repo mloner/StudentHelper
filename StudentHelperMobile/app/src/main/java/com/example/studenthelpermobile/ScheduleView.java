@@ -87,9 +87,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
                             SetLesson(LessonFill(day));
                         }
                         lessonArrayList.clear();
-                        TextView space = new TextView(this);
-                        space.setText("\n\n\n");
-                        linearLayout.addView(space);
+                        SetSpacers();
                     }
                     for (int n = 0; n < sweek.length(); n++) {
                         JSONArray dayArr = (JSONArray) sweek.get(n);
@@ -98,9 +96,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
                             SetLesson(LessonFill(day));
                         }
                         lessonArrayList.clear();
-                        TextView space = new TextView(this);
-                        space.setText("\n\n\n");
-                        linearLayout.addView(space);
+                        SetSpacers();
                     }
                     bothSub.setVisibility(View.GONE);
                     firstSub.setVisibility(View.GONE);
@@ -214,6 +210,12 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         day.setTypeface(null, Typeface.BOLD);
         day.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayout.addView(day);
+    }
+
+    public void SetSpacers(){
+        TextView space = new TextView(this);
+        space.setText("\n\n\n");
+        linearLayout.addView(space);
     }
 
 
