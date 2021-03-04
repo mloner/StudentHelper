@@ -191,10 +191,10 @@ for event in longpoll.listen():
                 sender(event.user_id, 'Пожалуйтса авторизуйтесь', 4)
 
             elif user_state['state'] == 'Start':
-                sender(event.user_id, 'НУ ТЫ ДУРАК БЛЯТЬ!? КНОПКА ЖЕ ЕСТЬ', 4)
+                sender(event.user_id, 'КНОПОЧКА ЖЕ ЕСТЬ', 4)
 
             elif user_state['state'] == 'RegisterUser':
-                sender(event.user_id, 'НУ ТЫ ДУРАК БЛЯТЬ!? КНОПКА ЖЕ ЕСТЬ', 0)
+                sender(event.user_id, 'КНОПОЧКА ЖЕ ЕСТЬ', 0)
 
             elif user_state['state'] == 'Finish':
                 if user_state['role'] == 'student':
@@ -230,7 +230,7 @@ for event in longpoll.listen():
                     sender(event.user_id, 'Вы успешно авторизовались!\n\nВыберите расписание', 5)
                     API_repository._setUserField(event.user_id, 'state', 'Finish')
                 else:
-                    sender(event.user_id, 'НУ ТЫ ДУРАК БЛЯТЬ!? КНОПКА ЖЕ ЕСТЬ', 3)
+                    sender(event.user_id, 'КНОПОЧКА ЖЕ ЕСТЬ', 3)
 
             elif user_state['state'] == 'RegisterUser_P':
                 if API_repository._checkFio(event.text)['status'] == 'OK':
