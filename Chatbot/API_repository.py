@@ -71,7 +71,7 @@ def _checkFio(fio:str):
     print(response)
     return response
 
-def _getScheduleStudent(role:str, group:str, schedule_type:str):
+def _getScheduleStudent(role:str, group:str, schedule_type:str, date:str):
     url = 'http://shipshon.fvds.ru/api/getScheduleStudent'
     req = {}
     req['client_type'] = 'bot'
@@ -79,12 +79,13 @@ def _getScheduleStudent(role:str, group:str, schedule_type:str):
     req['role'] = role
     req['group'] = group
     req['schedule_type'] = schedule_type
+    req['date'] = date
     print(json.dumps(req))
     response = json.loads(requests.get(url, params = req, headers=headers).text)
     print(response)
     return response
 
-def _getSchedulePrepod(role:str, fio:str, schedule_type:str):
+def _getSchedulePrepod(role:str, fio:str, schedule_type:str, date:str):
     url = 'http://shipshon.fvds.ru/api/getSchedulePrepod'
     req = {}
     req['client_type'] = 'bot'
@@ -92,6 +93,7 @@ def _getSchedulePrepod(role:str, fio:str, schedule_type:str):
     req['role'] = role
     req['fio'] = fio
     req['schedule_type'] = schedule_type
+    req['date'] = date
     print(json.dumps(req))
     response = json.loads(requests.get(url, params = req, headers=headers).text)
     print(response)
