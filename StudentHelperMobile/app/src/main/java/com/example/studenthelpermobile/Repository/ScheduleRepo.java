@@ -26,19 +26,21 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
     private Map<String, String> request;
     private JSONObject responseJSON;
     private Schedule schedule;
+    private String role;
 
-    public ScheduleRepo(int type, String login, String role, ProgressBar progressBar, ScheduleView scheduleView)  throws JSONException {
+    public ScheduleRepo(int type, String login, String role, ProgressBar progressBar, ScheduleView scheduleView){
         this.type = type;
         activity = scheduleView;
         this.progressBar = progressBar;
         request = new HashMap<>();
+        this.role = role;
         request.put("client_type", "mobile");
         if(role.equals("student")){
             request.put("group", login);
         }
         else {
             request.put("fio", login);
-            request.put("command","getSchedulePrepod");
+            request.put("command","getSchedulePrepod"); //ToDo расписание для препода
         }
         switch (this.type){
             case 1:
@@ -51,8 +53,6 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
                 request.put("schedule_type", "two_weeks");
                 break;
         }
-
-
     }
 
     @Override
@@ -66,7 +66,11 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
 
         try {
             RepositoryAPI repositoryAPI = new RepositoryAPI();
-            String s = "http://shipshon.fvds.ru/api/getScheduleStudent";
+            String s;
+            if(role.equals("student"))
+                s = "http://shipshon.fvds.ru/api/getScheduleStudent";
+            else
+                s = "http://shipshon.fvds.ru/api/getSchedulePrepod";
             s = repositoryAPI.URLBuilder(s, request);
             URL url = new URL(s);
             responseJSON = repositoryAPI.getRequest(url);
@@ -87,7 +91,6 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         return schedule;
     }

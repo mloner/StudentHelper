@@ -26,18 +26,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ScheduleView extends AppCompatActivity implements View.OnClickListener, AsyncInterface <Schedule> {
 
-    TextView ErrorText;
-    ProgressBar progressBar;
+    private TextView ErrorText;
+    private ProgressBar progressBar;
     private int type;
     private String login;
     private String role;
-    ScheduleRepo scheduleRepo;
-    LinearLayout linearLayout;
-    ArrayList <Lesson> lessonArrayList;
+    private ScheduleRepo scheduleRepo;
+    private LinearLayout linearLayout;
+    private ArrayList <Lesson> lessonArrayList;
 
-    Button firstSub;
-    Button secondSub;
-    Button bothSub;
+    private Button firstSub;
+    private Button secondSub;
+    private Button bothSub;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,41 +58,53 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         bothSub.setOnClickListener(this);
 
         lessonArrayList = new ArrayList<>();
-        try {
-            scheduleRepo = new ScheduleRepo(type, login,role,progressBar, this);
-            scheduleRepo.execute();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        scheduleRepo = new ScheduleRepo(type, login,role,progressBar, this);
+        scheduleRepo.execute();
     }
 
     @Override
     public void onAsyncTaskFinished(Schedule scheduleClass) { //Выполняется после получения расписания
         try {
             if(scheduleClass.getStatus().equals("OK")){
-                if(role.equals("student")){
-                JSONArray array = scheduleClass.getResponse();
-                for(int n = 0; n < array.length(); n++) {
-                    JSONObject s = (JSONObject) array.get(n);
-                    Lesson lesson = new Lesson();
-                    lessonArrayList.add(lesson);
-                    lesson.setClass_name(s.get("className").toString());
-                    lesson.setPrepod_name(s.get("prepodName").toString());
-                    lesson.setSubject_name(s.get("subjectName").toString());
-                    lesson.setLesson_type(s.get("lessonType").toString());
-                    lesson.setClass_name(s.get("className").toString());
-                    lesson.setLesson_start(s.get("lessonStart").toString());
-                    lesson.setLesson_end(s.get("lessonEnd").toString());
-                    lesson.setSubgroup(Integer.parseInt(s.get("subGroup").toString()));
-                    lesson.setRemote(Boolean.parseBoolean(s.get("isRemote").toString()));
-                    lesson.setGroup(s.get("groupName").toString());
-                    lesson.setDescription(s.get("description").toString());
-                    lesson.setWeekdayname(s.get("weekDayName").toString());
-                    SetLesson(lesson);
-                }
+                if(type != 3) {
+                    JSONArray array = scheduleClass.getResponse();
+                    for (int n = 0; n < array.length(); n++) {
+                        JSONObject s = (JSONObject) array.get(n);
+                        SetLesson(LessonFill(s));
+                    }
+                    bothSub.setVisibility(View.VISIBLE);
+                    firstSub.setVisibility(View.VISIBLE);
+                    secondSub.setVisibility(View.VISIBLE);
                 }
                 else {
-                    //Парсинг расписания препода
+                    JSONArray array = scheduleClass.getResponse();
+                    JSONArray fweek = (JSONArray) array.get(0);
+                    JSONArray sweek = (JSONArray) array.get(1);
+                    for (int n = 0; n < fweek.length(); n++) {
+                        JSONArray dayArr = (JSONArray) fweek.get(n);
+                        for(int i = 0; i < dayArr.length(); i++) {
+                            JSONObject day = (JSONObject) dayArr.get(i);
+                            SetLesson(LessonFill(day));
+                        }
+                        lessonArrayList.clear();
+                        TextView space = new TextView(this);
+                        space.setText("\n\n\n");
+                        linearLayout.addView(space);
+                    }
+                    for (int n = 0; n < sweek.length(); n++) {
+                        JSONArray dayArr = (JSONArray) sweek.get(n);
+                        for(int i = 0; i < dayArr.length(); i++) {
+                            JSONObject day = (JSONObject) dayArr.get(i);
+                            SetLesson(LessonFill(day));
+                        }
+                        lessonArrayList.clear();
+                        TextView space = new TextView(this);
+                        space.setText("\n\n\n");
+                        linearLayout.addView(space);
+                    }
+                    bothSub.setVisibility(View.GONE);
+                    firstSub.setVisibility(View.GONE);
+                    secondSub.setVisibility(View.GONE);
                 }
             }
             else {
@@ -139,7 +151,10 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         linearLayout.addView(classname);
 
         TextView lessontype = new TextView(this);
-        lessontype.setText(lesson.getLesson_type() + "    " + lesson.getPrepod_name());
+        if(role.equals("student"))
+            lessontype.setText(lesson.getLesson_type() + "    " + lesson.getPrepod_name());
+        else
+            lessontype.setText(lesson.getLesson_type() + "    " + lesson.getGroup());
         lessontype.setTextSize(16);
         lessontype.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayout.addView(lessontype);
@@ -169,12 +184,47 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public Lesson LessonFill(JSONObject s) throws JSONException {
+        Lesson lesson = new Lesson();
+        lessonArrayList.add(lesson);
+        lesson.setClass_name(s.get("className").toString());
+        lesson.setPrepod_name(s.get("prepodName").toString());
+        lesson.setSubject_name(s.get("subjectName").toString());
+        lesson.setLesson_type(s.get("lessonType").toString());
+        lesson.setClass_name(s.get("className").toString());
+        lesson.setLesson_start(s.get("lessonStart").toString());
+        lesson.setLesson_end(s.get("lessonEnd").toString());
+        lesson.setSubgroup(Integer.parseInt(s.get("subGroup").toString()));
+        lesson.setRemote(Boolean.parseBoolean(s.get("isRemote").toString()));
+        lesson.setGroup(s.get("groupName").toString());
+        lesson.setDescription(s.get("description").toString());
+        lesson.setWeekdayname(s.get("weekDayName").toString());
+        if(lessonArrayList.size()==1){
+            DayOfWeek(lessonArrayList.get(0));
+        }
+        return lesson;
+    }
+
+    public void DayOfWeek(Lesson lesson){
+        TextView day = new TextView(this);
+        String word = lesson.getWeekdayname();
+        day.setText(word.substring(0, 1).toUpperCase() + word.substring(1));
+        day.setTextColor(Color.BLACK);
+        day.setTextSize(16);
+        day.setTypeface(null, Typeface.BOLD);
+        day.setGravity(Gravity.CENTER_HORIZONTAL);
+        linearLayout.addView(day);
+    }
+
 
     @Override
     public void onClick(View view) {
+        linearLayout.removeAllViews();
+        if(lessonArrayList.size()!=0){
+            DayOfWeek(lessonArrayList.get(0));
+        }
         switch (view.getId()){
             case R.id.first_subgroup:
-                linearLayout.removeAllViews();
                 for (Lesson l: lessonArrayList
                      ) {
                     if(l.getSubgroup()==1 || l.getSubgroup() == 0){
@@ -183,7 +233,6 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.second_subgroup:
-                linearLayout.removeAllViews();
                 for (Lesson l: lessonArrayList
                 ) {
                     if(l.getSubgroup()==2 || l.getSubgroup() == 0){
@@ -192,11 +241,11 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             default:
-                linearLayout.removeAllViews();
                 for (Lesson l: lessonArrayList
                 ) {
                     SetLesson(l);
                 }
+                break;
         }
     }
 }

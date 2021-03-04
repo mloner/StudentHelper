@@ -69,7 +69,6 @@ public class PrepodInfoRepo extends AsyncTask<Void, Void, PrepodInfo> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return prepodInfo;
     }
 
