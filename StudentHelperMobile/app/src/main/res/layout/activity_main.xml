@@ -57,7 +57,7 @@
         android:gravity="center"
         android:layout_marginTop="20dp"
         android:id="@+id/text_enter_fio"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <EditText
         android:layout_width="match_parent"
@@ -69,7 +69,8 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:id="@+id/enter_fio"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:inputType="textCapWords"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -92,7 +93,8 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:id="@+id/enter_password"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:inputType="textCapWords"/>
 
     <Button
         android:layout_width="match_parent"
