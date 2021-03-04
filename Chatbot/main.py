@@ -278,7 +278,7 @@ for event in longpoll.listen():
                     API_repository._setUserField(event.user_id, 'state', 'Finish')
 
                 except ValueError:
-                    sender(event.user_id, 'Неверный формат', 2)
+                    sender(event.user_id, 'Неверный формат', 5)
                     API_repository._setUserField(event.user_id, 'state', 'Finish')
 
             elif user_state['state'] == 'Finish_date_P':
