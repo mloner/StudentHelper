@@ -26,7 +26,6 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
     private ProgressBar progressBar;
     private LinearLayout linearLayout;
     private PrepodListView activity;
-    private EditText SearchText;
     private ArrayList <String> PrepodList;
 
     @Override
@@ -35,7 +34,7 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
         setContentView(R.layout.prepod_list_activity);
         ErrorText = findViewById(R.id.error_text_prepod_list);
         progressBar = findViewById(R.id.progressbar_prepod_list);
-        SearchText = findViewById(R.id.search_text);
+        EditText searchText = findViewById(R.id.search_text);
         linearLayout = findViewById(R.id.prepod_list_layout);
         activity = this;
 
@@ -48,7 +47,7 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
 
         PrepodList = new ArrayList<>();
         PrepodSearch prepodSearch = new PrepodSearch(this, PrepodList );
-        SearchText.addTextChangedListener(prepodSearch);
+        searchText.addTextChangedListener(prepodSearch);
     }
 
 

@@ -29,9 +29,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
     private TextView ErrorText;
     private ProgressBar progressBar;
     private int type;
-    private String login;
     private String role;
-    private ScheduleRepo scheduleRepo;
     private LinearLayout linearLayout;
     private ArrayList <Lesson> lessonArrayList;
 
@@ -47,7 +45,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         progressBar = findViewById(R.id.schedule_progressbar);
         linearLayout = findViewById(R.id.schedule_layout);
         type = Objects.requireNonNull(getIntent().getExtras()).getInt("type");
-        login = Objects.requireNonNull(getIntent().getExtras()).getString("login");
+        String login = Objects.requireNonNull(getIntent().getExtras()).getString("login");
         role = Objects.requireNonNull(getIntent().getExtras()).getString("role");
 
         firstSub = findViewById(R.id.first_subgroup);
@@ -58,7 +56,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         bothSub.setOnClickListener(this);
 
         lessonArrayList = new ArrayList<>();
-        scheduleRepo = new ScheduleRepo(type, login,role,progressBar, this);
+        ScheduleRepo scheduleRepo = new ScheduleRepo(type, login, role, progressBar, this);
         scheduleRepo.execute();
     }
 
@@ -138,7 +136,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         linearLayout.addView(header);
 
         TextView time = new TextView(this);
-        time.setText(lesson.getLesson_start() + "  - " + lesson.getLesson_end());
+        time.setText(String.format("%s  - %s", lesson.getLesson_start(), lesson.getLesson_end()));
         time.setTextSize(16);
         time.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayout.addView(time);
@@ -151,16 +149,16 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
 
         TextView lessontype = new TextView(this);
         if(role.equals("student"))
-            lessontype.setText(lesson.getLesson_type() + "    " + lesson.getPrepod_name());
+            lessontype.setText(String.format("%s    %s", lesson.getLesson_type(), lesson.getPrepod_name()));
         else
-            lessontype.setText(lesson.getLesson_type() + "    " + lesson.getGroup());
+            lessontype.setText(String.format("%s    %s", lesson.getLesson_type(), lesson.getGroup()));
         lessontype.setTextSize(16);
         lessontype.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayout.addView(lessontype);
 
         if(lesson.getSubgroup()!=0){
             TextView subgroup = new TextView(this);
-            subgroup.setText(lesson.getSubgroup() + " " + getString(R.string.SubGroup));
+            subgroup.setText(String.format("%d %s", lesson.getSubgroup(), getString(R.string.SubGroup)));
             subgroup.setTextSize(16);
             subgroup.setTypeface(null, Typeface.BOLD);
             subgroup.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -170,8 +168,8 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         if(!lesson.getDescription().equals("null")){
             TextView description = new TextView(this);
             if (lesson.getDescription().contains("/")){
-                description.setText(getString(R.string.FirstSubgroup) + ": " + lesson.getDescription().substring(0, lesson.getDescription().indexOf('/')) + "\n" +
-                        getString(R.string.SecondSubgroup) + ": " + lesson.getDescription().substring(lesson.getDescription().indexOf('/')+1));
+                description.setText(String.format("%s: %s\n%s: %s", getString(R.string.FirstSubgroup), lesson.getDescription().substring(0, lesson.getDescription().indexOf('/')),
+                        getString(R.string.SecondSubgroup), lesson.getDescription().substring(lesson.getDescription().indexOf('/') + 1)));
             }
             else {
                 description.setText(lesson.getDescription());
@@ -199,15 +197,15 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         lesson.setDescription(s.get("description").toString());
         lesson.setWeekdayname(s.get("weekDayName").toString());
         if(lessonArrayList.size()==1){
-            DayOfWeek(lessonArrayList.get(0));
+            SetDayOfWeek(lessonArrayList.get(0));
         }
         return lesson;
     }
 
-    public void DayOfWeek(Lesson lesson){
+    public void SetDayOfWeek(Lesson lesson){
         TextView day = new TextView(this);
         String word = lesson.getWeekdayname();
-        day.setText(word.substring(0, 1).toUpperCase() + word.substring(1));
+        day.setText(String.format("%s%s", word.substring(0, 1).toUpperCase(), word.substring(1)));
         day.setTextColor(Color.BLACK);
         day.setTextSize(18);
         day.setTypeface(null, Typeface.BOLD);
@@ -226,7 +224,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         linearLayout.removeAllViews();
         if(lessonArrayList.size()!=0){
-            DayOfWeek(lessonArrayList.get(0));
+            SetDayOfWeek(lessonArrayList.get(0));
         }
         switch (view.getId()){
             case R.id.first_subgroup:

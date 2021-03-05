@@ -16,6 +16,7 @@ import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -24,10 +25,9 @@ import java.util.Map;
 public class LoginRepo extends AsyncTask <Void, Void, Login> {
 
     private Map <String, String> request;
-    ProgressBar progressBar;
-    private JSONObject responseJSON;
+    private ProgressBar progressBar;
     private MainActivity activity;
-    Login l;
+    private Login l;
 
 
     public LoginRepo (String role, String login, String password, ProgressBar progressBar, MainActivity activity) throws JSONException, NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -59,7 +59,7 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
             String s = "http://shipshon.fvds.ru/api/authorizationMobile";
             s = repositoryAPI.URLBuilder(s, request);
             URL url = new URL(s);
-            responseJSON = repositoryAPI.getRequest(url);
+            JSONObject responseJSON = repositoryAPI.getRequest(url);
 
 
             String status = responseJSON.get("status").toString();
@@ -86,7 +86,7 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
     private String PasswordEncrypt(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest m = MessageDigest.getInstance("MD5");
         m.reset();
-        m.update(password.getBytes("utf-8"));
+        m.update(password.getBytes(StandardCharsets.UTF_8));
 
         String s2 = new BigInteger(1, m.digest()).toString(16);
         StringBuilder sb = new StringBuilder(32);
@@ -96,7 +96,7 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
             sb.append("0");
         }
         // возвращаем MD5-хеш
-        sb.append(s2).toString();
+        sb.append(s2);
         return sb.toString();
     }
 

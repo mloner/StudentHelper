@@ -18,7 +18,6 @@ public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
 
     private PrepodListView activity;
     private ProgressBar progressBar;
-    private JSONObject responseJSON;
     private PrepodList prepodList;
 
     public PrepodListRepo (ProgressBar progressBar, PrepodListView prepodListView) throws JSONException {
@@ -37,7 +36,7 @@ public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
         RepositoryAPI repositoryAPI = new RepositoryAPI();
         try {
             URL url = new URL("http://shipshon.fvds.ru/api/getPrepodList");
-            responseJSON = repositoryAPI.getRequest(url);
+            JSONObject responseJSON = repositoryAPI.getRequest(url);
 
             String status = responseJSON.get("status").toString();
             JSONArray response = (JSONArray) responseJSON.get("response");
