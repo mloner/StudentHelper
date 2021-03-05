@@ -42,6 +42,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         login = Objects.requireNonNull(getIntent().getExtras()).getString("login");
         role = Objects.requireNonNull(getIntent().getExtras()).getString("role");
 
+        assert role != null;
         if(role.equals("student")){
             String s = getString(R.string.LoginAs)+ " " + getString(R.string.Group) + " " + login;
             WelcomeText.setText(s);

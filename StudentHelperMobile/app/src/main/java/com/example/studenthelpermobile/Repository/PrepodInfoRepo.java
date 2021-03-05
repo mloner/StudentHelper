@@ -19,7 +19,6 @@ public class PrepodInfoRepo extends AsyncTask<Void, Void, PrepodInfo> {
     private PrepodInfoView activity;
     private ProgressBar progressBar;
     private String fio;
-    private JSONObject responseJSON;
     private PrepodInfo prepodInfo;
 
 
@@ -41,7 +40,7 @@ public class PrepodInfoRepo extends AsyncTask<Void, Void, PrepodInfo> {
         RepositoryAPI repositoryAPI = new RepositoryAPI();
         try {
             URL url = new URL("http://shipshon.fvds.ru/api/getPrepodInfo" + "?fio=" + fio);
-            responseJSON = repositoryAPI.getRequest(url);
+            JSONObject responseJSON = repositoryAPI.getRequest(url);
 
             String response = responseJSON.get("status").toString();
             JSONObject r = (JSONObject) responseJSON.get("response");

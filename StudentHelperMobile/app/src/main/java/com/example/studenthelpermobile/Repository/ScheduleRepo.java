@@ -24,7 +24,6 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
     private ScheduleView activity;
     private ProgressBar progressBar;
     private Map<String, String> request;
-    private JSONObject responseJSON;
     private Schedule schedule;
     private String role;
 
@@ -40,7 +39,6 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
         }
         else {
             request.put("fio", login);
-            request.put("command","getSchedulePrepod"); //ToDo расписание для препода
         }
         switch (this.type){
             case 1:
@@ -73,7 +71,7 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
                 s = "http://shipshon.fvds.ru/api/getSchedulePrepod";
             s = repositoryAPI.URLBuilder(s, request);
             URL url = new URL(s);
-            responseJSON = repositoryAPI.getRequest(url);
+            JSONObject responseJSON = repositoryAPI.getRequest(url);
 
             String status = responseJSON.get("status").toString();
             JSONArray response = (JSONArray) responseJSON.get("response");

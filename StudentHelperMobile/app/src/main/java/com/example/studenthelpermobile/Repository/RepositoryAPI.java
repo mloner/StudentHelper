@@ -37,7 +37,6 @@ public class RepositoryAPI {
         String inputLine;
         StringBuffer responseString = new StringBuffer();
 
-        int code = connection.getResponseCode();
         while ((inputLine = in.readLine()) != null) {
             responseString.append(inputLine);
         }
