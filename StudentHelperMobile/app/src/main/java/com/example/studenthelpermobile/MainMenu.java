@@ -44,11 +44,11 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
 
         assert role != null;
         if(role.equals("student")){
-            String s = getString(R.string.LoginAs)+ " " + getString(R.string.Group) + " " + login;
+            String s = getString(R.string.LoginAsStudent, login);
             WelcomeText.setText(s);
         }
         else {
-            String s = getString(R.string.LoginAs) + " " + login ;
+            String s = getString(R.string.LoginAsPrepod, login);
             WelcomeText.setText(s);
         }
     }

@@ -123,8 +123,8 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
 
     private void SetLesson(Lesson lesson){
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,30,0,0);
-        params.gravity = Gravity.CENTER_HORIZONTAL;
+        params.setMargins(30,20,0,0);
+        //params.gravity = Gravity.CENTER_HORIZONTAL;
 
         TextView header = new TextView(this);
         header.setText(lesson.getSubject_name());
@@ -132,19 +132,22 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         header.setTextSize(16);
         header.setTypeface(null, Typeface.BOLD);
         header.setLayoutParams(params);
-        header.setGravity(Gravity.CENTER_HORIZONTAL);
+        //header.setGravity(Gravity.CENTER_HORIZONTAL);
+
         linearLayout.addView(header);
 
         TextView time = new TextView(this);
         time.setText(String.format("%s  - %s", lesson.getLesson_start(), lesson.getLesson_end()));
         time.setTextSize(16);
-        time.setGravity(Gravity.CENTER_HORIZONTAL);
+        //time.setGravity(Gravity.CENTER_HORIZONTAL);
+        time.setLayoutParams(params);
         linearLayout.addView(time);
 
         TextView classname = new TextView(this);
         classname.setText(lesson.getClass_name());
         classname.setTextSize(16);
-        classname.setGravity(Gravity.CENTER_HORIZONTAL);
+        classname.setLayoutParams(params);
+        //classname.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayout.addView(classname);
 
         TextView lessontype = new TextView(this);
@@ -153,15 +156,17 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         else
             lessontype.setText(String.format("%s    %s", lesson.getLesson_type(), lesson.getGroup()));
         lessontype.setTextSize(16);
-        lessontype.setGravity(Gravity.CENTER_HORIZONTAL);
+        lessontype.setLayoutParams(params);
+        //lessontype.setGravity(Gravity.CENTER_HORIZONTAL);
         linearLayout.addView(lessontype);
 
         if(lesson.getSubgroup()!=0){
             TextView subgroup = new TextView(this);
-            subgroup.setText(String.format("%d %s", lesson.getSubgroup(), getString(R.string.SubGroup)));
+            subgroup.setText(getString(R.string.SubGroup, lesson.getSubgroup()));
             subgroup.setTextSize(16);
             subgroup.setTypeface(null, Typeface.BOLD);
-            subgroup.setGravity(Gravity.CENTER_HORIZONTAL);
+            subgroup.setLayoutParams(params);
+            //subgroup.setGravity(Gravity.CENTER_HORIZONTAL);
             linearLayout.addView(subgroup);
         }
 
@@ -176,7 +181,8 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
             }
             description.setTextSize(16);
             description.setTypeface(null, Typeface.BOLD);
-            description.setGravity(Gravity.CENTER_HORIZONTAL);
+            description.setLayoutParams(params);
+            //description.setGravity(Gravity.CENTER_HORIZONTAL);
             linearLayout.addView(description);
         }
     }
