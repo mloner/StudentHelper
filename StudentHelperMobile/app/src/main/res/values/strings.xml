@@ -18,14 +18,15 @@
     <string name="PrepodInfo">Получить информацию о преподавателях</string>
     <string name="PrepodChat">Открыть чаты с преподавателями</string>
     <string name="LogoutTip">Чтобы выйти из аккаунта, нажмите кнопку "Назад"</string>
-    <string name="LoginAs">Вы вошли как</string>
+    <string name="LoginAsStudent">Вы авторизованы как студент группы %1$s</string>
+    <string name="LoginAsPrepod">Вы авторизованы как преподаватель %1$s</string>
 
     <!-- Лист преподавателей -->
     <string name="Search">Поиск</string>
     <string name="SearchHint">Начните вводить для поиска</string>
 
     <!-- Расписание -->
-    <string name="SubGroup">Подгруппа</string>
+    <string name="SubGroup">%1$d подгруппа</string>
     <string name="FirstSubgroup">1 подгруппа</string>
     <string name="SecondSubgroup">2 подгруппа</string>
     <string name="BothSubgroup">Обе подгруппы</string>
