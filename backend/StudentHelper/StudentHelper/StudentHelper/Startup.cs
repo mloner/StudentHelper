@@ -9,6 +9,9 @@ using System;
 using System.Reflection;
 using System.IO;
 using Microsoft.OpenApi.Models;
+using StudentHelper.Entities;
+using Microsoft.EntityFrameworkCore;
+using StudentHelper.Repos;
 
 namespace StudentHelper
 {
@@ -29,6 +32,22 @@ namespace StudentHelper
                     .AddConfiguration(Configuration.GetSection("Logging"))
                     .SetMinimumLevel(LogLevel.Information)
             );
+            //PG
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<PGEntities>(options =>
+                    options.UseNpgsql(
+                    Configuration["Config:PGConnectionString"]));
+            services.AddScoped<PGRepo>();
+            services.AddScoped<PGEntities>();
+
+            //FB
+            services.AddEntityFrameworkFirebird()
+                .AddDbContext<FBEntities>(options =>
+                    options.UseFirebird(
+                    Configuration["Config:FBConnectionString"]));
+            services.AddScoped<FBRepo>();
+            services.AddScoped<FBEntities>();
+
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
@@ -42,19 +61,15 @@ namespace StudentHelper
                     Description = "",
                     Contact = new OpenApiContact
                     {
-                        Name = "Github repository",
+                        Name = "GitHub repository",
                         Email = string.Empty,
                         Url = new Uri("https://github.com/mloner/StudentHelper"),
                     }
                 });
-
-                // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
-            });
-
-            
+            });   
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -63,9 +78,6 @@ namespace StudentHelper
                 app.UseDeveloperExceptionPage();
             }
 
-
-
-            // Creates Swagger JSON
             app.UseSwagger(c =>
             {
                 c.RouteTemplate = "api/docs/{documentName}/swagger.json";
@@ -81,9 +93,7 @@ namespace StudentHelper
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-
-            
+            });  
         }
     }
 }
