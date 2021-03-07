@@ -16,6 +16,9 @@ def sender(user_id, answer, keyboard_number):
 def sender_without_keyboard(user_id, answer):
     vk.messages.send(user_id = user_id, message = answer, random_id = 0)
 
+def sender_question(user_id, answer, keyboard):
+    vk.messages.send(user_id=user_id, message=answer, keyboard = keyboard, random_id=0)
+
 def sender_XOXOL(user_id):
     vk.messages.send(user_id=user_id, message='Для Миииииши', attachment = 'doc163807367_588463638', random_id=0)
 
@@ -35,8 +38,12 @@ def scheduel_text_S(i, schedule_text):
         schedule_text = schedule_text + '🗿 ' + '1 подргуппа' + '\n'
     elif i['subGroup'] == 2:
         schedule_text = schedule_text + '🗿 ' + '2 подргуппа' + '\n'
+    if i['description'] != None:
+        schedule_text = schedule_text + '1 пг.: ' + i['description'].split('/')[0] + '\n' + '2 пг.: ' + i['description'].split('/')[1] + '\n'
     schedule_text = schedule_text + '🚪 ' + i['className'] + '\n'
     schedule_text = schedule_text + '🤡 ' + i['prepodName'] + '\n\n'
+
+
     return schedule_text
 
 def scheduel_text_P(i, schedule_text):
@@ -50,7 +57,9 @@ def scheduel_text_P(i, schedule_text):
         schedule_text = schedule_text + '🗿 ' + '1 подргуппа' + '\n'
     elif i['subGroup'] == 2:
         schedule_text = schedule_text + '🗿 ' + '2 подргуппа' + '\n'
-    schedule_text = schedule_text + '🚪 ' + i['className'] + '\n\n'
+    if i['description'] != None:
+        schedule_text = schedule_text + '1 пг.: ' + i['description'].split('/')[0] + '\n' + '2 пг.: ' + i['description'].split('/')[1] + '\n'
+    schedule_text = schedule_text + '🚪 ' + i['className'] + '\n'
     return schedule_text
 
 for event in longpoll.listen():
@@ -76,11 +85,28 @@ for event in longpoll.listen():
 
         elif event.text == 'Разлогиниться':
             API_repository._setUserField(event.user_id, 'state', 'Start')
-            sender(event.user_id, 'Пожалуйтса авторизуйтесь', 4)
+            sender(event.user_id, 'Пожалуйста авторизуйтесь', 4)
 
         elif event.text == 'Сменить подгруппу' and user_state['role'] == 'student' and user_state['state'] == 'Finish':
             API_repository._setUserField(event.user_id, 'state', 'RegisterUser_S_S')
             sender(event.user_id, 'Выберите подгруппу', 3)
+
+        elif event.text == 'Пройти опрос':
+            question = API_repository._getQuestion(event.user_id)['response']
+            if isinstance(question, dict):
+                answers_str = ''
+                number_answer = 1
+                for answer in question['answerVariants']:
+                    answers_str = answers_str + str(number_answer) + ') ' + answer + '\n'
+                    number_answer = number_answer + 1
+                sender_question(event.user_id, question['question'], keyboards.answer_keyboard(len(question['answerVariants'])))
+                API_repository._setUserField(event.user_id, 'state', 'Finish_Q')
+            else:
+                if user_state['role'] == 'student':
+                    sender(event.user_id, 'Для вас нет новых опросов 🙃', 5)
+                else:
+                    sender(event.user_id, 'Для вас нет новых опросов 🙃', 2)
+
 
         elif event.text == 'На сегодня' and user_state['state'] == 'Finish':
             if user_state['role'] == 'student':
@@ -299,3 +325,13 @@ for event in longpoll.listen():
                 except ValueError:
                     sender(event.user_id, 'Неверный формат', 2)
                     API_repository._setUserField(event.user_id, 'state', 'Finish')
+
+            elif user_state['state'] == 'Finish_Q':
+                if API_repository._answerQuestion(event.user_id, event.text)['status'] != 'FAIL':
+                    if user_state['role'] == 'student':
+                        sender(event.user_id, 'Спасибо за ответ 🙂', 5)
+                    else:
+                        sender(event.user_id, 'Спасибо за ответ 🙂', 2)
+                else:
+                    sender_without_keyboard(event.user_id, 'КНОПОЧКИ ЖЕ ЕСТЬ')
+                API_repository._setUserField(event.user_id, 'state', 'Finish')

@@ -11,6 +11,40 @@ def get_but(text, color):
         "color": f"{color}"
     }
 
+def answer_but(count):
+    tmp_count = count
+    buttons = []
+    if tmp_count < 6:
+        for i in range(tmp_count):
+            buttons.append(get_but(str(i+1),'primary'))
+    return buttons
+
+def answer_keyboard(count):
+    keyboard_answer = {
+        "one_time": False,
+        "inline": True,
+        "buttons": [answer_but(count)]
+        }
+    keyboard_answer = json.dumps(keyboard_answer, ensure_ascii=False).encode('utf-8')
+    keyboard_answer = str(keyboard_answer.decode('utf-8'))
+    return keyboard_answer
+
+# def answer_but(answerVariants:[]):
+#     buttons = []
+#     for i in answerVariants:
+#         buttons.append(get_but(i,'primary'))
+#     return buttons
+#
+# def answer_keyboard(answerVariants:[]):
+#     keyboard_answer = {
+#         "one_time": False,
+#         "inline": True,
+#         "buttons": [answer_but(answerVariants)]
+#         }
+#     keyboard_answer = json.dumps(keyboard_answer, ensure_ascii=False).encode('utf-8')
+#     keyboard_answer = str(keyboard_answer.decode('utf-8'))
+#     return keyboard_answer
+
 # Стартовая Авторизации
 keyboard0 = {
     "one_time": True,
@@ -36,7 +70,7 @@ keyboard2 = {
     "one_time": True,
     "buttons": [
         [get_but('На сегодня', 'primary'), get_but('На завтра', 'primary'), get_but('По дате', 'primary')],
-        [get_but('Разлогиниться', 'negative')]
+        [get_but('Разлогиниться', 'negative'), get_but('Пройти опрос', 'primary')]
     ]
 }
 keyboard2 = json.dumps(keyboard2, ensure_ascii=False).encode('utf-8')
@@ -57,7 +91,7 @@ keyboard3 = str(keyboard3.decode('utf-8'))
 # Клава Начало
 keyboard4 = {
     "one_time": True,
-    "buttons": [[get_but('Авторизация', 'positive')]]
+    "buttons": [[get_but('Авторизация', 'secondary')]]
 }
 keyboard4 = json.dumps(keyboard4, ensure_ascii=False).encode('utf-8')
 keyboard4 = str(keyboard4.decode('utf-8'))
@@ -66,7 +100,8 @@ keyboard5 = {
     "one_time": True,
     "buttons": [
         [get_but('На сегодня', 'primary'), get_but('На завтра', 'primary'), get_but('По дате', 'primary')],
-        [get_but('Разлогиниться', 'negative'), get_but('Сменить подгруппу', 'primary')]
+        [get_but('Пройти опрос', 'primary'), get_but('Сменить подгруппу', 'primary')],
+        [get_but('Разлогиниться', 'negative')]
     ]
 }
 keyboard5 = json.dumps(keyboard5, ensure_ascii=False).encode('utf-8')

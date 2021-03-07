@@ -38,7 +38,7 @@ def _setUserField(idvk:str, field:str, value:str):
     return response
 
 def _getUserState(idvk:str):
-    url = 'http://shipshon.fvds.ru/api/getUserState'
+    url = '  api/getUserState'
     req = {}
     req['client_type'] = 'bot'
     req['command'] = 'getUserState'
@@ -47,6 +47,30 @@ def _getUserState(idvk:str):
     response = json.loads(requests.post(url, json.dumps(req), headers=headers).text)
     print(response)
     return response
+
+def _getQuestion(idvk:str):
+    url = 'http://shipshon.fvds.ru/api/getQuestion'
+    req = {}
+    req['client_type'] = 'bot'
+    req['command'] = 'getQuestion'
+    req['idvk'] = idvk
+    print(json.dumps(req))
+    response = json.loads(requests.post(url, json.dumps(req), headers=headers).text)
+    print(response)
+    return response
+
+def _answerQuestion(idvk:str, answer:str):
+    url = 'http://shipshon.fvds.ru/api/answerQuestion'
+    req = {}
+    req['client_type'] = 'bot'
+    req['command'] = 'answerQuestion'
+    req['idvk'] = idvk
+    req['answer'] = answer
+    print(json.dumps(req))
+    response = json.loads(requests.post(url, json.dumps(req), headers=headers).text)
+    print(response)
+    return response
+
 
 # GET
 def _checkGroup(group:str):
@@ -98,3 +122,4 @@ def _getSchedulePrepod(role:str, fio:str, schedule_type:str, date:str):
     response = json.loads(requests.get(url, params = req, headers=headers).text)
     print(response)
     return response
+
