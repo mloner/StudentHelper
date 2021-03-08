@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
@@ -9,9 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net;
 using static StudentHelper.Entities.FBEntities;
-using static StudentHelper.Repos.FBRepo;
 
 namespace StudentHelper.Controllers
 {
@@ -48,8 +44,6 @@ namespace StudentHelper.Controllers
         {
             _logger = logger;
             _config = config;
-            //_PGConStr = _config["Config:PGConnectionString"];
-            //_FBConStr = _config["Config:FBConnectionString"];
             _PGRepo = PGRepo;
             _FBRepo = FBRepo;
         }
@@ -61,7 +55,7 @@ namespace StudentHelper.Controllers
         public IActionResult GetPrepodList()
         {
             var now = DateTime.Now;
-            var rnd = new Random(now.Millisecond);
+            var rnd = (new Random(now.Millisecond)).Next();
             _logger.LogInformation($"Req id:{rnd}\n" +
                                    $"Time: {now.ToLocalTime()}\n" +
                                    $"Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
@@ -91,39 +85,27 @@ namespace StudentHelper.Controllers
         [HttpGet("getPrepodInfo")]
         public IActionResult GetPrepodInfo([FromQuery(Name = "fio")] string fio)
         {
+            var now = DateTime.Now;
+            var rnd = (new Random(now.Millisecond)).Next();
+            _logger.LogInformation($"Req id:{rnd}\n" +
+                                   $"Time: {now.ToLocalTime()}\n" +
+                                   $"Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
             dynamic resp = new JObject();
             resp.response = new JObject();
 
-
-            var teachers =
-                from t in _PGRepo._ctx.Teachers
-                join tp in _PGRepo._ctx.TeacherPositions on t.TeacherPositionid equals tp.id
-                join c in _PGRepo._ctx.Cathedras on t.Cathedraid equals c.id
-                join f in _PGRepo._ctx.Facultates on c.facultate_id equals f.id
-                join td in _PGRepo._ctx.TeacherDegrees on t.TeacherDegreeid equals td.id
-                select new
-                {
-                    FIO = t.FIO,
-                    position = tp.name,
-                    facultate = f.name,
-                    location = c.location,
-                    cathedraName = c.name,
-                    phone = t.phone,
-                    email = t.email,
-                    degree = td.name
-                };
-            var teacher = teachers.FirstOrDefault(t => t.FIO == fio);
+            var teacher = _PGRepo.getTeacherFullInfoByFio(fio);
             if (teacher != null)
             {
                 resp.status = "OK";
                 resp.response = new JObject(
-                    new JProperty("faculty", teacher.facultate),
-                    new JProperty("cathedra", teacher.cathedraName),
-                    new JProperty("location", teacher.location),
-                    new JProperty("position", teacher.position),
+                    new JProperty("faculty", teacher.Cathedra.Facultate.id),
+                    new JProperty("cathedra", teacher.Cathedra.name),
+                    new JProperty("location", teacher.Cathedra.location),
+                    new JProperty("position", teacher.TeacherPosition.name),
                     new JProperty("phone", teacher.phone),
                     new JProperty("email", teacher.email),
-                    new JProperty("degree", teacher.degree)
+                    new JProperty("degree", teacher.TeacherDegree.name)
                     );
             }
             else
@@ -132,11 +114,10 @@ namespace StudentHelper.Controllers
                 resp.response = new JValue("No such teacher");
             }
 
-
-
             string respStr = resp.ToString();
-            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
-
+            _logger.LogInformation($"Req id:{rnd}\n" +
+                                   $"Time: {now.ToLocalTime()}\n" +
+                                   $"Resp: {respStr}\n");
             return Content(respStr, "application/json");
         }
 
@@ -150,6 +131,12 @@ namespace StudentHelper.Controllers
                                                  [FromQuery(Name = "pass")] string pass,
                                                  [FromQuery(Name = "arg")] string arg)
         {
+            var now = DateTime.Now;
+            var rnd = (new Random(now.Millisecond)).Next();
+            _logger.LogInformation($"Req id:{rnd}\n" +
+                                   $"Time: {now.ToLocalTime()}\n" +
+                                   $"Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
             dynamic resp = new JObject();
             resp.status = "OK";
             resp.response = new JObject();
@@ -158,9 +145,8 @@ namespace StudentHelper.Controllers
             {
                 case "student":
                     {
-                        string name = arg;
-                        var group = _PGRepo._ctx.Groups.FirstOrDefault(g => g.name == name);
-                        if (group == null)
+                        var group = _PGRepo.getGroupByName(arg);
+                        if (group != null)
                         {
                             resp.status = "FAIL";
                             resp.response = "WRONG_LOGIN";
@@ -174,8 +160,7 @@ namespace StudentHelper.Controllers
                     }
                 case "prepod":
                     {
-                        string fio = arg;
-                        var teacher = _PGRepo._ctx.Teachers.FirstOrDefault(t => t.FIO == fio);
+                        var teacher = _PGRepo.getTeacherByFio(arg);
                         if (teacher == null)
                         {
                             resp.status = "FAIL";
@@ -200,8 +185,9 @@ namespace StudentHelper.Controllers
             }
 
             string respStr = resp.ToString();
-            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
-
+            _logger.LogInformation($"Req id:{rnd}\n" +
+                                               $"Time: {now.ToLocalTime()}\n" +
+                                               $"Resp: {respStr}\n");
             return Content(respStr, "application/json");
         }
 
@@ -211,12 +197,17 @@ namespace StudentHelper.Controllers
         [HttpGet("checkGroup")]
         public IActionResult CheckGroup([FromQuery(Name = "group")] string group)
         {
+            var now = DateTime.Now;
+            var rnd = (new Random(now.Millisecond)).Next();
+            _logger.LogInformation($"Req id:{rnd}\n" +
+                                   $"Time: {now.ToLocalTime()}\n" +
+                                   $"Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
             dynamic resp = new JObject();
             resp.status = "OK";
             resp.response = new JObject();
 
-            string groupName = group;
-            var reqGroup = _PGRepo._ctx.Groups.FirstOrDefault(g => g.name == groupName);
+            var reqGroup = _PGRepo.getGroupByName(group);
             if (reqGroup != null)
             {
                 resp.status = "OK";
@@ -230,8 +221,9 @@ namespace StudentHelper.Controllers
 
 
             string respStr = resp.ToString();
-            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
-
+            _logger.LogInformation($"Req id:{rnd}\n" +
+                                   $"Time: {now.ToLocalTime()}\n" +
+                                   $"Resp: {respStr}\n");
             return Content(respStr, "application/json");
         }
 
@@ -241,25 +233,31 @@ namespace StudentHelper.Controllers
         [HttpGet("checkFio")]
         public IActionResult CheckFio([FromQuery(Name = "fio")] string fio)
         {
+            var now = DateTime.Now;
+            var rnd = (new Random(now.Millisecond)).Next();
+            _logger.LogInformation($"Req id:{rnd}\n" +
+                                   $"Time: {now.ToLocalTime()}\n" +
+                                   $"Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
             dynamic resp = new JObject();
-            resp.status = "OK";
             resp.response = new JObject();
 
-                var teacher = _PGRepo._ctx.Teachers.FirstOrDefault(t => t.FIO == fio);
-                if (teacher != null)
-                {
-                    resp.status = "OK";
-                    resp.response = "";
-                }
-                else
-                {
-                    resp.status = "FAIL";
-                    resp.response = "";
-                }
+            var teacher = _PGRepo.getTeacherByFio(fio);
+            if (teacher != null)
+            {
+                resp.status = "OK";
+                resp.response = "";
+            }
+            else
+            {
+                resp.status = "FAIL";
+                resp.response = "";
+            }
 
             string respStr = resp.ToString();
-            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
-
+            _logger.LogInformation($"Req id:{rnd}\n" +
+                                                           $"Time: {now.ToLocalTime()}\n" +
+                                                           $"Resp: {respStr}\n");
             return Content(respStr, "application/json");
         }
 
@@ -289,7 +287,7 @@ namespace StudentHelper.Controllers
                     break;
             }
 
-            var fs = new DateTime(dateSchedule.Year, 9, 1);// 36 неделя (нечетная учебная неделя)
+            var fs = new DateTime(dateSchedule.Year, 9, 1);
             DateTime lastDay = new DateTime(dateSchedule.Year, 12, 31);
             var cal = new GregorianCalendar();
             bool weekNumChetn;
