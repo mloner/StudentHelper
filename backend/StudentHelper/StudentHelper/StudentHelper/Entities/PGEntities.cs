@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -42,7 +43,9 @@ namespace StudentHelper.Entities
         {
             public int id { get; set; }
             public string name { get; set; }
-            public int facultate_id { get; set; }
+
+            [Column("facultate_id", TypeName = "int")]
+            public int FacultateId { get; set; }
             public string location { get; set; }
 
             public Facultate Facultate { get; set; }
