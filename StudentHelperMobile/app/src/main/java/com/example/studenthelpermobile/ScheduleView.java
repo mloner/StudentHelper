@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.studenthelpermobile.Model.Lesson;
-import com.example.studenthelpermobile.Model.Schedule;
+import com.example.studenthelpermobile.Model.ResponseClass;
 import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Repository.ScheduleRepo;
 
@@ -24,7 +24,7 @@ import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ScheduleView extends AppCompatActivity implements View.OnClickListener, AsyncInterface <Schedule> {
+public class ScheduleView extends AppCompatActivity implements View.OnClickListener, AsyncInterface <ResponseClass> {
 
     private TextView ErrorText;
     private ProgressBar progressBar;
@@ -61,11 +61,11 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onAsyncTaskFinished(Schedule scheduleClass) { //Выполняется после получения расписания
+    public void onAsyncTaskFinished(ResponseClass responseClass) { //Выполняется после получения расписания
         try {
-            if(scheduleClass.getStatus().equals("OK")){
+            if(responseClass.getStatus().equals("OK")){
                 if(type != 3) {
-                    JSONArray array = scheduleClass.getResponse();
+                    JSONArray array = responseClass.getResponse();
                     for (int n = 0; n < array.length(); n++) {
                         JSONObject s = (JSONObject) array.get(n);
                         SetLesson(LessonFill(s));
@@ -75,7 +75,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
                     secondSub.setVisibility(View.VISIBLE);
                 }
                 else {
-                    JSONArray array = scheduleClass.getResponse();
+                    JSONArray array = responseClass.getResponse();
                     JSONArray fweek = (JSONArray) array.get(0);
                     JSONArray sweek = (JSONArray) array.get(1);
                     for (int n = 0; n < fweek.length(); n++) {

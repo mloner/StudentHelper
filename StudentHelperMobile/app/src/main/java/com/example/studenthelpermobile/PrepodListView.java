@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.studenthelpermobile.Model.PrepodList;
+import com.example.studenthelpermobile.Model.ResponseClass;
 import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Repository.PrepodListRepo;
 
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class PrepodListView extends AppCompatActivity implements AsyncInterface <PrepodList> {
+public class PrepodListView extends AppCompatActivity implements AsyncInterface <ResponseClass> {
 
     private TextView ErrorText;
     private ProgressBar progressBar;
@@ -52,10 +52,10 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
 
 
     @Override
-    public void onAsyncTaskFinished(PrepodList prepodListClass) {
+    public void onAsyncTaskFinished(ResponseClass responseClass) {
         try {
-            if(prepodListClass.getStatus().equals("OK")){
-                JSONArray array = prepodListClass.getResponse();
+            if(responseClass.getStatus().equals("OK")){
+                JSONArray array = responseClass.getResponse();
                 for(int n = 0; n < array.length(); n++){
                     final String s = (String) array.get(n);
                     PrepodList.add(s);

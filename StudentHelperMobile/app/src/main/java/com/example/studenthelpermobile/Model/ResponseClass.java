@@ -2,14 +2,15 @@ package com.example.studenthelpermobile.Model;
 
 import org.json.JSONArray;
 
-public class PrepodList {
+public class ResponseClass {
 
     private String status;
     private JSONArray response;
 
-    public PrepodList(){
+    public ResponseClass(){
         status = "";
         response = new JSONArray();
+
     }
 
     public JSONArray getResponse() {
@@ -19,7 +20,6 @@ public class PrepodList {
     public void setResponse(JSONArray response) {
         this.response = response;
     }
-
 
     public String getStatus() {
         return status;

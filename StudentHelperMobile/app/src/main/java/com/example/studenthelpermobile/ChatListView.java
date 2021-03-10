@@ -1,16 +1,13 @@
 package com.example.studenthelpermobile;
 
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.studenthelpermobile.Model.ChatList;
-import com.example.studenthelpermobile.Model.PrepodList;
 import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Repository.ChatListRepo;
-import com.example.studenthelpermobile.Repository.PrepodListRepo;
 
 import org.json.JSONException;
 

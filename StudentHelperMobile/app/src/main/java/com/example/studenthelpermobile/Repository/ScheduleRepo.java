@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.example.studenthelpermobile.Model.Schedule;
+import com.example.studenthelpermobile.Model.ResponseClass;
 import com.example.studenthelpermobile.ScheduleView;
 
 import org.json.JSONArray;
@@ -18,13 +18,13 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
+public class ScheduleRepo extends AsyncTask <Void, Void, ResponseClass>  {
 
     private int type;
     private ScheduleView activity;
     private ProgressBar progressBar;
     private Map<String, String> request;
-    private Schedule schedule;
+    private ResponseClass responseClass;
     private String role;
 
     public ScheduleRepo(int type, String login, String role, ProgressBar progressBar, ScheduleView scheduleView){
@@ -60,7 +60,7 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
     }
 
     @Override
-    protected Schedule doInBackground(Void... voids) {
+    protected ResponseClass doInBackground(Void... voids) {
 
         try {
             RepositoryAPI repositoryAPI = new RepositoryAPI();
@@ -76,9 +76,9 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
             String status = responseJSON.get("status").toString();
             JSONArray response = (JSONArray) responseJSON.get("response");
 
-            schedule = new Schedule();
-            schedule.setStatus(status);
-            schedule.setResponse(response);
+            responseClass = new ResponseClass();
+            responseClass.setStatus(status);
+            responseClass.setResponse(response);
 
         }catch (ProtocolException e) {
             e.printStackTrace();
@@ -90,12 +90,12 @@ public class ScheduleRepo extends AsyncTask <Void, Void, Schedule>  {
             e.printStackTrace();
         }
 
-        return schedule;
+        return responseClass;
     }
 
     @Override
-    protected void onPostExecute(Schedule schedule) {
-        super.onPostExecute(schedule);
-        activity.onAsyncTaskFinished(schedule);
+    protected void onPostExecute(ResponseClass responseClass) {
+        super.onPostExecute(responseClass);
+        activity.onAsyncTaskFinished(responseClass);
     }
 }

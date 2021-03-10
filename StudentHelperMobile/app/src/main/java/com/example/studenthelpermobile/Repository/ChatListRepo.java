@@ -6,8 +6,6 @@ import android.widget.ProgressBar;
 
 import com.example.studenthelpermobile.ChatListView;
 import com.example.studenthelpermobile.Model.ChatList;
-import com.example.studenthelpermobile.Model.PrepodList;
-import com.example.studenthelpermobile.PrepodListView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
