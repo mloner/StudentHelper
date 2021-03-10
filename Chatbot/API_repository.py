@@ -38,7 +38,7 @@ def _setUserField(idvk:str, field:str, value:str):
     return response
 
 def _getUserState(idvk:str):
-    url = '  api/getUserState'
+    url = 'http://shipshon.fvds.ru/api/getUserState'
     req = {}
     req['client_type'] = 'bot'
     req['command'] = 'getUserState'

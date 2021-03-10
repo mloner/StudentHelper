@@ -11,39 +11,21 @@ def get_but(text, color):
         "color": f"{color}"
     }
 
-def answer_but(count):
-    tmp_count = count
+def answer_but(answerVariants:[]):
     buttons = []
-    if tmp_count < 6:
-        for i in range(tmp_count):
-            buttons.append(get_but(str(i+1),'primary'))
+    for i in answerVariants:
+        buttons.append([get_but(i,'primary')])
     return buttons
 
-def answer_keyboard(count):
+def answer_keyboard(answerVariants:[]):
     keyboard_answer = {
         "one_time": False,
         "inline": True,
-        "buttons": [answer_but(count)]
+        "buttons": answer_but(answerVariants)
         }
     keyboard_answer = json.dumps(keyboard_answer, ensure_ascii=False).encode('utf-8')
     keyboard_answer = str(keyboard_answer.decode('utf-8'))
     return keyboard_answer
-
-# def answer_but(answerVariants:[]):
-#     buttons = []
-#     for i in answerVariants:
-#         buttons.append(get_but(i,'primary'))
-#     return buttons
-#
-# def answer_keyboard(answerVariants:[]):
-#     keyboard_answer = {
-#         "one_time": False,
-#         "inline": True,
-#         "buttons": [answer_but(answerVariants)]
-#         }
-#     keyboard_answer = json.dumps(keyboard_answer, ensure_ascii=False).encode('utf-8')
-#     keyboard_answer = str(keyboard_answer.decode('utf-8'))
-#     return keyboard_answer
 
 # Стартовая Авторизации
 keyboard0 = {
@@ -59,7 +41,7 @@ keyboard0 = str(keyboard0.decode('utf-8'))
 keyboard1 = {
     "one_time": True,
     "buttons": [
-        [get_but('ИВТ-363', 'primary'), get_but('ИВТ-365', 'primary')]
+        [get_but('ИВТ-361', 'primary'), get_but('ИВТ-363', 'primary'), get_but('ИВТ-365', 'primary')]
     ]
 }
 keyboard1 = json.dumps(keyboard1, ensure_ascii=False).encode('utf-8')
@@ -91,7 +73,7 @@ keyboard3 = str(keyboard3.decode('utf-8'))
 # Клава Начало
 keyboard4 = {
     "one_time": True,
-    "buttons": [[get_but('Авторизация', 'secondary')]]
+    "buttons": [[get_but('Авторизация', 'positive')]]
 }
 keyboard4 = json.dumps(keyboard4, ensure_ascii=False).encode('utf-8')
 keyboard4 = str(keyboard4.decode('utf-8'))

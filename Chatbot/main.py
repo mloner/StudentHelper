@@ -3,12 +3,23 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 import keyboards
 import API_repository
 import datetime
+import time
 
 import tokens
 token = tokens.my_token
 vk_session = vk_api.VkApi(token=token)
 vk = vk_session.get_api()
-longpoll = VkLongPoll(vk_session)
+
+class MyVkLongPoll(VkLongPoll):
+    def listen(self):
+        while True:
+            try:
+                for event in self.check():
+                    yield event
+            except Exception as e:
+                print( str(time.time()) + 'Error:', e)
+
+longpoll = MyVkLongPoll(vk_session)
 
 def sender(user_id, answer, keyboard_number):
     vk.messages.send(user_id=user_id, message=answer, keyboard = keyboards.keyboards[keyboard_number], random_id=0)
@@ -39,7 +50,10 @@ def scheduel_text_S(i, schedule_text):
     elif i['subGroup'] == 2:
         schedule_text = schedule_text + '🗿 ' + '2 подргуппа' + '\n'
     if i['description'] != None:
-        schedule_text = schedule_text + '1 пг.: ' + i['description'].split('/')[0] + '\n' + '2 пг.: ' + i['description'].split('/')[1] + '\n'
+        if i['description'].find('/') != -1:
+            schedule_text = schedule_text + '1 пг.: ' + i['description'].split('/')[0] + '\n' + '2 пг.: ' + i['description'].split('/')[1] + '\n'
+        else:
+            schedule_text = schedule_text + 'Обе пг.: ' + i['description']
     schedule_text = schedule_text + '🚪 ' + i['className'] + '\n'
     schedule_text = schedule_text + '🤡 ' + i['prepodName'] + '\n\n'
 
@@ -58,7 +72,10 @@ def scheduel_text_P(i, schedule_text):
     elif i['subGroup'] == 2:
         schedule_text = schedule_text + '🗿 ' + '2 подргуппа' + '\n'
     if i['description'] != None:
-        schedule_text = schedule_text + '1 пг.: ' + i['description'].split('/')[0] + '\n' + '2 пг.: ' + i['description'].split('/')[1] + '\n'
+        if i['description'].find('/') != -1:
+            schedule_text = schedule_text + '1 пг.: ' + i['description'].split('/')[0] + '\n' + '2 пг.: ' + i['description'].split('/')[1] + '\n'
+        else:
+            schedule_text = schedule_text + 'Обе пг.: ' + i['description']
     schedule_text = schedule_text + '🚪 ' + i['className'] + '\n'
     return schedule_text
 
@@ -94,12 +111,7 @@ for event in longpoll.listen():
         elif event.text == 'Пройти опрос':
             question = API_repository._getQuestion(event.user_id)['response']
             if isinstance(question, dict):
-                answers_str = ''
-                number_answer = 1
-                for answer in question['answerVariants']:
-                    answers_str = answers_str + str(number_answer) + ') ' + answer + '\n'
-                    number_answer = number_answer + 1
-                sender_question(event.user_id, question['question'], keyboards.answer_keyboard(len(question['answerVariants'])))
+                sender_question(event.user_id, question['question'], keyboards.answer_keyboard(question['answerVariants']))
                 API_repository._setUserField(event.user_id, 'state', 'Finish_Q')
             else:
                 if user_state['role'] == 'student':
@@ -244,15 +256,15 @@ for event in longpoll.listen():
 
             elif user_state['state'] == 'RegisterUser_S_S':
                 if event.text == '1 подгруппа':
-                    API_repository._registerUser(event.user_id, 'student', '', 1)
+                    API_repository._registerUser(event.user_id, 'student', None, 1)
                     sender(event.user_id, 'Вы успешно авторизовались!\n\nВыберите расписание', 5)
                     API_repository._setUserField(event.user_id, 'state', 'Finish')
                 elif event.text == '2 подгруппа':
-                    API_repository._registerUser(event.user_id, 'student', '', 2)
+                    API_repository._registerUser(event.user_id, 'student', None, 2)
                     sender(event.user_id, 'Вы успешно авторизовались!\n\nВыберите расписание', 5)
                     API_repository._setUserField(event.user_id, 'state', 'Finish')
                 elif event.text == 'Обе подгруппы':
-                    API_repository._registerUser(event.user_id, 'student', '', 0)
+                    API_repository._registerUser(event.user_id, 'student', None, 0)
                     sender(event.user_id, 'Вы успешно авторизовались!\n\nВыберите расписание', 5)
                     API_repository._setUserField(event.user_id, 'state', 'Finish')
                 else:
