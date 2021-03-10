@@ -131,8 +131,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             LoginRepo loginRepo = new LoginRepo(role, login, password, loginProgressbar, this);
             loginRepo.execute();
-        } catch (JSONException e) {
-            e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {

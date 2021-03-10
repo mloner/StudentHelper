@@ -14,22 +14,16 @@ import org.json.JSONArray;
 import java.io.IOException;
 import java.net.URL;
 
-public class PrepodListRepo extends AsyncTask<Void, Void, ResponseClass> {
+public class PrepodListRepo extends AsyncSuperClass {
 
     private PrepodListView activity;
-    private ProgressBar progressBar;
     private ResponseClass responseClass;
 
-    public PrepodListRepo (ProgressBar progressBar, PrepodListView prepodListView) throws JSONException {
+    public PrepodListRepo (ProgressBar progressBar, PrepodListView prepodListView) {
+        super(progressBar);
         activity = prepodListView;
-        this.progressBar = progressBar;
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
-    }
 
     @Override
     protected ResponseClass doInBackground(Void... voids) {

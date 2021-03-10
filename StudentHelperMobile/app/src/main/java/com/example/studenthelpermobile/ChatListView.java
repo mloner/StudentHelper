@@ -32,13 +32,8 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
         linearLayout = findViewById(R.id.chat_list_layout);
         activity = this;
 
-        try {
-            ChatListRepo chatListRepo = new ChatListRepo(progressBar, this);
-            chatListRepo.execute();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+        ChatListRepo chatListRepo = new ChatListRepo(progressBar, this);
+        chatListRepo.execute();
     }
 
     @Override

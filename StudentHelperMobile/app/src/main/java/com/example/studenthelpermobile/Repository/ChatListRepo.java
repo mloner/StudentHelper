@@ -14,23 +14,15 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 
-public class ChatListRepo extends AsyncTask<Void, Void, ResponseClass> {
+public class ChatListRepo extends AsyncSuperClass {
 
     private ChatListView activity;
-    private ProgressBar progressBar;
     private ResponseClass responseClass;
 
-    public ChatListRepo (ProgressBar progressBar, ChatListView chatListView) throws JSONException {
+    public ChatListRepo (ProgressBar progressBar, ChatListView chatListView) {
+        super(progressBar);
         activity = chatListView;
-        this.progressBar = progressBar;
     }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
 
     @Override
     protected ResponseClass doInBackground(Void... voids) {

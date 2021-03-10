@@ -8,11 +8,11 @@ public class ResponseClass {
     private String status;
     private JSONArray responseArray;
     private String responseString;
+    private JSONObject responseObject;
 
     public ResponseClass(){
         status = "";
         responseArray = new JSONArray();
-
     }
 
     public JSONArray getResponseArray() {
@@ -37,5 +37,13 @@ public class ResponseClass {
 
     public void setResponseString(String responseString) {
         this.responseString = responseString;
+    }
+
+    public JSONObject getResponseObject() {
+        return responseObject;
+    }
+
+    public void setResponseObject(JSONObject responseObject) {
+        this.responseObject = responseObject;
     }
 }

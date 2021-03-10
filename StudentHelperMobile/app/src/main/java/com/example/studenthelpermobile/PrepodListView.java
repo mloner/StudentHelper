@@ -38,12 +38,8 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
         linearLayout = findViewById(R.id.prepod_list_layout);
         activity = this;
 
-        try {
-            PrepodListRepo prepodListRepo = new PrepodListRepo(progressBar, this);
-            prepodListRepo.execute();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        PrepodListRepo prepodListRepo = new PrepodListRepo(progressBar, this);
+        prepodListRepo.execute();
 
         PrepodList = new ArrayList<>();
         PrepodSearch prepodSearch = new PrepodSearch(this, PrepodList );

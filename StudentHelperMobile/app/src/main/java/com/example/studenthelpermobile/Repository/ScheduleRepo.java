@@ -18,19 +18,18 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ScheduleRepo extends AsyncTask <Void, Void, ResponseClass>  {
+public class ScheduleRepo extends AsyncSuperClass  {
 
     private int type;
     private ScheduleView activity;
-    private ProgressBar progressBar;
     private Map<String, String> request;
     private ResponseClass responseClass;
     private String role;
 
     public ScheduleRepo(int type, String login, String role, ProgressBar progressBar, ScheduleView scheduleView){
+        super(progressBar);
         this.type = type;
         activity = scheduleView;
-        this.progressBar = progressBar;
         request = new HashMap<>();
         this.role = role;
         request.put("client_type", "mobile");
@@ -51,12 +50,6 @@ public class ScheduleRepo extends AsyncTask <Void, Void, ResponseClass>  {
                 request.put("schedule_type", "two_weeks");
                 break;
         }
-    }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override

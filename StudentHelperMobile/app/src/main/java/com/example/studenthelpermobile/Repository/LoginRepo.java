@@ -22,21 +22,18 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginRepo extends AsyncTask <Void, Void, ResponseClass> {
+public class LoginRepo extends AsyncSuperClass {
 
     private Map <String, String> request;
-    private ProgressBar progressBar;
     private MainActivity activity;
     private ResponseClass responseClass;
 
 
-    public LoginRepo (String role, String login, String password, ProgressBar progressBar, MainActivity activity) throws JSONException, NoSuchAlgorithmException, UnsupportedEncodingException {
-        this.progressBar = progressBar;
+    public LoginRepo (String role, String login, String password, ProgressBar progressBar, MainActivity activity) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        super(progressBar);
         this.activity = activity;
         //Шифрование пароля
-
-       String encryptedPass = PasswordEncrypt(password);
-
+        String encryptedPass = PasswordEncrypt(password);
         request = new HashMap<>();
         request.put("client_type", "mobile");
         request.put("role", role);
@@ -45,11 +42,6 @@ public class LoginRepo extends AsyncTask <Void, Void, ResponseClass> {
 
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
-    }
 
     @Override
     protected ResponseClass doInBackground(Void... voids) {
@@ -83,7 +75,7 @@ public class LoginRepo extends AsyncTask <Void, Void, ResponseClass> {
         return responseClass;
     }
 
-    private String PasswordEncrypt(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    private String PasswordEncrypt(String password) throws NoSuchAlgorithmException {
         MessageDigest m = MessageDigest.getInstance("MD5");
         m.reset();
         m.update(password.getBytes(StandardCharsets.UTF_8));
