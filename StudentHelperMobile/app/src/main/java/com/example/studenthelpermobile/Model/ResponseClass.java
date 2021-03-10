@@ -1,24 +1,26 @@
 package com.example.studenthelpermobile.Model;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class ResponseClass {
 
     private String status;
-    private JSONArray response;
+    private JSONArray responseArray;
+    private String responseString;
 
     public ResponseClass(){
         status = "";
-        response = new JSONArray();
+        responseArray = new JSONArray();
 
     }
 
-    public JSONArray getResponse() {
-        return response;
+    public JSONArray getResponseArray() {
+        return responseArray;
     }
 
-    public void setResponse(JSONArray response) {
-        this.response = response;
+    public void setResponseArray(JSONArray response) {
+        this.responseArray = response;
     }
 
     public String getStatus() {
@@ -27,5 +29,13 @@ public class ResponseClass {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getResponseString() {
+        return responseString;
+    }
+
+    public void setResponseString(String responseString) {
+        this.responseString = responseString;
     }
 }

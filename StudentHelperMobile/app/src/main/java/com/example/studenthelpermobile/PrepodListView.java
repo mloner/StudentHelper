@@ -55,7 +55,7 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
     public void onAsyncTaskFinished(ResponseClass responseClass) {
         try {
             if(responseClass.getStatus().equals("OK")){
-                JSONArray array = responseClass.getResponse();
+                JSONArray array = responseClass.getResponseArray();
                 for(int n = 0; n < array.length(); n++){
                     final String s = (String) array.get(n);
                     PrepodList.add(s);

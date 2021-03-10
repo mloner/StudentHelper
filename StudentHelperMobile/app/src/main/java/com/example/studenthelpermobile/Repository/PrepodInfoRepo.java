@@ -52,6 +52,7 @@ public class PrepodInfoRepo extends AsyncTask<Void, Void, PrepodInfo> {
             String mail = r.get("email").toString();
             String pos = r.get("position").toString();
             String degree = r.get("degree").toString();
+            //ToDO вынести реализацию в контроллер
 
             prepodInfo = new PrepodInfo();
             prepodInfo.setCathedra(cath);

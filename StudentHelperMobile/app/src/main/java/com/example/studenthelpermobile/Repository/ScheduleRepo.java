@@ -78,7 +78,7 @@ public class ScheduleRepo extends AsyncTask <Void, Void, ResponseClass>  {
 
             responseClass = new ResponseClass();
             responseClass.setStatus(status);
-            responseClass.setResponse(response);
+            responseClass.setResponseArray(response);
 
         }catch (ProtocolException e) {
             e.printStackTrace();

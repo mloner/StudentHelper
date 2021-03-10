@@ -5,7 +5,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.studenthelpermobile.Model.ChatList;
+
+import com.example.studenthelpermobile.Model.ResponseClass;
 import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Repository.ChatListRepo;
 
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ChatListView extends AppCompatActivity implements AsyncInterface<ChatList> {
+public class ChatListView extends AppCompatActivity implements AsyncInterface<ResponseClass> {
 
     private TextView ErrorText;
     private ProgressBar progressBar;
@@ -41,7 +42,7 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Ch
     }
 
     @Override
-    public void onAsyncTaskFinished(ChatList chatList) {
+    public void onAsyncTaskFinished(ResponseClass responseClass) {
         //ToDO вынести распаковку в отдельный класс
     }
 }

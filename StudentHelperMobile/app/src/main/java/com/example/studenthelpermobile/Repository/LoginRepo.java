@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.studenthelpermobile.MainActivity;
-import com.example.studenthelpermobile.Model.Login;
+import com.example.studenthelpermobile.Model.ResponseClass;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,12 +22,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginRepo extends AsyncTask <Void, Void, Login> {
+public class LoginRepo extends AsyncTask <Void, Void, ResponseClass> {
 
     private Map <String, String> request;
     private ProgressBar progressBar;
     private MainActivity activity;
-    private Login l;
+    private ResponseClass responseClass;
 
 
     public LoginRepo (String role, String login, String password, ProgressBar progressBar, MainActivity activity) throws JSONException, NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -52,7 +52,7 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
     }
 
     @Override
-    protected Login doInBackground(Void... voids) {
+    protected ResponseClass doInBackground(Void... voids) {
         try {
 
             RepositoryAPI repositoryAPI = new RepositoryAPI();
@@ -65,9 +65,9 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
             String status = responseJSON.get("status").toString();
             String response = responseJSON.get("response").toString();
 
-            l = new Login();
-            l.setStatus(status);
-            l.setResponse(response);
+            responseClass = new ResponseClass();
+            responseClass.setStatus(status);
+            responseClass.setResponseString(response);
 
 
         }catch (ProtocolException e) {
@@ -80,7 +80,7 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
             e.printStackTrace();
         }
 
-        return l;
+        return responseClass;
     }
 
     private String PasswordEncrypt(String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -101,8 +101,8 @@ public class LoginRepo extends AsyncTask <Void, Void, Login> {
     }
 
     @Override
-    protected void onPostExecute(Login l) {
-        super.onPostExecute(l);
-        activity.onAsyncTaskFinished(l);
+    protected void onPostExecute(ResponseClass responseClass) {
+        super.onPostExecute(responseClass);
+        activity.onAsyncTaskFinished(responseClass);
     }
 }

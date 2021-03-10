@@ -65,7 +65,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         try {
             if(responseClass.getStatus().equals("OK")){
                 if(type != 3) {
-                    JSONArray array = responseClass.getResponse();
+                    JSONArray array = responseClass.getResponseArray();
                     for (int n = 0; n < array.length(); n++) {
                         JSONObject s = (JSONObject) array.get(n);
                         SetLesson(LessonFill(s));
@@ -75,7 +75,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
                     secondSub.setVisibility(View.VISIBLE);
                 }
                 else {
-                    JSONArray array = responseClass.getResponse();
+                    JSONArray array = responseClass.getResponseArray();
                     JSONArray fweek = (JSONArray) array.get(0);
                     JSONArray sweek = (JSONArray) array.get(1);
                     for (int n = 0; n < fweek.length(); n++) {

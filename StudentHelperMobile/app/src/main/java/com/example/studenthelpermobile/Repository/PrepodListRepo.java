@@ -43,7 +43,7 @@ public class PrepodListRepo extends AsyncTask<Void, Void, ResponseClass> {
 
             responseClass = new ResponseClass();
             responseClass.setStatus(status);
-            responseClass.setResponse(response);
+            responseClass.setResponseArray(response);
 
 
         } catch (IOException e) {
