@@ -5,9 +5,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.studenthelpermobile.ChatListView;
-import com.example.studenthelpermobile.Model.ChatList;
-import com.example.studenthelpermobile.Model.PrepodList;
-import com.example.studenthelpermobile.PrepodListView;
+import com.example.studenthelpermobile.Model.ResponseClass;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,26 +14,18 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 
-public class ChatListRepo extends AsyncTask<Void, Void, ChatList> {
+public class ChatListRepo extends AsyncSuperClass {
 
     private ChatListView activity;
-    private ProgressBar progressBar;
-    private ChatList chatList;
+    private ResponseClass responseClass;
 
-    public ChatListRepo (ProgressBar progressBar, ChatListView chatListView) throws JSONException {
+    public ChatListRepo (ProgressBar progressBar, ChatListView chatListView) {
+        super(progressBar);
         activity = chatListView;
-        this.progressBar = progressBar;
     }
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-
-    @Override
-    protected ChatList doInBackground(Void... voids) {
+    protected ResponseClass doInBackground(Void... voids) {
         RepositoryAPI repositoryAPI = new RepositoryAPI();
         try {
             URL url = new URL("http://shipshon.fvds.ru/api/getChatList");
@@ -44,9 +34,9 @@ public class ChatListRepo extends AsyncTask<Void, Void, ChatList> {
             String status = responseJSON.get("status").toString();
             JSONArray response = (JSONArray) responseJSON.get("response");
 
-            chatList = new ChatList();
-            chatList.setStatus(status);
-            chatList.setResponse(response);
+            responseClass = new ResponseClass();
+            responseClass.setStatus(status);
+            responseClass.setResponseArray(response);
 
 
         } catch (IOException e) {
@@ -54,13 +44,13 @@ public class ChatListRepo extends AsyncTask<Void, Void, ChatList> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return chatList;
+        return responseClass;
 
     }
 
     @Override
-    protected void onPostExecute(ChatList chatList) {
-        super.onPostExecute(chatList);
-        activity.onAsyncTaskFinished(chatList);
+    protected void onPostExecute(ResponseClass responseClass) {
+        super.onPostExecute(responseClass);
+        activity.onAsyncTaskFinished(responseClass);
     }
 }

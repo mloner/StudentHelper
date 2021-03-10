@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.studenthelpermobile.Model.Login;
+import com.example.studenthelpermobile.Model.ResponseClass;
 import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Repository.LoginRepo;
 
@@ -21,7 +21,7 @@ import java.security.NoSuchAlgorithmException;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncInterface <Login> {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AsyncInterface <ResponseClass> {
 
     Button StudentBtn;
     Button PrepodBtn;
@@ -131,8 +131,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             LoginRepo loginRepo = new LoginRepo(role, login, password, loginProgressbar, this);
             loginRepo.execute();
-        } catch (JSONException e) {
-            e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
@@ -147,10 +145,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onAsyncTaskFinished(Login login) {
+    public void onAsyncTaskFinished(ResponseClass responseClass) {
         try {
-            if(login.getStatus().equals("OK")) {
-                if (login.getResponse().equals("OK")) {
+            if(responseClass.getStatus().equals("OK")) {
+                if (responseClass.getResponseString().equals("OK")) {
                     editor = mSettings.edit();
                     editor.putString(APP_PREFERENCES_LOGIN, this.login);
                     editor.putString(APP_PREFERENCES_ROLE, this.role);
@@ -163,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             else {
-                switch (login.getResponse()) {
+                switch (responseClass.getResponseString()) {
                     case "WRONG_LOGIN":
                         if (isStudent) {
                             ErrorText.setText(R.string.Group_error);
