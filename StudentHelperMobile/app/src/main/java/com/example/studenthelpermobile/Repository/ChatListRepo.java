@@ -4,24 +4,26 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.studenthelpermobile.ChatListView;
+import com.example.studenthelpermobile.Model.ChatList;
 import com.example.studenthelpermobile.Model.PrepodList;
 import com.example.studenthelpermobile.PrepodListView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 import java.io.IOException;
 import java.net.URL;
 
-public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
+public class ChatListRepo extends AsyncTask<Void, Void, ChatList> {
 
-    private PrepodListView activity;
+    private ChatListView activity;
     private ProgressBar progressBar;
-    private PrepodList prepodList;
+    private ChatList chatList;
 
-    public PrepodListRepo (ProgressBar progressBar, PrepodListView prepodListView) throws JSONException {
-        activity = prepodListView;
+    public ChatListRepo (ProgressBar progressBar, ChatListView chatListView) throws JSONException {
+        activity = chatListView;
         this.progressBar = progressBar;
     }
 
@@ -31,19 +33,20 @@ public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
         progressBar.setVisibility(View.VISIBLE);
     }
 
+
     @Override
-    protected PrepodList doInBackground(Void... voids) {
+    protected ChatList doInBackground(Void... voids) {
         RepositoryAPI repositoryAPI = new RepositoryAPI();
         try {
-            URL url = new URL("http://shipshon.fvds.ru/api/getPrepodList");
+            URL url = new URL("http://shipshon.fvds.ru/api/getChatList");
             JSONObject responseJSON = repositoryAPI.getRequest(url);
 
             String status = responseJSON.get("status").toString();
             JSONArray response = (JSONArray) responseJSON.get("response");
 
-            prepodList = new PrepodList();
-            prepodList.setStatus(status);
-            prepodList.setResponse(response);
+            chatList = new ChatList();
+            chatList.setStatus(status);
+            chatList.setResponse(response);
 
 
         } catch (IOException e) {
@@ -51,12 +54,13 @@ public class PrepodListRepo extends AsyncTask<Void, Void, PrepodList> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return prepodList;
+        return chatList;
+
     }
 
     @Override
-    protected void onPostExecute(PrepodList prepodList) {
-        super.onPostExecute(prepodList);
-        activity.onAsyncTaskFinished(prepodList);
+    protected void onPostExecute(ChatList chatList) {
+        super.onPostExecute(chatList);
+        activity.onAsyncTaskFinished(chatList);
     }
 }
