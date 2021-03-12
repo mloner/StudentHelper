@@ -30,6 +30,7 @@
     <string name="FirstSubgroup">1 подгруппа</string>
     <string name="SecondSubgroup">2 подгруппа</string>
     <string name="BothSubgroup">Обе подгруппы</string>
+    <string name="NumberOfWeek">%1$d неделя</string>
 
     <!-- Сообщения об ошибках -->
     <string name="Login_error">Ошибка: неправильные ФИО</string>

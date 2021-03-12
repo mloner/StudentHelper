@@ -78,6 +78,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
                     JSONArray array = responseClass.getResponseArray();
                     JSONArray fweek = (JSONArray) array.get(0);
                     JSONArray sweek = (JSONArray) array.get(1);
+                    SetNumberOfWeek(1);
                     for (int n = 0; n < fweek.length(); n++) {
                         JSONArray dayArr = (JSONArray) fweek.get(n);
                         for(int i = 0; i < dayArr.length(); i++) {
@@ -89,6 +90,7 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
                         lessonArrayList.clear();
 
                     }
+                    SetNumberOfWeek(2);
                     for (int n = 0; n < sweek.length(); n++) {
                         JSONArray dayArr = (JSONArray) sweek.get(n);
                         for(int i = 0; i < dayArr.length(); i++) {
@@ -223,6 +225,16 @@ public class ScheduleView extends AppCompatActivity implements View.OnClickListe
         TextView space = new TextView(this);
         space.setText("\n\n");
         linearLayout.addView(space);
+    }
+
+    public void SetNumberOfWeek(int n){
+        TextView number = new TextView(this);
+        number.setText(getString(R.string.NumberOfWeek,n));
+        number.setTextColor(Color.BLACK);
+        number.setTextSize(20);
+        number.setTypeface(null, Typeface.BOLD);
+        number.setGravity(Gravity.CENTER_HORIZONTAL);
+        linearLayout.addView(number);
     }
 
 
