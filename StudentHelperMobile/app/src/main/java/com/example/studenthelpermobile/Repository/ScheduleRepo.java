@@ -1,7 +1,5 @@
 package com.example.studenthelpermobile.Repository;
 
-import android.os.AsyncTask;
-import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.studenthelpermobile.Model.ResponseClass;
@@ -20,7 +18,7 @@ import java.util.Map;
 
 public class ScheduleRepo extends AsyncSuperClass  {
 
-    private int type;
+
     private ScheduleView activity;
     private Map<String, String> request;
     private ResponseClass responseClass;
@@ -28,7 +26,7 @@ public class ScheduleRepo extends AsyncSuperClass  {
 
     public ScheduleRepo(int type, String login, String role, ProgressBar progressBar, ScheduleView scheduleView){
         super(progressBar);
-        this.type = type;
+
         activity = scheduleView;
         request = new HashMap<>();
         this.role = role;
@@ -39,7 +37,7 @@ public class ScheduleRepo extends AsyncSuperClass  {
         else {
             request.put("fio", login);
         }
-        switch (this.type){
+        switch (type){
             case 1:
                 request.put("schedule_type", "today");
                 break;
