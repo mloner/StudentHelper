@@ -8,22 +8,14 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@color/BLACK"
+        style="@style/TextStyle"
         android:text="@string/Welcome"
-        android:gravity="center"
-        android:layout_marginTop="20dp"/>
+        />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@color/BLACK"
+        style="@style/TextStyle"
         android:text="@string/Authorization"
-        android:gravity="center"
-        android:layout_marginTop="20dp"/>
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,71 +41,43 @@
     </LinearLayout>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@color/BLACK"
+        style="@style/TextStyleInvisible"
         android:text="@string/Enter_FIO"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
         android:id="@+id/text_enter_fio"
-        android:visibility="invisible" />
+        />
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@color/BLACK"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
+        style="@style/TextStyleInvisible"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:id="@+id/enter_fio"
-        android:visibility="invisible"
         android:inputType="textCapWords"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@color/BLACK"
+        style="@style/TextStyleInvisible"
         android:text="@string/Enter_Password"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
         android:id="@+id/text_enter_password"
-        android:visibility="invisible"/>
+        />
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textColor="@color/BLACK"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
+        style="@style/TextStyleInvisible"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:id="@+id/enter_password"
-        android:visibility="invisible"
         android:inputType="textCapWords"/>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
-        android:layout_height="wrap_content"
+        style="@style/TextStyleInvisible"
         android:text="@string/Login_button"
-        android:textColor="@color/BLACK"
+        android:textSize="16sp"
         android:id="@+id/login_button"
-        android:visibility="invisible"/>
+        />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
+        style="@style/TextStyleInvisible"
         android:textColor="@color/RED"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
         android:id="@+id/error_text"
-        android:visibility="invisible"/>
+        />
 
     <ProgressBar
         android:layout_width="wrap_content"

@@ -38,6 +38,14 @@
         <activity android:name=".PrepodInfoView">
 
         </activity>
+
+        <activity android:name=".ChatListView">
+
+        </activity>
+
+        <activity android:name=".ChatView">
+
+        </activity>
     </application>
 
 </manifest>

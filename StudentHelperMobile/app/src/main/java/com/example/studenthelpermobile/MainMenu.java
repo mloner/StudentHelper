@@ -82,7 +82,9 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
                 startActivity(prepodinfo);
                 break;
             case R.id.prepod_chat:
-
+                Intent chatList = new Intent(this, ChatListView.class);
+                startActivity(chatList);
+                chatList.putExtra("role", role);
                 break;
         }
     }

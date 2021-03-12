@@ -8,4 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TextStyle" >
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/BLACK</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="TextStyleInvisible" parent="@style/TextStyle" >
+        <item name="android:visibility">invisible</item>
+    </style>
+
+    <style name="TextStyleButton" parent="@style/TextStyle" >
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>
