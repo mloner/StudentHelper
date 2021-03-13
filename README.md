@@ -40,7 +40,7 @@
 
 ## Архитектура приложения
 
-![AppSchema](https://github.com/mloner/StudentHelper/blob/main/images/AppSchema.png)
+![AppSchema](https://github.com/mloner/StudentHelper/blob/main/images/appSchema.jpg)
 
 ## Описание хранимых данных в БД
 
