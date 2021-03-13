@@ -8,12 +8,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.studenthelpermobile.Model.ChatTitle;
 import com.example.studenthelpermobile.Model.ResponseClass;
 import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Repository.ChatListRepo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -26,8 +28,9 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
     private ProgressBar progressBar;
     private LinearLayout linearLayout;
     private ChatListView activity;
-    private ArrayList <String> ChatList;
+    private ArrayList <ChatTitle> ChatList;
     private String role;
+    private String login;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +41,9 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
         activity = this;
         ChatList = new ArrayList<>();
         role = Objects.requireNonNull(getIntent().getExtras()).getString("role");
+        login = Objects.requireNonNull(getIntent().getExtras()).getString("login");
 
-        ChatListRepo chatListRepo = new ChatListRepo(progressBar, this);
+        ChatListRepo chatListRepo = new ChatListRepo(progressBar, this, role, login);
         chatListRepo.execute();
     }
 
@@ -49,8 +53,14 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
             if(responseClass.getStatus().equals("OK")){
                 JSONArray array = responseClass.getResponseArray();
                 for(int n = 0; n < array.length(); n++){
-                    final String s = (String) array.get(n);
-                    ChatList.add(s);
+                    JSONObject chat = (JSONObject) array.get(n);
+                    ChatTitle chatTitle = new ChatTitle();
+                    chatTitle.setCount((Integer) chat.get("messageCount"));
+                    if(role.equals("student"))
+                        chatTitle.setTitle((String) chat.get("prepodName"));
+                    else
+                        chatTitle.setTitle((String) chat.get("group"));
+                    ChatList.add(chatTitle);
                 }
                 SetChats(ChatList);
             }
@@ -71,17 +81,24 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
         ErrorText.setVisibility(View.VISIBLE);
     }
 
-    public void SetChats(ArrayList<String> chats){
-        for (String s: chats) {
+    public void SetChats(ArrayList<ChatTitle> chats){
+        for (ChatTitle s: chats) {
             Button b = new Button(this);
-            b.setText(s);
-            final String put = s;
+            b.setText(String.format("%s (%d)",s.getTitle(), s.getCount()));
+            final String put = s.getTitle();
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(activity, ChatView.class);
-                    intent.putExtra("chatName", put);
-                    intent.putExtra("role", role);
+                    if(role.equals("student")){
+                        intent.putExtra("group", login);
+                        intent.putExtra("prepodName", put);
+                    }
+                    else {
+                        intent.putExtra("group", put);
+                        intent.putExtra("prepodName", login);
+                    }
+
                     startActivity(intent);
                 }
             });

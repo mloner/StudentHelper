@@ -1,10 +1,9 @@
 package com.example.studenthelpermobile.Repository;
 
-import android.os.AsyncTask;
-import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.studenthelpermobile.ChatListView;
+import com.example.studenthelpermobile.ChatView;
 import com.example.studenthelpermobile.Model.ResponseClass;
 
 import org.json.JSONArray;
@@ -16,25 +15,25 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChatListRepo extends AsyncSuperClass {
+public class ChatRepo extends AsyncSuperClass {
 
-    private ChatListView activity;
+    private ChatView activity;
     private ResponseClass responseClass;
     private Map<String, String> request;
 
-    public ChatListRepo (ProgressBar progressBar, ChatListView chatListView, String role, String login) {
+    public ChatRepo(ProgressBar progressBar, ChatView chatView, String group, String prepodName) {
         super(progressBar);
-        activity = chatListView;
+        activity = chatView;
         request = new HashMap<>();
-        request.put("role", role);
-        request.put("login", login);
+        request.put("group", group);
+        request.put("prepodName", prepodName);
     }
 
     @Override
     public ResponseClass doInBackground(Void... voids) {
         RepositoryAPI repositoryAPI = new RepositoryAPI();
         try {
-            String s = "http://shipshon.fvds.ru/api/getChatList";
+            String s = "http://shipshon.fvds.ru/api/getChat";
             s = repositoryAPI.URLBuilder(s, request);
             URL url = new URL(s);
             JSONObject responseJSON = repositoryAPI.getRequest(url);
@@ -61,4 +60,5 @@ public class ChatListRepo extends AsyncSuperClass {
         super.onPostExecute(responseClass);
         activity.onAsyncTaskFinished(responseClass);
     }
+
 }
