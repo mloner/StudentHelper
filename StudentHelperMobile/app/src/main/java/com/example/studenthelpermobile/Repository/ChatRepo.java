@@ -26,7 +26,7 @@ public class ChatRepo extends AsyncSuperClass {
         activity = chatView;
         request = new HashMap<>();
         request.put("group", group);
-        request.put("prepodName", prepodName);
+        request.put("prepod", prepodName);
         request.put("lessonName", lessonName);
     }
 

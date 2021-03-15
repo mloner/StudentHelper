@@ -30,8 +30,8 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
         lessonName = Objects.requireNonNull(getIntent().getExtras()).getString("lessonName");
         progressBar = findViewById(R.id.progressbar_chat);
         linearLayout = findViewById(R.id.chat_layout);
-        /*ChatRepo chatListRepo = new ChatRepo(progressBar, this, group, prepodName, lessonName);
-        chatListRepo.execute();*/
+        ChatRepo chatListRepo = new ChatRepo(progressBar, this, group, prepodName, lessonName);
+        chatListRepo.execute();
 
     }
 

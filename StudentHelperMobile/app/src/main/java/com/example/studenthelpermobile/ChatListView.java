@@ -38,7 +38,6 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
 
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase db;
-    private Cursor cursor;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,12 +99,36 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
             databaseHelper = new DatabaseHelper(getApplicationContext());
             databaseHelper.create_db();
             db = databaseHelper.open();
-            String sql = "select countMessages from read_messages where lessonName =? and prepodName = ? and groupName =?";
-            SQLiteStatement statement = db.compileStatement(sql);
-            statement.bindString(1,s.getLessonName());
-            statement.bindString(2,s.getPrepodName());
-            statement.bindString(3,s.getGroup());
-            long count = statement.simpleQueryForLong();
+
+            String isExist = "select COUNT(id) from read_messages where lessonName =? and prepodName = ? and groupName =?";
+            SQLiteStatement isExiststatement = db.compileStatement(isExist);
+            isExiststatement.bindString(1,s.getLessonName());
+            isExiststatement.bindString(2,s.getPrepodName());
+            isExiststatement.bindString(3,s.getGroup());
+            long id = isExiststatement.simpleQueryForLong();
+            long count;
+            final String group = s.getGroup();
+            final String prepodName = s.getPrepodName();
+            final String lessonName = s.getLessonName();
+            final long insert_count = s.getCount();
+            if(id == 0){
+
+                String sql = "INSERT INTO read_messages (lessonName, prepodName, groupName) VALUES (?,?,?)";
+                SQLiteStatement statement = db.compileStatement(sql);
+                statement.bindString(1,s.getLessonName());
+                statement.bindString(2,s.getPrepodName());
+                statement.bindString(3,s.getGroup());
+                statement.executeInsert();
+                count = 0;
+            }
+            else {
+                String sql = "select countMessages from read_messages where lessonName =? and prepodName = ? and groupName =?";
+                SQLiteStatement statement = db.compileStatement(sql);
+                statement.bindString(1,s.getLessonName());
+                statement.bindString(2,s.getPrepodName());
+                statement.bindString(3,s.getGroup());
+                count = statement.simpleQueryForLong();
+            }
             db.close();
             if(role.equals("student")){
                 if(s.getCount() - count != 0)
@@ -119,12 +142,22 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
                 else
                     b.setText(String.format("%s\n%s",s.getLessonName(),s.getGroup()));
             }
-            final String group = s.getGroup();
-            final String prepodName = s.getPrepodName();
-            final String lessonName = s.getLessonName();
+
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    databaseHelper.create_db();
+                    db = databaseHelper.open();
+                    String sql = "update read_messages set countMessages = ? where lessonName =? and prepodName = ? and groupName =?";
+                    SQLiteStatement statement = db.compileStatement(sql);
+                    statement.bindLong(1,insert_count);
+                    statement.bindString(2,lessonName);
+                    statement.bindString(3,prepodName);
+                    statement.bindString(4,group);
+                    statement.executeUpdateDelete();
+                    db.close();
+
                     Intent intent = new Intent(activity, ChatView.class);
                     intent.putExtra("group", group);
                     intent.putExtra("prepodName", prepodName);
