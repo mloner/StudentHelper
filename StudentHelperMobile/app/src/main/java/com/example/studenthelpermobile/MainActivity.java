@@ -14,8 +14,6 @@ import com.example.studenthelpermobile.Model.ResponseClass;
 import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Repository.LoginRepo;
 
-import org.json.JSONException;
-
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 

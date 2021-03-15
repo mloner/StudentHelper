@@ -1,7 +1,9 @@
 package com.example.studenthelpermobile;
 
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.studenthelpermobile.Model.ResponseClass;
 import com.example.studenthelpermobile.Repository.AsyncInterface;
@@ -15,7 +17,9 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
 
     private String prepodName;
     private String group;
+    private String lessonName;
     private ProgressBar progressBar;
+    private LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +27,12 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
         setContentView(R.layout.chat_activity);
         prepodName = Objects.requireNonNull(getIntent().getExtras()).getString("prepodName");
         group = Objects.requireNonNull(getIntent().getExtras()).getString("group");
+        lessonName = Objects.requireNonNull(getIntent().getExtras()).getString("lessonName");
         progressBar = findViewById(R.id.progressbar_chat);
-        ChatRepo chatListRepo = new ChatRepo(progressBar, this, group, prepodName);
-        chatListRepo.execute();
+        linearLayout = findViewById(R.id.chat_layout);
+        /*ChatRepo chatListRepo = new ChatRepo(progressBar, this, group, prepodName, lessonName);
+        chatListRepo.execute();*/
+
     }
 
     @Override

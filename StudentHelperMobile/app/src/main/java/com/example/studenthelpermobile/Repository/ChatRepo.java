@@ -21,12 +21,13 @@ public class ChatRepo extends AsyncSuperClass {
     private ResponseClass responseClass;
     private Map<String, String> request;
 
-    public ChatRepo(ProgressBar progressBar, ChatView chatView, String group, String prepodName) {
+    public ChatRepo(ProgressBar progressBar, ChatView chatView, String group, String prepodName, String lessonName) {
         super(progressBar);
         activity = chatView;
         request = new HashMap<>();
         request.put("group", group);
         request.put("prepodName", prepodName);
+        request.put("lessonName", lessonName);
     }
 
     @Override

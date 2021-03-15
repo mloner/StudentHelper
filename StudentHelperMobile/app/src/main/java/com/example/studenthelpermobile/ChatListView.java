@@ -56,10 +56,15 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
                     JSONObject chat = (JSONObject) array.get(n);
                     ChatTitle chatTitle = new ChatTitle();
                     chatTitle.setCount((Integer) chat.get("messageCount"));
-                    if(role.equals("student"))
-                        chatTitle.setTitle((String) chat.get("prepodName"));
-                    else
-                        chatTitle.setTitle((String) chat.get("group"));
+                    chatTitle.setLessonName((String) chat.get("lessonName"));
+                    if(role.equals("student")) {
+                        chatTitle.setPrepodName((String) chat.get("prepodName"));
+                        chatTitle.setGroup(login);
+                    }
+                    else {
+                        chatTitle.setGroup((String) chat.get("group"));
+                        chatTitle.setPrepodName(login);
+                    }
                     ChatList.add(chatTitle);
                 }
                 SetChats(ChatList);
@@ -84,21 +89,22 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
     public void SetChats(ArrayList<ChatTitle> chats){
         for (ChatTitle s: chats) {
             Button b = new Button(this);
-            b.setText(String.format("%s (%d)",s.getTitle(), s.getCount()));
-            final String put = s.getTitle();
+            if(role.equals("student")){
+                b.setText(String.format("%s\n%s (%d)",s.getLessonName(),s.getPrepodName(), s.getCount()));
+            }
+            else {
+                b.setText(String.format("%s\n%s (%d)",s.getLessonName(),s.getGroup(), s.getCount()));
+            }
+            final String group = s.getGroup();
+            final String prepodName = s.getPrepodName();
+            final String lessonName = s.getLessonName();
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(activity, ChatView.class);
-                    if(role.equals("student")){
-                        intent.putExtra("group", login);
-                        intent.putExtra("prepodName", put);
-                    }
-                    else {
-                        intent.putExtra("group", put);
-                        intent.putExtra("prepodName", login);
-                    }
-
+                    intent.putExtra("group", group);
+                    intent.putExtra("prepodName", prepodName);
+                    intent.putExtra("lessonName", lessonName);
                     startActivity(intent);
                 }
             });
