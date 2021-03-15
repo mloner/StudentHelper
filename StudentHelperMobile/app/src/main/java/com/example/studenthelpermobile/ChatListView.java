@@ -1,6 +1,9 @@
 package com.example.studenthelpermobile;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +15,7 @@ import com.example.studenthelpermobile.Model.ChatTitle;
 import com.example.studenthelpermobile.Model.ResponseClass;
 import com.example.studenthelpermobile.Repository.AsyncInterface;
 import com.example.studenthelpermobile.Repository.ChatListRepo;
+import com.example.studenthelpermobile.SQLite.DatabaseHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +35,10 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
     private ArrayList <ChatTitle> ChatList;
     private String role;
     private String login;
+
+    private DatabaseHelper databaseHelper;
+    private SQLiteDatabase db;
+    private Cursor cursor;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,11 +97,27 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
     public void SetChats(ArrayList<ChatTitle> chats){
         for (ChatTitle s: chats) {
             Button b = new Button(this);
+            databaseHelper = new DatabaseHelper(getApplicationContext());
+            databaseHelper.create_db();
+            db = databaseHelper.open();
+            String sql = "select countMessages from read_messages where lessonName =? and prepodName = ? and groupName =?";
+            SQLiteStatement statement = db.compileStatement(sql);
+            statement.bindString(1,s.getLessonName());
+            statement.bindString(2,s.getPrepodName());
+            statement.bindString(3,s.getGroup());
+            long count = statement.simpleQueryForLong();
+            db.close();
             if(role.equals("student")){
-                b.setText(String.format("%s\n%s (%d)",s.getLessonName(),s.getPrepodName(), s.getCount()));
+                if(s.getCount() - count != 0)
+                    b.setText(String.format("%s\n%s (%d)",s.getLessonName(),s.getPrepodName(), s.getCount() - count));
+                else
+                    b.setText(String.format("%s\n%s",s.getLessonName(),s.getPrepodName()));
             }
             else {
-                b.setText(String.format("%s\n%s (%d)",s.getLessonName(),s.getGroup(), s.getCount()));
+                if(s.getCount() - count != 0)
+                    b.setText(String.format("%s\n%s (%d)",s.getLessonName(),s.getGroup(), s.getCount() - count));
+                else
+                    b.setText(String.format("%s\n%s",s.getLessonName(),s.getGroup()));
             }
             final String group = s.getGroup();
             final String prepodName = s.getPrepodName();
