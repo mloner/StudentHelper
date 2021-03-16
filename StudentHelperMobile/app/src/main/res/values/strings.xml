@@ -17,6 +17,7 @@
     <string name="ScheduleTwoWeeks">Получить полное расписание</string>
     <string name="PrepodInfo">Получить информацию о преподавателях</string>
     <string name="PrepodChat">Открыть чаты с преподавателями</string>
+    <string name="StudentChat">Открыть чаты со студентами</string>
     <string name="LogoutTip">Чтобы выйти из аккаунта, нажмите кнопку "Назад"</string>
     <string name="LoginAsStudent">Вы авторизованы как студент группы %1$s</string>
     <string name="LoginAsPrepod">Вы авторизованы как преподаватель %1$s</string>

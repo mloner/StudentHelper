@@ -45,10 +45,12 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         assert role != null;
         if(role.equals("student")){
             String s = getString(R.string.LoginAsStudent, login);
+            PrepodChat.setText(getString(R.string.PrepodChat));
             WelcomeText.setText(s);
         }
         else {
             String s = getString(R.string.LoginAsPrepod, login);
+            PrepodChat.setText(getString(R.string.StudentChat));
             WelcomeText.setText(s);
         }
     }

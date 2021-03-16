@@ -30,7 +30,6 @@
 
     <Button
         style="@style/TextStyleButton"
-        android:text="@string/PrepodChat"
         android:id="@+id/prepod_chat"/>
 
     <TextView

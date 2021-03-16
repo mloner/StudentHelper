@@ -1,7 +1,6 @@
 package com.example.studenthelpermobile;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
@@ -112,7 +111,6 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
             final String lessonName = s.getLessonName();
             final long insert_count = s.getCount();
             if(id == 0){
-
                 String sql = "INSERT INTO read_messages (lessonName, prepodName, groupName) VALUES (?,?,?)";
                 SQLiteStatement statement = db.compileStatement(sql);
                 statement.bindString(1,s.getLessonName());
@@ -162,6 +160,7 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
                     intent.putExtra("group", group);
                     intent.putExtra("prepodName", prepodName);
                     intent.putExtra("lessonName", lessonName);
+                    intent.putExtra("role", role);
                     startActivity(intent);
                 }
             });
