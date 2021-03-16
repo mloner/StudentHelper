@@ -3,6 +3,8 @@ package com.example.studenthelpermobile;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.os.Bundle;
+import android.text.util.Linkify;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -68,6 +70,8 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
 
     }
 
+
+
     @Override
     public void onAsyncTaskFinished(ResponseClass responseClass) {
         try {
@@ -100,21 +104,29 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
     }
 
     private void SetMessages(ArrayList<Message> messages){
+        linearLayout.removeAllViews();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(30,20,0,0);
+        ContextThemeWrapper newContext = new ContextThemeWrapper(this, R.style.MessageStyle);
         for (Message m:
                 messages) {
-            final TextView editText = new TextView(this);
-            editText.setText(String.format("%s\n%s\n", m.getTime(), m.getMsg()));
-            editText.setOnLongClickListener(new View.OnLongClickListener(){
+            final TextView text = new TextView(newContext);
+            text.setText(String.format("%s\n%s\n", m.getTime(), m.getMsg()));
+            Linkify.addLinks(text, Linkify.WEB_URLS);
+            text.setLinksClickable(true);
+            text.setLayoutParams(params);
+            final String copy = m.getMsg();
+            text.setOnLongClickListener(new View.OnLongClickListener(){
                 @Override
                 public boolean onLongClick(View view) {
-                    myClip = ClipData.newPlainText("text", editText.getText());
+                    myClip = ClipData.newPlainText("text", copy);
                     myClipboard.setPrimaryClip(myClip);
                     Toast toast = Toast.makeText(getApplicationContext(), "Сообщение скопировано", Toast.LENGTH_LONG);
                     toast.show();
                     return false;
                 }
             });
-            linearLayout.addView(editText);
+            linearLayout.addView(text);
         }
     }
 

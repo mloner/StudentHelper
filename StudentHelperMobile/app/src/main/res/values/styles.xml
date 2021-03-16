@@ -18,6 +18,11 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="MessageStyle" parent="TextStyle">
+        <item name="android:gravity">start</item>
+        <item name="android:layout_marginStart">20dp</item>
+    </style>
+
     <style name="TextStyleInvisible" parent="@style/TextStyle" >
         <item name="android:visibility">invisible</item>
     </style>

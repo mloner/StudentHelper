@@ -45,10 +45,16 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
         progressBar = findViewById(R.id.progressbar_chat_list);
         linearLayout = findViewById(R.id.chat_list_layout);
         activity = this;
-        ChatList = new ArrayList<>();
+
         role = Objects.requireNonNull(getIntent().getExtras()).getString("role");
         login = Objects.requireNonNull(getIntent().getExtras()).getString("login");
 
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         ChatListRepo chatListRepo = new ChatListRepo(progressBar, this, role, login);
         chatListRepo.execute();
     }
@@ -57,6 +63,7 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
     public void onAsyncTaskFinished(ResponseClass responseClass) {
         try {
             if(responseClass.getStatus().equals("OK")){
+                ChatList = new ArrayList<>();
                 JSONArray array = responseClass.getResponseArray();
                 for(int n = 0; n < array.length(); n++){
                     JSONObject chat = (JSONObject) array.get(n);
@@ -93,6 +100,8 @@ public class ChatListView extends AppCompatActivity implements AsyncInterface<Re
     }
 
     public void SetChats(ArrayList<ChatTitle> chats){
+        linearLayout.removeAllViews();
+
         for (ChatTitle s: chats) {
             Button b = new Button(this);
             databaseHelper = new DatabaseHelper(getApplicationContext());
