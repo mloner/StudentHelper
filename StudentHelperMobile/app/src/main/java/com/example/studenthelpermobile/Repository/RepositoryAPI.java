@@ -15,10 +15,10 @@ import java.util.Map;
 
 public class RepositoryAPI {
 
-    public JSONObject postResponse(JSONObject request) throws IOException, JSONException {
+    public JSONObject postResponse(JSONObject request, URL url) throws IOException, JSONException {
 
         JSONObject responseJSON;
-        URL url = new URL("http://shipshon.fvds.ru/api");
+
 
         //Отправка запроса
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -57,7 +57,6 @@ public class RepositoryAPI {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("GET");
-        int code = connection.getResponseCode();
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();

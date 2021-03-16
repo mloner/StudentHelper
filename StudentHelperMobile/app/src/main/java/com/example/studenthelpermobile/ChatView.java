@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.text.util.Linkify;
 import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
     private EditText chatLine;
     private ImageButton sendButton;
     private ArrayList <Message> messageArrayList;
+    private ScrollView scrollView;
     ClipboardManager myClipboard;
     ClipData myClip;
 
@@ -57,7 +60,8 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
         sendButton = findViewById(R.id.chat_send);
         sendButton.setOnClickListener(this);
         ErrorText = findViewById(R.id.error_text_chat);
-        messageArrayList = new ArrayList<>();
+        scrollView = findViewById(R.id.chat_scroll);
+
         myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 
         if (role.equals("prepod")){
@@ -65,8 +69,13 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
             sendButton.setVisibility(View.VISIBLE);
         }
 
-        ChatRepo chatRepo = new ChatRepo(progressBar, this, group, prepodName, lessonName);
-        chatRepo.execute();
+        ChatRepo chatRepo = null;
+        try {
+            chatRepo = new ChatRepo(progressBar, this, group, prepodName, lessonName, true, "");
+            chatRepo.execute();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -76,6 +85,7 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
     public void onAsyncTaskFinished(ResponseClass responseClass) {
         try {
             if(responseClass.getStatus().equals("OK")){
+                messageArrayList = new ArrayList<>();
                 JSONArray array = responseClass.getResponseArray();
                 for(int n = 0; n < array.length(); n++){
                     JSONObject message = (JSONObject) array.get(n);
@@ -85,6 +95,7 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
                     messageArrayList.add(msg);
                 }
                 SetMessages(messageArrayList);
+
             }
             else {
                 ServerError();
@@ -96,6 +107,13 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
             e.printStackTrace();
         }
         progressBar.setVisibility(View.GONE);
+        //скролл в конец
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
     }
 
     private void ServerError(){
@@ -132,6 +150,20 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
 
     @Override
     public void onClick(View view) {
+        String text = chatLine.getText().toString();
+        chatLine.setText("");
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(this.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+
+        assert imm != null;
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        ChatRepo chatRepo = null;
+        try {
+            chatRepo = new ChatRepo(progressBar, this, group, prepodName, lessonName, false, text);
+            chatRepo.execute();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 }

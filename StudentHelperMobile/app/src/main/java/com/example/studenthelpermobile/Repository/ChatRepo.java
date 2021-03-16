@@ -20,24 +20,44 @@ public class ChatRepo extends AsyncSuperClass {
     private ChatView activity;
     private ResponseClass responseClass;
     private Map<String, String> request;
+    private JSONObject requestJSON;
+    private boolean isGetRequest;
 
-    public ChatRepo(ProgressBar progressBar, ChatView chatView, String group, String prepodName, String lessonName) {
+    public ChatRepo(ProgressBar progressBar, ChatView chatView, String group, String prepodName, String lessonName, boolean isGet, String text) throws JSONException {
         super(progressBar);
         activity = chatView;
         request = new HashMap<>();
-        request.put("group", group);
-        request.put("prepod", prepodName);
-        request.put("lessonName", lessonName);
+        isGetRequest = isGet;
+        requestJSON = new JSONObject();
+        if(isGet) {
+            request.put("group", group);
+            request.put("prepod", prepodName);
+            request.put("lessonName", lessonName);
+        }
+        else {
+            requestJSON.put("text", text);
+            requestJSON.put("group", group);
+            requestJSON.put("prepod", prepodName);
+            requestJSON.put("lessonName", lessonName);
+        }
     }
 
     @Override
     public ResponseClass doInBackground(Void... voids) {
         RepositoryAPI repositoryAPI = new RepositoryAPI();
         try {
-            String s = "http://shipshon.fvds.ru/api/getChat";
-            s = repositoryAPI.URLBuilder(s, request);
-            URL url = new URL(s);
-            JSONObject responseJSON = repositoryAPI.getRequest(url);
+            JSONObject responseJSON;
+            if(isGetRequest) {
+                String s = "http://shipshon.fvds.ru/api/getChat";
+                s = repositoryAPI.URLBuilder(s, request);
+                URL url = new URL(s);
+                responseJSON = repositoryAPI.getRequest(url);
+            }
+            else {
+                String s = "http://shipshon.fvds.ru/api/sendMessage";
+                URL url = new URL(s);
+                responseJSON = repositoryAPI.postResponse(requestJSON, url);
+            }
 
             String status = responseJSON.get("status").toString();
             JSONArray response = (JSONArray) responseJSON.get("response");
