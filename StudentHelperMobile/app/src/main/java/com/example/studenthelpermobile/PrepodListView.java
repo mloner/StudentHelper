@@ -68,7 +68,6 @@ public class PrepodListView extends AppCompatActivity implements AsyncInterface 
             e.printStackTrace();
         }
         progressBar.setVisibility(View.GONE);
-
     }
 
     private void ServerError(){

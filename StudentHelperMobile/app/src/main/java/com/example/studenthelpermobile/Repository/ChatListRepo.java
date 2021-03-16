@@ -13,22 +13,30 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChatListRepo extends AsyncSuperClass {
 
     private ChatListView activity;
     private ResponseClass responseClass;
+    private Map<String, String> request;
 
-    public ChatListRepo (ProgressBar progressBar, ChatListView chatListView) {
+    public ChatListRepo (ProgressBar progressBar, ChatListView chatListView, String role, String login) {
         super(progressBar);
         activity = chatListView;
+        request = new HashMap<>();
+        request.put("role", role);
+        request.put("login", login);
     }
 
     @Override
-    protected ResponseClass doInBackground(Void... voids) {
+    public ResponseClass doInBackground(Void... voids) {
         RepositoryAPI repositoryAPI = new RepositoryAPI();
         try {
-            URL url = new URL("http://shipshon.fvds.ru/api/getChatList");
+            String s = "http://shipshon.fvds.ru/api/getChatList";
+            s = repositoryAPI.URLBuilder(s, request);
+            URL url = new URL(s);
             JSONObject responseJSON = repositoryAPI.getRequest(url);
 
             String status = responseJSON.get("status").toString();

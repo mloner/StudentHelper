@@ -10,12 +10,8 @@
         android:id="@+id/prepod_info_layout">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
+            style="@style/TextStyle"
             android:textColor="@color/RED"
-            android:gravity="center"
-            android:layout_marginTop="20dp"
             android:id="@+id/error_text_prepod_info"
             android:visibility="gone"/>
 
@@ -27,14 +23,12 @@
             android:layout_gravity="center"/>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/TextStyle"
             android:id="@+id/prepod_info_text"
-            android:textColor="@color/BLACK"
-            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:gravity="start"/>
 
     </LinearLayout>
 
