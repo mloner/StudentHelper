@@ -150,20 +150,21 @@ public class ChatView extends AppCompatActivity implements AsyncInterface<Respon
 
     @Override
     public void onClick(View view) {
-        String text = chatLine.getText().toString();
-        chatLine.setText("");
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(this.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
+        switch (view.getId()){
+            case R.id.chat_send:
+                String text = chatLine.getText().toString();
+                chatLine.setText("");
+                InputMethodManager imm = (InputMethodManager) this.getSystemService(this.INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-        assert imm != null;
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        ChatRepo chatRepo = null;
-        try {
-            chatRepo = new ChatRepo(progressBar, this, group, prepodName, lessonName, false, text);
-            chatRepo.execute();
-        } catch (JSONException e) {
-            e.printStackTrace();
+                try {
+                    ChatRepo chatRepo = new ChatRepo(progressBar, this, group, prepodName, lessonName, false, text);
+                    chatRepo.execute();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
-
     }
 }
