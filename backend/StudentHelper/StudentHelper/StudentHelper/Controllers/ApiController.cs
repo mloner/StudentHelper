@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using StudentHelper.Entities;
+using StudentHelper.Models;
 using StudentHelper.Repos;
 using System;
 using System.Collections.Generic;
@@ -12,40 +16,40 @@ using static StudentHelper.Entities.FBEntities;
 namespace StudentHelper.Controllers
 {
     [Route("api")]
+    [Produces("application/json")]
     [ApiController]
     public class ApiController : ControllerBase
     {
         private readonly ILogger<ApiController> _logger;
         private readonly IConfiguration _config;
-        private readonly string _PGConStr;
-        private readonly string _FBConStr;
 
-        PGRepo _PGRepo;
-        FBRepo _FBRepo;
+        private readonly ChatService _chatService;
+        private PGRepo _PGRepo;
+        private FBRepo _FBRepo;
 
-        //[HttpGet("get302")]
-        //public IActionResult Get302()
-        //{
-        //    return Redirect("~/swagger");
-        //}
+        private int rnd;
+        private DateTime now;
 
-        //[HttpGet("get401")]
-        //public IActionResult Get401()
-        //{
-        //    return Unauthorized();
-        //}
-
-        //[HttpGet("get501")]
-        //public IActionResult Get501()
-        //{
-        //    return StatusCode(StatusCodes.Status501NotImplemented);
-        //}
-        public ApiController(ILogger<ApiController> logger, IConfiguration config, PGRepo PGRepo, FBRepo FBRepo)
+        public ApiController(ILogger<ApiController> logger,
+                             IConfiguration config,
+                             PGRepo PGRepo,
+                             FBRepo FBRepo,
+                             ChatService chatService)
         {
             _logger = logger;
             _config = config;
+            _chatService = chatService;
             _PGRepo = PGRepo;
             _FBRepo = FBRepo;
+            now = DateTime.Now.ToLocalTime().AddHours(3);
+            rnd = (new Random(now.Millisecond)).Next();
+        }
+
+        [HttpGet]
+        public IActionResult lbh()
+        {
+
+            return Content("ghj");
         }
 
         /// <summary>
@@ -54,11 +58,7 @@ namespace StudentHelper.Controllers
         [HttpGet("getPrepodList")]
         public IActionResult GetPrepodList()
         {
-            var now = DateTime.Now;
-            var rnd = (new Random(now.Millisecond)).Next();
-            _logger.LogInformation($"Req id:{rnd}\n" +
-                                   $"Time: {now.ToLocalTime()}\n" +
-                                   $"Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
 
             dynamic resp = new JObject();
 
@@ -72,11 +72,9 @@ namespace StudentHelper.Controllers
             resp.status = "OK";
 
             string respStr = resp.ToString();
-            _logger.LogInformation($"Req id:{rnd}\n" +
-                                   $"Time: {now.ToLocalTime()}\n" +
-                                   $"Resp: {respStr}\n");
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
 
-            return Content(respStr, "application/json");
+            return Content(respStr);
         }
 
         /// <summary>
@@ -85,11 +83,8 @@ namespace StudentHelper.Controllers
         [HttpGet("getPrepodInfo")]
         public IActionResult GetPrepodInfo([FromQuery(Name = "fio")] string fio)
         {
-            var now = DateTime.Now;
-            var rnd = (new Random(now.Millisecond)).Next();
-            _logger.LogInformation($"Req id:{rnd}\n" +
-                                   $"Time: {now.ToLocalTime()}\n" +
-                                   $"Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
 
             dynamic resp = new JObject();
             resp.response = new JObject();
@@ -115,12 +110,10 @@ namespace StudentHelper.Controllers
             }
 
             string respStr = resp.ToString();
-            _logger.LogInformation($"Req id:{rnd}\n" +
-                                   $"Time: {now.ToLocalTime()}\n" +
-                                   $"Resp: {respStr}\n");
-            return Content(respStr, "application/json");
-        }
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
 
+            return Content(respStr);
+        }
 
         /// <summary>
         /// Авторизация с мобильного приложения
@@ -131,11 +124,7 @@ namespace StudentHelper.Controllers
                                                  [FromQuery(Name = "pass")] string pass,
                                                  [FromQuery(Name = "arg")] string arg)
         {
-            var now = DateTime.Now;
-            var rnd = (new Random(now.Millisecond)).Next();
-            _logger.LogInformation($"Req id:{rnd}\n" +
-                                   $"Time: {now.ToLocalTime()}\n" +
-                                   $"Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
 
             dynamic resp = new JObject();
             resp.status = "OK";
@@ -146,7 +135,7 @@ namespace StudentHelper.Controllers
                 case "student":
                     {
                         var group = _PGRepo.getGroupByName(arg);
-                        if (group != null)
+                        if (group == null)
                         {
                             resp.status = "FAIL";
                             resp.response = "WRONG_LOGIN";
@@ -185,10 +174,9 @@ namespace StudentHelper.Controllers
             }
 
             string respStr = resp.ToString();
-            _logger.LogInformation($"Req id:{rnd}\n" +
-                                               $"Time: {now.ToLocalTime()}\n" +
-                                               $"Resp: {respStr}\n");
-            return Content(respStr, "application/json");
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
+
+            return Content(respStr);
         }
 
         /// <summary>
@@ -197,11 +185,8 @@ namespace StudentHelper.Controllers
         [HttpGet("checkGroup")]
         public IActionResult CheckGroup([FromQuery(Name = "group")] string group)
         {
-            var now = DateTime.Now;
-            var rnd = (new Random(now.Millisecond)).Next();
-            _logger.LogInformation($"Req id:{rnd}\n" +
-                                   $"Time: {now.ToLocalTime()}\n" +
-                                   $"Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
 
             dynamic resp = new JObject();
             resp.status = "OK";
@@ -221,10 +206,9 @@ namespace StudentHelper.Controllers
 
 
             string respStr = resp.ToString();
-            _logger.LogInformation($"Req id:{rnd}\n" +
-                                   $"Time: {now.ToLocalTime()}\n" +
-                                   $"Resp: {respStr}\n");
-            return Content(respStr, "application/json");
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
+
+            return Content(respStr);
         }
 
         /// <summary>
@@ -233,11 +217,8 @@ namespace StudentHelper.Controllers
         [HttpGet("checkFio")]
         public IActionResult CheckFio([FromQuery(Name = "fio")] string fio)
         {
-            var now = DateTime.Now;
-            var rnd = (new Random(now.Millisecond)).Next();
-            _logger.LogInformation($"Req id:{rnd}\n" +
-                                   $"Time: {now.ToLocalTime()}\n" +
-                                   $"Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
 
             dynamic resp = new JObject();
             resp.response = new JObject();
@@ -255,10 +236,9 @@ namespace StudentHelper.Controllers
             }
 
             string respStr = resp.ToString();
-            _logger.LogInformation($"Req id:{rnd}\n" +
-                                                           $"Time: {now.ToLocalTime()}\n" +
-                                                           $"Resp: {respStr}\n");
-            return Content(respStr, "application/json");
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
+
+            return Content(respStr);
         }
 
         /// <summary>
@@ -270,7 +250,9 @@ namespace StudentHelper.Controllers
                                                 [FromQuery(Name = "schedule_type")] string schedule_type,
                                                 [FromQuery(Name = "date")] string date)
         {
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
 
+            string role = "student";
             var dateSchedule = new DateTime();
             switch (schedule_type)
             {
@@ -310,103 +292,73 @@ namespace StudentHelper.Controllers
             dynamic resp = new JObject();
             resp.status = "OK";
 
-                var schedules =
-                    from l in _PGRepo._ctx.Lessons
-                    join c in _PGRepo._ctx.Classes on l.class_id equals c.id
-                    join ltp in _PGRepo._ctx.LessonTypes on l.lesson_type_id equals ltp.id
-                    join t in _PGRepo._ctx.Teachers on l.teacher_id equals t.id
-                    join g in _PGRepo._ctx.Groups on l.group_id equals g.id
-                    join sn in _PGRepo._ctx.SubjectNames on l.subject_name_id equals sn.id
-                    join wd in _PGRepo._ctx.WeekDays on l.day_num_id equals wd.id
-                    join ltm in _PGRepo._ctx.LessonTimes on l.start_lesson_num equals ltm.id
-                    select new
-                    {
-                        subjectName = sn.name,
-                        prepodName = t.FIO,
-                        className = c.name,
-                        lessonType = ltp.name,
-                        lessonStart = ltm.start_time,
-                        lessonEnd = (from ltm1 in _PGRepo._ctx.LessonTimes
-                                     where ltm1.id == (l.start_lesson_num + l.lesson_duration - 1)
-                                     select ltm1.end_time).Single(),
-                        groupName = g.name,
-                        subGroup = l.subgroup,
-                        isRemote = l.remote,
-                        weekNum = l.week_num,
-                        weekDayName = wd.name,
-                        duration = l.lesson_duration,
-                        description = l.description,
-                        weekdayNum = wd.id
-                    };
-                var schedule = schedules.Where(s => s.groupName == group);
+            var schedule = _PGRepo.getScheduleByGroup(group);
 
-                if (schedule_type == "two_weeks")
+            resp.response = new JArray();
+
+            if (schedule_type == "two_weeks")
+            {
+                // num of week
+                for (int i = 1; i <= 2; i++)
                 {
-
-                    resp.response = new JArray();
-
-                    // num of week
-                    for (int i = 1; i <= 2; i++)
+                    var weekScheduleJson = new JArray();
+                    var weekSchedule = schedule.Where(s => s.weekNum == i);
+                    // days of week
+                    for (int j = 1; j <= 6; j++)
                     {
-                        var weekScheduleJson = new JArray();
-                        var weekSchedule = schedule.Where(s => s.weekNum == i);
-                        // days of week
-                        for (int j = 1; j <= 6; j++)
+                        var dayScheduleJson = new JArray();
+                        var daySchedule = weekSchedule.Where(ws => ws.weekdayNum == j);
+                        foreach (var lesson in daySchedule)
                         {
-                            var dayScheduleJson = new JArray();
-                            var daySchedule = weekSchedule.Where(ws => ws.weekdayNum == j);
-                            foreach (var lesson in daySchedule)
-                            {
-                                dayScheduleJson.Add(new JObject(
-                                            new JProperty("subjectName", lesson.subjectName),
-                                            new JProperty("prepodName", lesson.prepodName),
-                                            new JProperty("className", lesson.className),
-                                            new JProperty("lessonType", lesson.lessonType),
-                                            new JProperty("lessonStart", lesson.lessonStart),
-                                            new JProperty("lessonEnd", lesson.lessonEnd),
-                                            new JProperty("groupName", lesson.groupName),
-                                            new JProperty("subGroup", lesson.subGroup),
-                                            new JProperty("isRemote", lesson.isRemote),
-                                            new JProperty("description", lesson.description),
-                                            new JProperty("weekDayName", lesson.weekDayName)
-                                    ));
-                            }
-                            weekScheduleJson.Add(dayScheduleJson);
+                            dayScheduleJson.Add(new JObject(
+                                        new JProperty("subjectName", lesson.subjectName),
+                                        new JProperty("prepodName", lesson.prepodName),
+                                        new JProperty("className", lesson.className),
+                                        new JProperty("lessonType", lesson.lessonType),
+                                        new JProperty("lessonStart", lesson.lessonStart),
+                                        new JProperty("lessonEnd", lesson.lessonEnd),
+                                        new JProperty("groupName", lesson.groupName),
+                                        new JProperty("subGroup", lesson.subGroup),
+                                        new JProperty("isRemote", lesson.isRemote),
+                                        new JProperty("description", lesson.description),
+                                        new JProperty("weekDayName", lesson.weekDayName)
+                                ));
                         }
-                        resp.response.Add(weekScheduleJson);
+                        weekScheduleJson.Add(dayScheduleJson);
                     }
-
+                    resp.response.Add(weekScheduleJson);
                 }
-                else
+            }
+            else
+            {
+                schedule = schedule.Where(s =>  s.weekNum == weekNumInt &&
+                                                s.weekDayName == RUmonth)
+                                   .OrderBy(s => s.lessonStart).ToList();
+
+                resp.status = "OK";
+
+                foreach (var si in schedule)
                 {
-                    schedule = schedules.Where(s => s.groupName == group &&
-                                                    s.weekNum == weekNumInt &&
-                                                    s.weekDayName == RUmonth).OrderBy(s => s.lessonStart);
-
-                    resp.status = "OK";
-                    resp.response = new JArray();
-
-                    foreach (var si in schedule)
-                    {
-                        resp.response.Add(new JObject(
-                            new JProperty("subjectName", si.subjectName),
-                            new JProperty("prepodName", si.prepodName),
-                            new JProperty("className", si.className),
-                            new JProperty("lessonType", si.lessonType),
-                            new JProperty("lessonStart", si.lessonStart),
-                            new JProperty("lessonEnd", si.lessonEnd),
-                            new JProperty("groupName", si.groupName),
-                            new JProperty("subGroup", si.subGroup),
-                            new JProperty("isRemote", si.isRemote),
-                            new JProperty("description", si.description),
-                            new JProperty("weekDayName", si.weekDayName)
-                            ));
-                    }
+                    resp.response.Add(new JObject(
+                        new JProperty("subjectName", si.subjectName),
+                        new JProperty("prepodName", si.prepodName),
+                        new JProperty("className", si.className),
+                        new JProperty("lessonType", si.lessonType),
+                        new JProperty("lessonStart", si.lessonStart),
+                        new JProperty("lessonEnd", si.lessonEnd),
+                        new JProperty("groupName", si.groupName),
+                        new JProperty("subGroup", si.subGroup),
+                        new JProperty("isRemote", si.isRemote),
+                        new JProperty("description", si.description),
+                        new JProperty("weekDayName", si.weekDayName)
+                        ));
                 }
-            string respStr = resp.ToString();
-            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
+            }
 
-            return Content(respStr, "application/json");
+            string respStr = resp.ToString();
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
+
+            return Content(respStr);
         }
 
         /// <summary>
@@ -418,6 +370,9 @@ namespace StudentHelper.Controllers
                                                [FromQuery(Name = "schedule_type")] string schedule_type,
                                                [FromQuery(Name = "date")] string date)
         {
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
+
             var dateSchedule = new DateTime();
             switch (schedule_type)
             {
@@ -457,35 +412,7 @@ namespace StudentHelper.Controllers
             dynamic resp = new JObject();
             resp.status = "OK";
 
-            var schedules =
-                from l in _PGRepo._ctx.Lessons
-                join c in _PGRepo._ctx.Classes on l.class_id equals c.id
-                join ltp in _PGRepo._ctx.LessonTypes on l.lesson_type_id equals ltp.id
-                join t in _PGRepo._ctx.Teachers on l.teacher_id equals t.id
-                join g in _PGRepo._ctx.Groups on l.group_id equals g.id
-                join sn in _PGRepo._ctx.SubjectNames on l.subject_name_id equals sn.id
-                join wd in _PGRepo._ctx.WeekDays on l.day_num_id equals wd.id
-                join ltm in _PGRepo._ctx.LessonTimes on l.start_lesson_num equals ltm.id
-                select new
-                {
-                    subjectName = sn.name,
-                    prepodName = t.FIO,
-                    className = c.name,
-                    lessonType = ltp.name,
-                    lessonStart = ltm.start_time,
-                    lessonEnd = (from ltm1 in _PGRepo._ctx.LessonTimes
-                                    where ltm1.id == (l.start_lesson_num + l.lesson_duration - 1)
-                                    select ltm1.end_time).Single(),
-                    groupName = g.name,
-                    subGroup = l.subgroup,
-                    isRemote = l.remote,
-                    weekNum = l.week_num,
-                    weekDayName = wd.name,
-                    duration = l.lesson_duration,
-                    description = l.description,
-                    weekdayNum = wd.id
-                };
-            var schedule = schedules.Where(s => s.prepodName == fio);
+            var schedule = _PGRepo.getScheduleByTeacherFio(fio);
 
             if (schedule_type == "two_weeks")
             {
@@ -525,9 +452,10 @@ namespace StudentHelper.Controllers
             }
             else
             {
-                schedule = schedules.Where(s => s.prepodName == fio &&
+                schedule = schedule.Where(s => s.prepodName == fio &&
                                                 s.weekNum == weekNumInt &&
-                                                s.weekDayName == RUmonth).OrderBy(s => s.lessonStart);
+                                                s.weekDayName == RUmonth)
+                                   .OrderBy(s => s.lessonStart).ToList();
 
                 resp.status = "OK";
                 resp.response = new JArray();
@@ -550,17 +478,20 @@ namespace StudentHelper.Controllers
                 }
             }
             string respStr = resp.ToString();
-            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
 
-            return Content(respStr, "application/json");
+            return Content(respStr);
         }
 
-        // <summary>
-        // Получить текущее состояние юзера чат-бота
-        // </summary>
+        /// <summary>
+        /// Получить текущее состояние юзера чат-бота
+        /// </summary>
         [HttpPost("getUserState")]
         public IActionResult GetUserState([FromBody] object data)
         {
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
+
             dynamic req = JObject.Parse(data.ToString());
             dynamic resp = new JObject();
 
@@ -598,9 +529,9 @@ namespace StudentHelper.Controllers
 
 
             string respStr = resp.ToString();
-            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
 
-            return Content(respStr, "application/json");
+            return Content(respStr);
         }
 
         /// <summary>
@@ -609,34 +540,42 @@ namespace StudentHelper.Controllers
         [HttpPost("registerUser")]
         public IActionResult RegisterUser([FromBody] object data)
         {
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
             dynamic req = JObject.Parse(data.ToString());
             dynamic resp = new JObject();
             resp.status = "OK";
             resp.response = new JObject();
 
-                string idvk = req.idvk;
+            string idvk = req.idvk;
 
-                string role = req.role;
-                string arg = req.arg;
-                int? subgroup = req.subGroup;
+            string role = req.role;
+            string arg = req.arg;
+            int? subgroup = req.subGroup;
 
-                var user = _FBRepo._ctx.USERS.FirstOrDefault(u => u.IDVK == idvk);
+            User user = new User();
 
-                user.ROLE = role;
-                if (role != "student")
-                    user.ARG = arg;
-                user.SUBGROUP = subgroup;
-
-                _FBRepo._ctx.SaveChanges();
-
+            user.IDVK = idvk;
+            user.ROLE = role;
+            user.SUBGROUP = subgroup;
+            user.ARG = arg;
+            
+            bool res = _FBRepo.changeUserByIdvk(user);
+            if (res == true)
+            {
                 resp.status = "OK";
                 resp.response = "OK";
-
+            }
+            else
+            {
+                resp.status = "FAIL";
+                resp.response = "";
+            }
 
             string respStr = resp.ToString();
-            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
 
-            return Content(respStr, "application/json");
+            return Content(respStr);
         }
 
         /// <summary>
@@ -645,6 +584,9 @@ namespace StudentHelper.Controllers
         [HttpPost("setUserField")]
         public IActionResult SetUserState([FromBody] object data)
         {
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
+
             dynamic req = JObject.Parse(data.ToString());
             dynamic resp = new JObject();
             resp.status = "OK";
@@ -653,46 +595,52 @@ namespace StudentHelper.Controllers
             string idvk = req.idvk;
             string field = req.field;
             string value = req.value;
-            var user = _FBRepo._ctx.USERS.FirstOrDefault(u => u.IDVK == idvk);
-            if (user == null)
+
+            User user = new User();
+            user.IDVK = idvk;
+
+           
+            switch (field)
             {
-                resp.status = "FAIL";
-                resp.response = "No such user";
+                case "role":
+                    user.ROLE = value;
+                    break;
+                case "arg":
+                    user.ARG = value;
+                    break;
+                case "state":
+                    user.STATE = value;
+                    break;
+                case "subgroup":
+                    user.SUBGROUP = Convert.ToInt32(value);
+                    break;
+                }
+            var res = _FBRepo.changeUserByIdvk(user);
+            if (res == true)
+            {
+                resp.status = "OK";
+                resp.response = "";
             }
             else
             {
-                switch (field)
-                {
-                    case "role":
-                        user.ROLE = value;
-                        break;
-                    case "arg":
-                        user.ARG = value;
-                        break;
-                    case "state":
-                        user.STATE = value;
-                        break;
-                    case "subgroup":
-                        user.SUBGROUP = Convert.ToInt32(value);
-                        break;
-
-                }
-
-                _FBRepo._ctx.SaveChanges();
-
-                resp.status = "OK";
+                resp.status = "FAIL";
                 resp.response = "";
             }
 
             string respStr = resp.ToString();
-            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
 
-            return Content(respStr, "application/json");
+            return Content(respStr);
         }
 
+        /// <summary>
+        /// Получить актуальный неотвеченный вопрос для юзера
+        /// </summary>
         [HttpPost("getQuestion")]
         public IActionResult GetQuestion([FromBody] object data)
         {
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
             dynamic req = JObject.Parse(data.ToString());
             dynamic resp = new JObject();
             resp.status = "OK";
@@ -701,25 +649,15 @@ namespace StudentHelper.Controllers
             int uId = -1;
             // получить айди юзера
 
-             uId = _FBRepo._ctx.USERS.Where(u => u.IDVK == idvk).Select(u => u.ID).FirstOrDefault();
+            uId = _FBRepo._ctx.USERS.Where(u => u.IDVK == idvk).Select(u => u.ID).FirstOrDefault();
 
             // получить все опросы, на которые овтетил чел с этим idvk
             List<int?> usrAnsQ;
             usrAnsQ = _FBRepo._ctx.INTERVIEWRESULTS.Where(ir => ir.USER_ID == uId).Select(ir => ir.QUESTIONID).ToList();
 
-            //foreach (var ua in usrAnsQ)
-            //{
-            //    Console.WriteLine(ua);
-            //}
-
             // получить все  активные опросы
             List<int> activeQ;
             activeQ = _FBRepo._ctx.QUESTIONS.Where(q => q.ISACTIVE == true).Select(q => q.ID).ToList();
-
-            //foreach (var aq in activeQ)
-            //{
-            //    Console.WriteLine(aq);
-            //}
 
             // первый из активных вопросов, на которые еще не отвечал юзер
             var result = activeQ.Where(aq => usrAnsQ.All(ua => ua != aq)).ToList();
@@ -744,7 +682,6 @@ namespace StudentHelper.Controllers
                 string questionText;
                 questionText = _FBRepo._ctx.QUESTIONS.Where(q => q.ID == questionId).Select(q => q.TEXT).FirstOrDefault().ToString();
 
-
                 resp.response = new JObject(new JProperty("question", questionText),
                                             new JProperty("answerVariants", answerVariantListJson));
             }
@@ -753,20 +690,20 @@ namespace StudentHelper.Controllers
                 resp.response = new JValue("");
             }
 
-            //foreach (var q in result)
-            //{
-            //    Console.WriteLine(q);
-            //}
-
             string respStr = resp.ToString();
-            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
 
-            return Content(respStr, "application/json");
+            return Content(respStr);
         }
 
+        /// <summary>
+        /// Ответить на взятый юзером вопрос
+        /// </summary>
         [HttpPost("answerQuestion")]
         public IActionResult AnswerQuestion([FromBody] object data)
         {
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
             dynamic req = JObject.Parse(data.ToString());
             dynamic resp = new JObject();
             resp.status = "OK";
@@ -777,7 +714,6 @@ namespace StudentHelper.Controllers
             // получить айди вопроса из базы
             var user = new User();
             user = _FBRepo._ctx.USERS.Where(u => u.IDVK == idvk).FirstOrDefault();
-
 
             //получить айди ответа на этот вопрос
             int? ansId;
@@ -800,9 +736,138 @@ namespace StudentHelper.Controllers
             user.LASTOPENEDQUESTION_ID = null;
             _FBRepo._ctx.SaveChanges();
 
-
             string respStr = resp.ToString();
-            _logger.LogInformation("Time: " + DateTime.Now + "\n" + "Request: " + System.Reflection.MethodInfo.GetCurrentMethod() + "\n" + "Response: " + respStr);
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
+
+            return Content(respStr);
+        }
+
+        /// <summary>
+        /// Получить список чатов
+        /// </summary>
+        [HttpGet("getChatList")]
+        public ActionResult GetChatList([FromQuery(Name = "role")] string role,
+                                        [FromQuery(Name = "login")] string login)
+        {
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
+            List<Chat> lst = new List<Chat>();
+            dynamic chats = new JArray();
+            dynamic response = new JObject();
+
+            switch (role)
+            {
+                case "student":
+                    {
+                        lst = _chatService.GetByGroup(login);
+                        break;
+                    }
+                case "prepod":
+                    {
+                        lst = _chatService.GetByTeacher(login);
+                        break;
+                    }
+            }
+            foreach (var chat in lst)
+            {
+                chats.Add(new JObject(
+                        new JProperty("prepodName", chat.prepodName),
+                        new JProperty("group", chat.group),
+                        new JProperty("lessonName", chat.lessonName),
+                        new JProperty("messageCount", chat.messages.Count)
+                    ));
+            }
+            
+
+            response.status = "OK";
+            response.response = chats;
+
+            string respStr = response.ToString();
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
+
+            return Content(respStr);
+        }
+
+       
+
+        /// <summary>
+        /// Получить чат
+        /// </summary>
+        [HttpGet("getChat")]
+        public ActionResult GetChat([FromQuery(Name = "prepod")] string prepod,
+                                    [FromQuery(Name = "group")] string group,
+                                    [FromQuery(Name = "lessonName")] string lessonName)
+        {
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
+            JsonResponse resp = new JsonResponse();
+            
+            var msgList = new List<Message>();
+
+            Chat chat = _chatService.GetByTeacherByGroupByLessonName(prepod, group, lessonName);
+
+            if (chat != null)
+            {
+                resp.status = "OK";
+                resp.response = chat.messages;
+            }
+            else
+            {
+                resp.status = "FAIL";
+                resp.response = new String("No such teacher/group/lesson name");
+            }
+            
+            string respStr = JsonConvert.SerializeObject(resp);
+
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
+
+            return Content(respStr, "application/json");
+        }
+
+        /// <summary>
+        /// Отправить сообщение в чат
+        /// </summary>
+        [HttpPost("sendMessage")]
+        public ActionResult SendMessage([FromBody] object data)
+        {
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
+            dynamic req = JObject.Parse(data.ToString());
+
+            string prepod = req.prepod;
+            string group = req.group;
+            string lessonName = req.lessonName;
+            string text = req.text;
+
+            JsonResponse resp = new JsonResponse();
+
+            var msgList = new List<Message>();
+
+            Chat chat = _chatService.GetByTeacherByGroupByLessonName(prepod, group, lessonName);
+
+            if (chat != null)
+            {
+                // add message to the chat
+                chat.messages.Add(new Message()
+                {
+                    time = now.ToString(),
+                    msg = text
+                });
+
+                _chatService.Update(chat.Id, chat);
+
+                resp.status = "OK";
+                resp.response = chat.messages;
+            }
+            else
+            {
+                resp.status = "FAIL";
+                resp.response = new String("No such teacher/group/lesson name");
+            }
+
+            string respStr = JsonConvert.SerializeObject(resp);
+
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
 
             return Content(respStr, "application/json");
         }

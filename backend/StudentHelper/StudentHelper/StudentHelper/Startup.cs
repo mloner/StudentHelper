@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using StudentHelper.Entities;
 using Microsoft.EntityFrameworkCore;
 using StudentHelper.Repos;
+using Microsoft.Extensions.Options;
 
 namespace StudentHelper
 {
@@ -24,7 +25,18 @@ namespace StudentHelper
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
+
+            // requires using Microsoft.Extensions.Options
+            services.Configure<ChatstoreDatabaseSettings>(
+                Configuration.GetSection(nameof(ChatstoreDatabaseSettings)));
+
+            services.AddSingleton<IChatstoreDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<ChatstoreDatabaseSettings>>().Value);
+
+            services.AddSingleton<ChatService>();
+
             services.AddControllers();
+
             services.AddLogging(builder =>
                 builder
                     .AddDebug()

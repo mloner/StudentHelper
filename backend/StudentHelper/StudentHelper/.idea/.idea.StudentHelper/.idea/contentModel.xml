@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Nikita\AppData\Local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Nikita\AppData\Local\JetBrains\Rider2020.2\resharper-host\Local\Transient\Rider\v202\SolutionCaches\_StudentHelper.-2104156133.00" t="ExcludeRecursive" />
+    <e p="C:\vuz\6sem\SUBD\StudentHelper\backend\StudentHelper\StudentHelper" t="IncludeFlat">
+      <e p=".dockerignore" t="Include" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="StudentHelper" t="IncludeRecursive">
+        <e p="appsettings.Development.json" t="Include" />
+        <e p="appsettings.json" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Controllers" t="Include">
+          <e p="ApiController.cs" t="Include" />
+        </e>
+        <e p="Dockerfile" t="Include" />
+        <e p="Entities" t="Include">
+          <e p="Chat.cs" t="Include" />
+          <e p="FBEntities.cs" t="Include" />
+          <e p="PGEntities.cs" t="Include" />
+        </e>
+        <e p="Models" t="Include">
+          <e p="JsonResponse.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="net5.0" t="Include">
+              <e p="StudentHelper.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+          <e p="PublishProfiles" t="Include">
+            <e p="registry.hub.docker.com_mloner.pubxml" t="Include" />
+          </e>
+        </e>
+        <e p="Repos" t="Include">
+          <e p="ChatService.cs" t="Include" />
+          <e p="FBRepo.cs" t="Include" />
+          <e p="PGRepo.cs" t="Include" />
+        </e>
+        <e p="Startup.cs" t="Include" />
+        <e p="StudentHelper.csproj" t="IncludeRecursive" />
+        <e p="Tools" t="Include">
+          <e p="Tools.cs" t="Include" />
+        </e>
+      </e>
+      <e p="StudentHelper.sln" t="IncludeFlat" />
+    </e>
+  </component>
+</project>
