@@ -56,19 +56,19 @@ namespace StudentHelper.Entities
 			public AnswerVariant ANSWER_VARIANT { get; set; }
 		}
 
-		public FBEntities(DbContextOptions<FBEntities> dboe)
-			: base(dboe)
-		{ }
+        public FBEntities(DbContextOptions<FBEntities> dboe)
+            : base(dboe)
+        { }
 
-		protected override void OnModelCreating(ModelBuilder modelo)
-		{
-			//Fluent Api
-			modelo.Entity<User>(entity =>
-			{
-				entity.HasIndex(e => e.ID)
-					.HasName("ID")
-					.IsUnique();
-			});
-		}
-	}
+        protected override void OnModelCreating(ModelBuilder modelo)
+        {
+            //Fluent Api
+            modelo.Entity<User>(entity =>
+            {
+                entity.HasIndex(e => e.ID)
+                    .HasName("ID")
+                    .IsUnique();
+            });
+        }
+    }
 }

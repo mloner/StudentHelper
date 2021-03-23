@@ -127,6 +127,24 @@ namespace StudentHelper.Entities
             public List<Lesson> Lessons { get; set; } = new List<Lesson>();
         }
 
+        public class ScheduleView
+        {
+            public string subjectName { get; set; }
+            public string prepodName { get; set; }
+            public string className { get; set; }
+            public string lessonType { get; set; }
+            public string lessonStart { get; set; }
+            public string lessonEnd { get; set; }
+            public string groupName { get; set; }
+            public int subGroup { get; set; }
+            public bool isRemote { get; set; }
+            public int weekNum { get; set; }
+            public string weekDayName { get; set; }
+            public int duration { get; set; }
+            public string description { get; set; }
+            public int weekdayNum { get; set; }
+        }
+
         public DbSet<TeacherPosition> TeacherPositions { get; set; }
         public DbSet<TeacherDegree> TeacherDegrees { get; set; }
         public DbSet<Teacher> Teachers { get; set; }

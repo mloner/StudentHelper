@@ -14,16 +14,37 @@ namespace StudentHelper.Repos
 	{
 		public FBEntities _ctx;
 
+		// Users
 		public User getUserByIdvk(string idvk)
 		{
 			return _ctx.USERS.FirstOrDefault(u => u.IDVK == idvk);
+		}
+
+		public bool changeUserByIdvk(User user)
+		{
+			try
+			{
+				var _user = _ctx.USERS.FirstOrDefault(u => u.IDVK == user.IDVK);
+
+				_user.LASTOPENEDQUESTION_ID = user.LASTOPENEDQUESTION_ID == null ? _user.LASTOPENEDQUESTION_ID : user.LASTOPENEDQUESTION_ID;
+				_user.ROLE = user.ROLE == null ? _user.ROLE : user.ROLE;
+				_user.STATE = user.STATE == null ? _user.STATE : user.STATE;
+				_user.SUBGROUP = user.SUBGROUP == null ? _user.SUBGROUP : user.SUBGROUP;
+				_user.ARG = user.ARG == null ? _user.ARG : user.ARG;
+
+				_ctx.USERS.Update(_user);
+				_ctx.SaveChanges();
+			}
+			catch (Exception e)
+			{
+				return false;
+			}
+			return true;
 		}
 
 		public FBRepo(FBEntities ctx)
 		{
 			_ctx = ctx;
 		}
-
-
 	}
 }

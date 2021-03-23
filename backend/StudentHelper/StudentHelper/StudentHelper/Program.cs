@@ -21,7 +21,8 @@ namespace StudentHelper
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                        .UseUrls("http://0.0.0.0:5000");
                 });
     }
 #pragma warning restore CS1591
