@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentHelper", "StudentHelper\StudentHelper.csproj", "{B1209C0D-5CE1-4A82-9F0B-2002BF201452}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentHelper", "WebApplication7\StudentHelper.csproj", "{EA9ED806-C0C8-452C-A76B-F75A00AB0E01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B1209C0D-5CE1-4A82-9F0B-2002BF201452}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1209C0D-5CE1-4A82-9F0B-2002BF201452}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1209C0D-5CE1-4A82-9F0B-2002BF201452}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1209C0D-5CE1-4A82-9F0B-2002BF201452}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA9ED806-C0C8-452C-A76B-F75A00AB0E01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA9ED806-C0C8-452C-A76B-F75A00AB0E01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA9ED806-C0C8-452C-A76B-F75A00AB0E01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA9ED806-C0C8-452C-A76B-F75A00AB0E01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {C4F8D7FB-960A-45F2-9B97-38E62E3B8AFF}
+		SolutionGuid = {6BBF9626-6851-4946-9E11-60F09B487FB6}
 	EndGlobalSection
 EndGlobal
