@@ -12,6 +12,9 @@ namespace StudentHelper.Entities
 		public DbSet<AnswerVariant> ANSWERVARIANTS { get; set; }
 		public DbSet<Question> QUESTIONS { get; set; }
 		public DbSet<InterviewResult> INTERVIEWRESULTS { get; set; }
+
+		public DbSet<Handbook> HANDBOOK { get; set; }
+
 		public class User
 		{
 			public int ID { get; set; }
@@ -56,7 +59,14 @@ namespace StudentHelper.Entities
 			public AnswerVariant ANSWER_VARIANT { get; set; }
 		}
 
-        public FBEntities(DbContextOptions<FBEntities> dboe)
+		public class Handbook
+		{
+			public int ID { get; set; }
+			public string WORD { get; set; }
+			public string DESC { get; set; }
+		}
+
+		public FBEntities(DbContextOptions<FBEntities> dboe)
             : base(dboe)
         { }
 

@@ -42,6 +42,29 @@ namespace StudentHelper.Repos
 			return true;
 		}
 
+		public string GetHandbookInfo(string word)
+		{
+			string res = "";
+			try
+			{
+				var item = _ctx.HANDBOOK.Where(x => x.WORD == word.ToLower()).FirstOrDefault();
+				if (item != null)
+				{
+					res = item.DESC;
+				}
+			}
+			catch (Exception e)
+			{
+				
+			}
+			return res;
+		}
+
+		public List<string> GetHandbooks()
+		{
+			return _ctx.HANDBOOK.Select(x => x.WORD).ToList();
+		}
+
 		public FBRepo(FBEntities ctx)
 		{
 			_ctx = ctx;
