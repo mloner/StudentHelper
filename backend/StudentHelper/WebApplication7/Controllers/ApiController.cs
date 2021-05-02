@@ -871,5 +871,42 @@ namespace StudentHelper.Controllers
 
             return Content(respStr, "application/json");
         }
+
+        /// <summary>
+        /// Получить описание команды
+        /// </summary>
+        [HttpGet("handbook")]
+        public ActionResult GetHandbookInfo([FromQuery(Name = "word")] string word)
+        {
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now} Method: {System.Reflection.MethodInfo.GetCurrentMethod()}\n");
+
+            JsonResponse resp = new JsonResponse();
+            if (word == null)
+            {
+                var items = _FBRepo.GetHandbooks();
+                resp.status = "OK";
+                resp.response = items;
+            }
+            else
+            {
+                var desc = _FBRepo.GetHandbookInfo(word);
+                if (desc != "")
+                {
+                    resp.status = "OK";
+                    resp.response = desc;
+                }
+                else
+                {
+                    resp.status = "FAIL";
+                    resp.response = "No such command";
+                }
+            }
+ 
+            string respStr = JsonConvert.SerializeObject(resp);
+
+            _logger.LogInformation($"Req id:{rnd}\n Time: {now}\n Resp: {respStr}\n");
+
+            return Content(respStr, "application/json");
+        }
     }
 }
