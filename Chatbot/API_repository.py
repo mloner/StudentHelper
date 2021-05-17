@@ -4,14 +4,14 @@ import requests
 test_ok = json.loads('{"response": "ok"}')
 test_fail = json.loads('{"response": "fail"}')
 
-url = 'http://shipshon.fvds.ru/api'
+url = 'http://78.24.216.229/api'
 headers = {'Content-type': 'application/json',  # Определение типа данных
            'Accept': 'text/plain',
            'Content-Encoding': 'utf-8'}
 
 # POST
 def _registerUser(idvk:str, role:str, arg:str, subGroup:str):
-    url = 'http://shipshon.fvds.ru/api/registerUser'
+    url = 'http://78.24.216.229/api/registerUser'
     req = {}
     req['client_type'] = 'bot'
     req['command'] = 'registerUser'
@@ -25,7 +25,7 @@ def _registerUser(idvk:str, role:str, arg:str, subGroup:str):
     return response
 
 def _setUserField(idvk:str, field:str, value:str):
-    url = 'http://shipshon.fvds.ru/api/setUserField'
+    url = 'http://78.24.216.229/api/setUserField'
     req = {}
     req['client_type'] = 'bot'
     req['command'] = 'setUserField'
@@ -38,7 +38,7 @@ def _setUserField(idvk:str, field:str, value:str):
     return response
 
 def _getUserState(idvk:str):
-    url = 'http://shipshon.fvds.ru/api/getUserState'
+    url = 'http://78.24.216.229/api/getUserState'
     req = {}
     req['client_type'] = 'bot'
     req['command'] = 'getUserState'
@@ -49,7 +49,7 @@ def _getUserState(idvk:str):
     return response
 
 def _getQuestion(idvk:str):
-    url = 'http://shipshon.fvds.ru/api/getQuestion'
+    url = 'http://78.24.216.229/api/getQuestion'
     req = {}
     req['client_type'] = 'bot'
     req['command'] = 'getQuestion'
@@ -60,7 +60,7 @@ def _getQuestion(idvk:str):
     return response
 
 def _answerQuestion(idvk:str, answer:str):
-    url = 'http://shipshon.fvds.ru/api/answerQuestion'
+    url = 'http://78.24.216.229/api/answerQuestion'
     req = {}
     req['client_type'] = 'bot'
     req['command'] = 'answerQuestion'
@@ -74,7 +74,7 @@ def _answerQuestion(idvk:str, answer:str):
 
 # GET
 def _checkGroup(group:str):
-    url = 'http://shipshon.fvds.ru/api/checkGroup'
+    url = 'http://78.24.216.229/api/checkGroup'
     req = {}
     req['client_type'] = 'bot'
     req['command'] = 'checkGroup'
@@ -85,7 +85,7 @@ def _checkGroup(group:str):
     return response
 
 def _checkFio(fio:str):
-    url = 'http://shipshon.fvds.ru/api/checkFio'
+    url = 'http://78.24.216.229/api/checkFio'
     req = {}
     req['client_type'] = 'bot'
     req['command'] = 'checkFio'
@@ -96,7 +96,7 @@ def _checkFio(fio:str):
     return response
 
 def _getScheduleStudent(role:str, group:str, schedule_type:str, date:str):
-    url = 'http://shipshon.fvds.ru/api/getScheduleStudent'
+    url = 'http://78.24.216.229/api/getScheduleStudent'
     req = {}
     req['client_type'] = 'bot'
     req['command'] = 'getScheduleStudent'
@@ -110,7 +110,7 @@ def _getScheduleStudent(role:str, group:str, schedule_type:str, date:str):
     return response
 
 def _getSchedulePrepod(role:str, fio:str, schedule_type:str, date:str):
-    url = 'http://shipshon.fvds.ru/api/getSchedulePrepod'
+    url = 'http://78.24.216.229/api/getSchedulePrepod'
     req = {}
     req['client_type'] = 'bot'
     req['command'] = 'getSchedulePrepod'
@@ -123,3 +123,32 @@ def _getSchedulePrepod(role:str, fio:str, schedule_type:str, date:str):
     print(response)
     return response
 
+def _getPrepodList():
+    url = 'http://78.24.216.229/api/getPrepodList'
+    req = {}
+    req['command'] = 'getPrepodList'
+    print(json.dumps(req))
+    response = json.loads(requests.get(url, params = req, headers=headers).text)
+    print(response)
+    return response
+
+def _handbook_answer(word:str):
+    url = 'http://78.24.216.229/api/handbook'
+    req = {}
+    req['client_type'] = 'bot'
+    req['command'] = 'handbook'
+    req['word'] = word
+    print(json.dumps(req))
+    response = json.loads(requests.get(url, params = req, headers=headers).text)
+    print(response)
+    return response
+
+def _handbook():
+    url = 'http://78.24.216.229/api/handbook'
+    req = {}
+    req['client_type'] = 'bot'
+    req['command'] = 'handbook'
+    print(json.dumps(req))
+    response = json.loads(requests.get(url, params = req, headers=headers).text)
+    print(response)
+    return response

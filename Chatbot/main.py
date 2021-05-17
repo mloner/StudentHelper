@@ -88,7 +88,20 @@ for event in longpoll.listen():
         if (event.text == 'хохол' or event.text == 'Хохол'):
             sender_XOXOL(event.user_id)
 
-        if event.text == 'Авторизация' and user_state['state'] != 'Finish':
+        elif (event.text == '!помощь'):
+            helpList = ''
+            for i in API_repository._handbook()['response']:
+                helpList = helpList + i + '\n'
+            sender_without_keyboard(event.user_id, 'Доступные команды:\n' + helpList)
+
+        elif (len(event.text)>0 and event.text[0] == "!"):
+            helpAnswer = API_repository._handbook_answer(event.text)
+            if helpAnswer["status"] == "OK":
+                sender_without_keyboard(event.user_id, helpAnswer["response"])
+            else:
+                sender_without_keyboard(event.user_id, 'К сожалению такой команды нет')
+
+        elif event.text == 'Авторизация' and user_state['state'] != 'Finish':
             API_repository._setUserField(event.user_id, 'state', 'RegisterUser')
             sender(event.user_id, 'Кто Вы?', 0)
 
@@ -98,11 +111,14 @@ for event in longpoll.listen():
 
         elif event.text == 'Преподаватель' and user_state['state'] != 'Finish':
             API_repository._setUserField(event.user_id, 'state', 'RegisterUser_P')
-            sender_without_keyboard(event.user_id, 'Введите, пожалуйста, ваше ФИО в формате "Фамилия И.О."')
+            prepodList = ''
+            for i in API_repository._getPrepodList()['response']:
+                prepodList = prepodList + i + '\n'
+            sender_without_keyboard(event.user_id, 'Введите, пожалуйста, ваше ФИО в формате "Фамилия И.О." \n Список преподаваетелей: \n' + prepodList)
 
         elif event.text == 'Разлогиниться':
             API_repository._setUserField(event.user_id, 'state', 'Start')
-            sender(event.user_id, 'Пожалуйста авторизуйтесь', 4)
+            sender(event.user_id, 'Пожалуйста авторизуйтесь. Для получения помощи напишите: !помощь', 4)
 
         elif event.text == 'Сменить подгруппу' and user_state['role'] == 'student' and user_state['state'] == 'Finish':
             API_repository._setUserField(event.user_id, 'state', 'RegisterUser_S_S')
@@ -237,13 +253,13 @@ for event in longpoll.listen():
             elif user_state['state'] == 'Finish':
                 if user_state['role'] == 'student':
                     if user_state['subGroup'] == 0:
-                        sender(event.user_id, 'Вы уже авторизованы как студент группы ' + user_state['arg'] + ' Обе подгруппы\n\nВыберите расписание', 5)
+                        sender(event.user_id, 'Вы уже авторизованы как студент группы ' + user_state['arg'] + ' Обе подгруппы\nДля получения помощи напишите: !помощь\n\nВыберите расписание', 5)
                     elif user_state['subGroup'] == 1:
-                        sender(event.user_id, 'Вы уже авторизованы как студент группы ' + user_state['arg'] + ' 1 подгруппа\n\nВыберите расписание', 5)
+                        sender(event.user_id, 'Вы уже авторизованы как студент группы ' + user_state['arg'] + ' 1 подгруппа\nДля получения помощи напишите: !помощь\n\nВыберите расписание', 5)
                     elif user_state['subGroup'] == 2:
-                        sender(event.user_id, 'Вы уже авторизованы как студент группы ' + user_state['arg'] + ' 2 подгруппа\n\nВыберите расписание', 5)
+                        sender(event.user_id, 'Вы уже авторизованы как студент группы ' + user_state['arg'] + ' 2 подгруппа\nДля получения помощи напишите: !помощь\n\nВыберите расписание', 5)
                 else:
-                    sender(event.user_id, 'Вы уже авторизованы как преподаватель ' + user_state['arg'], 2)
+                    sender(event.user_id, 'Вы уже авторизованы как преподаватель ' + user_state['arg'] + '\nДля получения помощи напишите: !помощь', 2)
 
             elif user_state['state'] == 'RegisterUser_S':
                 if API_repository._checkGroup(event.text.upper())['status'] == 'OK':
@@ -257,15 +273,15 @@ for event in longpoll.listen():
             elif user_state['state'] == 'RegisterUser_S_S':
                 if event.text == '1 подгруппа':
                     API_repository._registerUser(event.user_id, 'student', None, 1)
-                    sender(event.user_id, 'Вы успешно авторизовались!\n\nВыберите расписание', 5)
+                    sender(event.user_id, 'Вы успешно авторизовались!\nДля получения помощи напишите: !помощь\n\nВыберите расписание', 5)
                     API_repository._setUserField(event.user_id, 'state', 'Finish')
                 elif event.text == '2 подгруппа':
                     API_repository._registerUser(event.user_id, 'student', None, 2)
-                    sender(event.user_id, 'Вы успешно авторизовались!\n\nВыберите расписание', 5)
+                    sender(event.user_id, 'Вы успешно авторизовались!\nДля получения помощи напишите: !помощь\n\nВыберите расписание', 5)
                     API_repository._setUserField(event.user_id, 'state', 'Finish')
                 elif event.text == 'Обе подгруппы':
                     API_repository._registerUser(event.user_id, 'student', None, 0)
-                    sender(event.user_id, 'Вы успешно авторизовались!\n\nВыберите расписание', 5)
+                    sender(event.user_id, 'Вы успешно авторизовались!\nДля получения помощи напишите: !помощь\n\nВыберите расписание', 5)
                     API_repository._setUserField(event.user_id, 'state', 'Finish')
                 else:
                     sender(event.user_id, 'КНОПОЧКА ЖЕ ЕСТЬ', 3)
@@ -273,7 +289,7 @@ for event in longpoll.listen():
             elif user_state['state'] == 'RegisterUser_P':
                 if API_repository._checkFio(event.text)['status'] == 'OK':
                     API_repository._registerUser(event.user_id, 'prepod', event.text, None)
-                    sender(event.user_id, 'Вы успешно авторизовались!\n\nВыберите расписание', 2)
+                    sender(event.user_id, 'Вы успешно авторизовались!\nДля получения помощи напишите: !помощь\n\nВыберите расписание', 2)
                     API_repository._setUserField(event.user_id, 'state', 'Finish')
                 else:
                     API_repository._setUserField(event.user_id, 'state', 'Start')
