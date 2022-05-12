@@ -70,6 +70,8 @@ https://trello.com/b/wV3wPOBh/student-helper
 
 ## Ссылка на swagger
 http://shipshon.fvds.ru/swagger/index.html
+![image](https://user-images.githubusercontent.com/63730893/168047169-70de87c0-7927-453a-8642-aa6ce2b95246.png)
+
 
 ## Демонстрация работы мобильного приложения
 https://disk.yandex.ru/i/Vt1VNhq2MzubKg
