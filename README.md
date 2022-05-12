@@ -73,3 +73,6 @@ http://shipshon.fvds.ru/swagger/index.html
 
 ## Демонстрация работы мобильного приложения
 https://disk.yandex.ru/i/Vt1VNhq2MzubKg
+
+## Демонстрация работы чат бота
+https://vk.com/video163807367_456239330
